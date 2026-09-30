@@ -21,7 +21,7 @@
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GameDir)\BepInEx\plugins" />
   </Target>
 
-  <Target Name="Package" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="Package" AfterTargets="Build" Condition="'$(Configuration)' == 'Release' And '$(NoRelease)' != 'true'">
     <PropertyGroup>
       <StageDir>$(RepoRoot)dist\$(AssemblyName)\</StageDir>
     </PropertyGroup>

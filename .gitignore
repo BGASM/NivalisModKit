@@ -5,6 +5,7 @@ releases/
 *.zip
 .vs/
 .vscode/
+research/
 
 # Local debug tooling, not published
 mods/NivalisManagerDebug/

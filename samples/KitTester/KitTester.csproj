@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>KitTester</AssemblyName>
+    <Version>0.1.0</Version>
+    <!-- Test harness and example code, never released. -->
+    <NoRelease>true</NoRelease>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\mods\NivalisModKit\NivalisModKit.csproj" Private="false" />
+  </ItemGroup>
+</Project>
