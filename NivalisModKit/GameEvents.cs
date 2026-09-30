@@ -26,11 +26,29 @@ public static partial class GameEvents
     /// </summary>
     public static event Action<BuyIngredientsArgs> BuyIngredientsFinished;
 
+    /// <summary>
+    /// A venue area ran its hourly update. Fires for every venue in the world, not only the
+    /// player's; check <c>Area.PlayerOwned</c>.
+    /// </summary>
+    public static event Action<VenueHourArgs> VenueHour;
+
+    /// <summary>
+    /// A venue area successfully bought one stack of an ingredient. Fires once per vendor
+    /// purchase, inside the buying loop; failed purchases don't fire.
+    /// </summary>
+    public static event Action<IngredientsPurchasedArgs> IngredientsPurchased;
+
     internal static void RaiseBuyIngredientsStarting(BuyIngredientsArgs a) =>
         Raise(nameof(BuyIngredientsStarting), BuyIngredientsStarting, a);
 
     internal static void RaiseBuyIngredientsFinished(BuyIngredientsArgs a) =>
         Raise(nameof(BuyIngredientsFinished), BuyIngredientsFinished, a);
+
+    internal static void RaiseVenueHour(VenueHourArgs a) =>
+        Raise(nameof(VenueHour), VenueHour, a);
+
+    internal static void RaiseIngredientsPurchased(IngredientsPurchasedArgs a) =>
+        Raise(nameof(IngredientsPurchased), IngredientsPurchased, a);
 
     // Each subscriber runs in its own try, so one failing mod can't stop the others
     // or throw into game code.

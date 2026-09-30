@@ -5,6 +5,8 @@ using System.Reflection;
 using HarmonyLib;
 using Nivalis.CraftingSystem;
 using Nivalis.GhostSystem.CustomerLoop;
+using Nivalis.InventorySystem;
+using IL2List = Il2CppSystem.Collections.Generic.List<Nivalis.InventorySystem.ItemInstanceData>;
 
 namespace NivalisModKit;
 
@@ -32,6 +34,14 @@ static class EventPatches
         Install(nameof(GameEvents.BuyIngredientsFinished),
             () => typeof(VenueAreaGhost), nameof(VenueAreaGhost.TryPurchaseIngredients),
             postfix: nameof(BuyFinishPostfix), priority: Priority.Last);
+
+        Install(nameof(GameEvents.VenueHour),
+            () => typeof(VenueAreaGhost), nameof(VenueAreaGhost.OnHourUpdate),
+            postfix: nameof(VenueHourPostfix));
+
+        Install(nameof(GameEvents.IngredientsPurchased),
+            () => typeof(VenueAreaGhost), nameof(VenueAreaGhost.TryMakePurchase),
+            postfix: nameof(PurchasePostfix));
 
         KitPlugin.L.LogInfo($"Events: {GameEvents.Live.Count} of {attempted} live");
     }
@@ -72,5 +82,23 @@ static class EventPatches
     {
         try { GameEvents.RaiseBuyIngredientsFinished(new BuyIngredientsArgs(__instance, recipe, __result)); }
         catch (Exception e) { KitPlugin.L.LogError($"BuyFinishPostfix: {e}"); }
+    }
+
+    static void VenueHourPostfix(VenueAreaGhost __instance)
+    {
+        try { GameEvents.RaiseVenueHour(new VenueHourArgs(__instance)); }
+        catch (Exception e) { KitPlugin.L.LogError($"VenueHourPostfix: {e}"); }
+    }
+
+    static void PurchasePostfix(VenueAreaGhost __instance, ItemType stackType, int totalPrice,
+        IL2List boughtInstances, bool __result)
+    {
+        try
+        {
+            if (!__result) return;
+            GameEvents.RaiseIngredientsPurchased(new IngredientsPurchasedArgs(
+                __instance, stackType, boughtInstances?.Count ?? 0, totalPrice));
+        }
+        catch (Exception e) { KitPlugin.L.LogError($"PurchasePostfix: {e}"); }
     }
 }
