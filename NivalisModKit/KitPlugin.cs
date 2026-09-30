@@ -21,10 +21,27 @@ public class KitPlugin : BasePlugin
         SimulateMissing = Config.Bind("Debug", "SimulateMissing", "",
             "Comma-separated event names to install against a method that doesn't exist, " +
             "to test the missing-event fallback. Leave empty.");
+        var liveReload = Config.Bind("General", "LiveConfigReload", true,
+            "Reload a mod's settings when its .cfg file in BepInEx\\config is saved, while the game runs.");
 
         L.LogInfo($"{ModKit.Name} {ModKit.Version} loaded");
         CheckGameVersion();
         EventPatches.InstallAll();
+        StartServices(liveReload.Value);
+    }
+
+    void StartServices(bool liveReload)
+    {
+        try { AddComponent<KitBehaviour>(); }
+        catch (Exception e)
+        {
+            L.LogError($"Kit component: missing, per-frame services off ({e.Message})");
+            return;
+        }
+
+        if (!liveReload) return;
+        try { ConfigWatcher.Start(); }
+        catch (Exception e) { L.LogError($"Live config reload: missing ({e.Message})"); }
     }
 
     static void CheckGameVersion()

@@ -87,12 +87,25 @@ See [samples/KitTester](../../samples/KitTester) and [samples/QuantityTester](..
 
 Public members are added, never removed. Anything replaced is marked `[Obsolete]` first. A mod built against 0.1 keeps working with later 0.x releases.
 
+## Live config reload
+
+With the kit installed, any mod's settings reload when you save its `.cfg` file in `BepInEx\config`, while the game runs. The log shows what changed:
+
+```
+Config reloaded: bgasm.nivalis.orderfix.cfg: VendorSort: Balanced -> Cheapest
+```
+
+A mod picks up the change the next time it reads the setting. For modders: read `entry.Value` when you use it rather than copying it once in `Load`, or subscribe to `entry.SettingChanged`. Reloads run on the main thread, so handlers can touch game objects.
+
+Some settings only matter at startup, such as ones that decide whether a mod hooks anything at all. Those still need a restart.
+
 ## Settings
 
 `BepInEx\config\bgasm.nivalis.modkit.cfg`
 
 | Setting | Default | Effect |
 |---|---|---|
+| `[General] LiveConfigReload` | true | Reload mods' settings when their `.cfg` file is saved. Takes effect after a restart. |
 | `[Debug] SimulateMissing` | empty | Comma-separated event names to treat as missing. For testing a mod's fallback. |
 
 ## Compatibility
