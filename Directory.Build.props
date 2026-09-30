@@ -27,6 +27,9 @@
     </PropertyGroup>
     <RemoveDir Directories="$(StageDir)" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(StageDir)BepInEx\plugins" />
+    <!-- XML docs, for projects that generate them (the kit), so modders get IntelliSense. -->
+    <Copy SourceFiles="$(TargetDir)$(AssemblyName).xml" DestinationFolder="$(StageDir)BepInEx\plugins"
+          Condition="'$(GenerateDocumentationFile)' == 'true' And Exists('$(TargetDir)$(AssemblyName).xml')" />
     <MakeDir Directories="$(RepoRoot)releases" />
     <ZipDirectory SourceDirectory="$(StageDir)" DestinationFile="$(RepoRoot)releases\$(AssemblyName)-$(Version).zip" Overwrite="true" />
   </Target>
