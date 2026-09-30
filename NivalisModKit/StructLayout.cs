@@ -39,7 +39,9 @@ public static class StructLayout
         if (Offsets.TryGetValue((typeof(T), field), out int cached)) return cached;
 
         IntPtr klass = ClassPointer<T>();
-        IntPtr f = IL2CPP.GetIl2CppField(klass, field);
+        // The raw lookup, not IL2CPP.GetIl2CppField, which logs an error when a mod probes
+        // for a field that doesn't exist.
+        IntPtr f = IL2CPP.il2cpp_class_get_field_from_name(klass, field);
         if (f == IntPtr.Zero) throw new MissingFieldException(typeof(T).Name, field);
 
         int offset = (int)IL2CPP.il2cpp_field_get_offset(f);
