@@ -4,7 +4,7 @@ namespace NivalisModKit;
 public static class ModKit
 {
     /// <summary>BepInEx plugin GUID. Use as <c>[BepInDependency(ModKit.Guid)]</c>.</summary>
-    public const string Guid = "will.nivalis.modkit";
+    public const string Guid = "bgasm.nivalis.modkit";
 
     /// <summary>Display name.</summary>
     public const string Name = "Nivalis ModKit";

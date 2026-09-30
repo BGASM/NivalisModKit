@@ -10,7 +10,7 @@ namespace QuantityTester;
 
 // Example of Purchasing.OrderQuantity: multiplies how much managers buy, using only kit events.
 // Test harness for the pipeline running alongside Order Fix. Off by default.
-[BepInPlugin("will.nivalis.quantitytester", "Quantity Tester", "0.1.0")]
+[BepInPlugin("bgasm.nivalis.quantitytester", "Quantity Tester", "0.1.0")]
 [BepInDependency(ModKit.Guid)]
 public class Plugin : BasePlugin
 {

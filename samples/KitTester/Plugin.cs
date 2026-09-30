@@ -12,7 +12,7 @@ namespace KitTester;
 
 // Logs every kit event. Doubles as the regression test after game updates:
 // every kit feature should be exercised here.
-[BepInPlugin("will.nivalis.kittester", "Kit Tester", "0.1.0")]
+[BepInPlugin("bgasm.nivalis.kittester", "Kit Tester", "0.1.0")]
 [BepInDependency(ModKit.Guid)]
 public class Plugin : BasePlugin
 {
