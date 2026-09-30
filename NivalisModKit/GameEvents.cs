@@ -34,7 +34,8 @@ public static partial class GameEvents
 
     /// <summary>
     /// A venue area successfully bought one stack of an ingredient. Fires once per vendor
-    /// purchase, inside the buying loop; failed purchases don't fire.
+    /// purchase, inside a restock round (between BuyIngredientsStarting and Finished); failed
+    /// purchases and equipment purchases don't fire. Needs both BuyIngredients events.
     /// </summary>
     public static event Action<IngredientsPurchasedArgs> IngredientsPurchased;
 
@@ -73,7 +74,7 @@ public static partial class GameEvents
         }
     }
 
-    static void LogFailure(string name, Delegate d, Exception e)
+    internal static void LogFailure(string name, Delegate d, Exception e)
     {
         string who = d.Method.DeclaringType?.Assembly.GetName().Name ?? "?";
         KitPlugin.L?.LogError($"{name} handler in {who} ({d.Method.DeclaringType?.Name}.{d.Method.Name}) threw: {e}");

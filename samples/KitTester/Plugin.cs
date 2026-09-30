@@ -28,6 +28,8 @@ public class Plugin : BasePlugin
 
     static int hourUpdates;
     static bool worldChecked;
+    static bool pipelineChecked;
+    static int bought, skipped, failed;
 
     public override void Load()
     {
@@ -41,9 +43,22 @@ public class Plugin : BasePlugin
         CheckNativeHook();
 
         GameEvents.BuyIngredientsStarting += a =>
+        {
+            if (!pipelineChecked) { pipelineChecked = true; L.LogInfo($"Purchasing.IsAvailable = {Purchasing.IsAvailable}"); }
+            bought = skipped = failed = 0;
             L.LogInfo($"BuyIngredientsStarting: {NameOf(a.Area?.Venue)} / {RecipeName(a)}");
+        };
         GameEvents.BuyIngredientsFinished += a =>
-            L.LogInfo($"BuyIngredientsFinished: {NameOf(a.Area?.Venue)} / {RecipeName(a)} bought={a.Bought}");
+            L.LogInfo($"BuyIngredientsFinished: {NameOf(a.Area?.Venue)} / {RecipeName(a)} bought={a.Bought} " +
+                      $"(pipeline: {bought} bought, {skipped} skipped, {failed} failed)");
+
+        // Read-only; doesn't turn the pipeline on. Counts per recipe, shown on the Finished line.
+        Purchasing.Decision += d =>
+        {
+            if (d.Result == PurchaseResult.Bought) bought++;
+            else if (d.Result == PurchaseResult.Skipped) skipped++;
+            else failed++;
+        };
         GameEvents.IngredientsPurchased += a =>
             L.LogInfo($"IngredientsPurchased: {NameOf(a.Area?.Venue)} / {NameOf(a.Item)} x{a.Count} for {a.TotalPrice}");
         GameEvents.VenueHour += OnVenueHour;

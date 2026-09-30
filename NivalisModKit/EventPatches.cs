@@ -39,19 +39,26 @@ static class EventPatches
             () => typeof(VenueAreaGhost), nameof(VenueAreaGhost.OnHourUpdate),
             postfix: nameof(VenueHourPostfix));
 
+        // TryMakePurchase also buys equipment (e.g. Drinks_Machine), so this only fires inside a
+        // restock round, which the BuyIngredients patches mark.
         Install(nameof(GameEvents.IngredientsPurchased),
             () => typeof(VenueAreaGhost), nameof(VenueAreaGhost.TryMakePurchase),
-            postfix: nameof(PurchasePostfix));
+            postfix: nameof(PurchasePostfix),
+            requires: new[] { nameof(GameEvents.BuyIngredientsStarting), nameof(GameEvents.BuyIngredientsFinished) });
 
         KitPlugin.L.LogInfo($"Events: {GameEvents.Live.Count} of {attempted} live");
     }
 
     static void Install(string ev, Func<Type> type, string method,
-        string prefix = null, string postfix = null, int priority = Priority.Normal)
+        string prefix = null, string postfix = null, int priority = Priority.Normal,
+        string[] requires = null)
     {
         attempted++;
         try
         {
+            var absent = requires?.Where(r => !GameEvents.Live.Contains(r)).ToList();
+            if (absent?.Count > 0) throw new Exception($"needs {string.Join(" and ", absent)}");
+
             string name = simulated.Contains(ev) ? method + "_SimulatedMissing" : method;
             Type t = type() ?? throw new Exception("target type not found");
             MethodBase target = AccessTools.Method(t, name)
@@ -72,9 +79,16 @@ static class EventPatches
 
     // ---------- patch bodies: never throw into game code ----------
 
+    // The venue area inside TryPurchaseIngredients, or zero between restock rounds.
+    static IntPtr roundArea = IntPtr.Zero;
+
     static void BuyStartPrefix(VenueAreaGhost __instance, IRecipe recipe)
     {
-        try { GameEvents.RaiseBuyIngredientsStarting(new BuyIngredientsArgs(__instance, recipe, false)); }
+        try
+        {
+            roundArea = __instance?.Pointer ?? IntPtr.Zero;
+            GameEvents.RaiseBuyIngredientsStarting(new BuyIngredientsArgs(__instance, recipe, false));
+        }
         catch (Exception e) { KitPlugin.L.LogError($"BuyStartPrefix: {e}"); }
     }
 
@@ -82,6 +96,7 @@ static class EventPatches
     {
         try { GameEvents.RaiseBuyIngredientsFinished(new BuyIngredientsArgs(__instance, recipe, __result)); }
         catch (Exception e) { KitPlugin.L.LogError($"BuyFinishPostfix: {e}"); }
+        finally { roundArea = IntPtr.Zero; }
     }
 
     static void VenueHourPostfix(VenueAreaGhost __instance)
@@ -95,7 +110,7 @@ static class EventPatches
     {
         try
         {
-            if (!__result) return;
+            if (!__result || __instance == null || __instance.Pointer != roundArea) return;
             GameEvents.RaiseIngredientsPurchased(new IngredientsPurchasedArgs(
                 __instance, stackType, boughtInstances?.Count ?? 0, totalPrice));
         }
