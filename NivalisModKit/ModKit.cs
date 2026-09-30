@@ -11,4 +11,10 @@ public static class ModKit
 
     /// <summary>Kit version. Keep in step with the csproj Version.</summary>
     public const string Version = "0.1.0";
+
+    /// <summary>
+    /// Game version (Unity <c>Application.version</c>) this kit build was tested on.
+    /// The kit warns at startup when the running game differs. Empty until first recorded.
+    /// </summary>
+    public const string TestedGameVersion = "1.0";
 }
