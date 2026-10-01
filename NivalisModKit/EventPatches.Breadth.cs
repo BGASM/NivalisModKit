@@ -15,8 +15,6 @@ static partial class EventPatches
     static void InstallBreadth()
     {
         // ---------- curfew and detection (CurfewManager) ----------
-        Subscribe(nameof(GameEvents.PlayerCaught), () => Via(() => CurfewManager.OnPlayerCaught,
-            () => Raise(nameof(GameEvents.PlayerCaught), GameEvents.RaisePlayerCaught)));
         Subscribe(nameof(GameEvents.AwarenessIncreased), () => ViaT<float>(() => CurfewManager.OnAwarenessIncrease,
             delta => Raise(nameof(GameEvents.AwarenessIncreased), () => GameEvents.RaiseAwarenessIncreased(new AwarenessArgs(delta, CurrentAwareness())))));
         Subscribe(nameof(GameEvents.SecurityLevelChanged), () => ViaT2<WorldLocation, int>(() => CurfewManager.OnSecurityLevelChanged,
@@ -24,6 +22,21 @@ static partial class EventPatches
         Subscribe(nameof(GameEvents.CurfewStarted), () => ViaCurfewEvent(cm => cm.OnCurfewStart, GameEvents.RaiseCurfewStarted));
         Subscribe(nameof(GameEvents.CurfewEnded), () => ViaCurfewEvent(cm => cm.OnCurfewEnd, GameEvents.RaiseCurfewEnded));
         Subscribe(nameof(GameEvents.CurfewWarning), () => ViaCurfewEvent(cm => cm.OnCurfewWarningEnabled, GameEvents.RaiseCurfewWarning));
+
+        // Day end: curfew start (02:00) or sleeping closes the day. CurfewManager, SleepManager and
+        // RentManager share one DayEndEvent asset. Its base class takes object listeners, which the
+        // game calls on every invoke (InvokeBaseEvent), so no struct crosses a delegate.
+        Subscribe(nameof(GameEvents.DayEnded), () =>
+        {
+            Il2CppSystem.Action<Il2CppSystem.Object> action = (Action<Il2CppSystem.Object>)(_ =>
+                Raise(nameof(GameEvents.DayEnded), () => GameEvents.RaiseDayEnded(new DayEndedArgs(GameTime.Day))));
+            keepAlive.Add(action);
+            return ViaInstance(() => Single<CurfewManager>(), o =>
+            {
+                var ev = ((CurfewManager)o).dayEndEvent ?? throw new Exception("dayEndEvent not set on CurfewManager");
+                ev.Subscribe(0, action);
+            });
+        });
 
         // ---------- fishing ----------
         Subscribe(nameof(GameEvents.FishCaught), () =>

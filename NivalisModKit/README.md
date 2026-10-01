@@ -17,7 +17,7 @@ Event BuyIngredientsStarting: live
 Event BuyIngredientsFinished: live
 ...
 Event PlayerSold: live
-Events: 62 of 62 live
+Events: 65 of 65 live
 ```
 
 After a game update, an event whose hook no longer matches shows as `missing` and never fires. The rest keep working. Mods that use a missing event can check for it and switch the feature off. The log line names the method that couldn't be found, which is the thing to report.
@@ -47,6 +47,8 @@ public class Plugin : BasePlugin
 | `GameLoaded` | A save finished loading. Has the save name and starting district. |
 | `GameSaved` | A save was written, manual or autosave. |
 | `DayStarted` | A new game day. The game's day turns over at 08:00, not midnight. |
+| `DayEnded` | The day closed: curfew began (02:00) or the player slept. Rent is collected around now. |
+| `EndOfDayShown` | The end-of-day summary screen opened. |
 | `HourStarted` | The world clock reached a new hour. Once per change: sleeping from 21:00 fires once at the new hour. |
 | `DistrictEntered` | The player arrived in a different district. Building doors don't count. |
 | **Player shopping** | |
@@ -60,8 +62,8 @@ public class Plugin : BasePlugin
 | `QuestMarkerAdded`, `QuestMarkerRemoved` | A quest marker in the world was switched on or off. A refresh shows as Added, Removed, Added. |
 | `VenueSetupQuestUpdated` | A venue setup quest changed state or progress. |
 | **Curfew and security** | |
-| `CurfewWarning`, `CurfewStarted`, `CurfewEnded` | Warning at 01:00, curfew 02:00 to 08:00. |
-| `PlayerCaught` | Caught breaking curfew by a camera or drone. |
+| `CurfewWarning`, `CurfewStarted`, `CurfewEnded` | Warning at 01:00, curfew 02:00 to 08:00. The clock stops during curfew; sleeping skips to 08:00. |
+| `PlayerCaught` | Caught (awareness reached 1): by drone or camera, district, new security level. Furniture locks against theft for the rest of the curfew. |
 | `AwarenessIncreased` | Security awareness rose: the rise and the new level. |
 | `SecurityLevelChanged` | A district's security level changed. |
 | **Fishing and farming** | |
@@ -70,13 +72,13 @@ public class Plugin : BasePlugin
 | **Property** | |
 | `PropertyOwnerChanged` | Any venue, apartment or greenhouse bought, sold, rented or given up. |
 | `RentStarted`, `RentStopped` | A property started or stopped being rented. |
-| `FurniturePlaced`, `FurnitureStored` | The player placed or stored furniture (or another holdable object). |
+| `FurniturePickedUp`, `FurniturePlaced`, `FurnitureStored` | The player picked up, placed, or stored furniture (or another holdable object). |
 | `ApartmentEntered`, `ApartmentLeft` | The player entered or left an apartment. |
 | **Staff** | |
 | `StaffHired`, `StaffFired` | Staff hired at or fired from a venue. |
-| `StaffPaid` | A venue paid a staff member (wage, in hundredths). |
+| `StaffPaid` | A wage came due: the amount (hundredths) and whether the owner could pay it. |
 | `StaffSkillGained` | Someone gained experience in a skill. Frequent. |
-| `StaffRolesChanged`, `StaffHoursChanged` | Roles (serving, cooking, cleaning, managing) or working hours changed. |
+| `StaffRolesChanged`, `StaffHoursChanged` | Roles (serving, cooking, cleaning, managing) or shift hours changed in the staff screen. Hours fire once the slider settles, with before and after. |
 | **Theft and security (patched)** | |
 | `TheftCommitted` | The player stole furniture from a venue they don't own. |
 | `CameraDisabled` | The player disabled a security camera. |
@@ -150,6 +152,7 @@ patched until a mod subscribes to that one.
 | `Tuning.FishYield` | Items a catch gives (`Yield`) |
 | `Tuning.PropertyPrice` | Purchase price of a venue, apartment or greenhouse (`Price`, hundredths) |
 | `Tuning.AwarenessGain` | How much security awareness rises (`Amount`; 0 = not noticed) |
+| `Tuning.Catch` | About to be caught: set `Cancel` to let the player off (awareness drops to `AwarenessAfterCancel`, 0.5 by default; furniture stays unlocked) |
 
 ```csharp
 Tuning.FishYield += c => c.Yield *= 2;                 // double catches
@@ -170,6 +173,7 @@ Read-only lookups. Each returns a fresh list you can keep, or empty/null outside
 | `Items` | `All`, `ByName("chicken")` (ignores case, spaces, underscores), `ById(guid)`, `NameOf(item)` |
 | `Recipes` | `All`, `Known`, `ForDish(item)`, `InputsOf(recipe)` (item and amount per serving), `OutputOf(recipe)` |
 | `Quests` | `Active`, `Completed`, `Pinned` |
+| `Security` | `IsCurfew`, `IsSecurityActive`, `Awareness` (0 to 1), `IsCaught`, `Level`, `LevelOf(district)` |
 
 ```csharp
 // Cheapest vendor for chicken, and how far it is from your first venue.

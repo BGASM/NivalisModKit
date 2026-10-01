@@ -335,3 +335,48 @@ public static class Quests
         return list;
     }
 }
+
+/// <summary>Curfew and CorpSec security state.</summary>
+public static class Security
+{
+    static CurfewManager Manager => Singleton<CurfewManager>.InstanceExist(out var cm) ? cm : null;
+
+    /// <summary>True during curfew (02:00 to 08:00).</summary>
+    public static bool IsCurfew
+    {
+        get { try { return CurfewManager.IsCurfewInEffect; } catch { return false; } }
+    }
+
+    /// <summary>True when cameras and drones are active (curfew security on).</summary>
+    public static bool IsSecurityActive
+    {
+        get { try { return Manager?.IsCurfewSecurityEnabled ?? false; } catch { return false; } }
+    }
+
+    /// <summary>Awareness of the player, 0 to 1. At 1 the player is caught.</summary>
+    public static float Awareness
+    {
+        get { try { return Manager?.Awarness ?? 0f; } catch { return 0f; } }
+    }
+
+    /// <summary>
+    /// True while the player is caught (awareness at 1). Furniture stays locked against theft
+    /// until awareness resets.
+    /// </summary>
+    public static bool IsCaught
+    {
+        get { try { return Manager?.IsPlayerCaught ?? false; } catch { return false; } }
+    }
+
+    /// <summary>Security level of the player's current district.</summary>
+    public static int Level
+    {
+        get { try { return Manager?.GetSecurityLevel() ?? 0; } catch { return 0; } }
+    }
+
+    /// <summary>Security level of a district.</summary>
+    public static int LevelOf(WorldLocation district)
+    {
+        try { return district == null ? 0 : Manager?.GetSecurityLevel(district) ?? 0; } catch { return 0; }
+    }
+}

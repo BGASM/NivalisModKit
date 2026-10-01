@@ -8,6 +8,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Il2CppSystem.Core"><HintPath>$(GameDir)\BepInEx\interop\Il2CppSystem.Core.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="MonoMod.RuntimeDetour">
       <HintPath>$(GameDir)\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
       <Private>false</Private>

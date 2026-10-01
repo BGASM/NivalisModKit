@@ -36,6 +36,59 @@ public static class Tuning
         typeof(CurfewManager), nameof(CurfewManager.IncreaseAwarness), new[] { typeof(float), typeof(bool) },
         prefix: nameof(AwarenessPrefix)));
 
+    static readonly Hook<CatchContext> catchHook = new(nameof(Catch), () => Patch(
+        typeof(CurfewManager), nameof(CurfewManager.CatchPlayer), new[] { typeof(bool) },
+        prefix: nameof(CatchPrefix)));
+
+    /// <summary>
+    /// The player is about to be caught (awareness reached 1). Set <c>Cancel</c> to let them off:
+    /// the kit then drops awareness to <c>AwarenessAfterCancel</c> (0.5 by default), so furniture
+    /// stays unlocked, and clears every camera's and drone's lock-on, so only a fresh sighting builds
+    /// awareness up again before the next catch. Set it
+    /// close to 1 and a drone overhead re-triggers the catch within a few steps. To stop awareness
+    /// rising at all, use <see cref="AwarenessGain"/>.
+    /// </summary>
+    public static event Action<CatchContext> Catch { add => catchHook.Add(value); remove => catchHook.Remove(value); }
+
+    static bool catchCancelled;
+
+    // Read once by the PlayerCaught postfix, so a cancelled catch raises no event.
+    internal static bool ConsumeCatchCancelled()
+    {
+        bool c = catchCancelled;
+        catchCancelled = false;
+        return c;
+    }
+
+    static bool CatchPrefix(CurfewManager __instance, bool byDrone)
+    {
+        var ctx = catchHook.Run(() => new CatchContext(byDrone));
+        if (ctx == null || !ctx.Cancel) return true;
+        float after = Math.Clamp(ctx.AwarenessAfterCancel, 0f, 0.99f);   // 1 would mean caught
+        try { __instance._awarness = after; } catch { }
+        ResetDetectors();
+        catchCancelled = true;
+        return false;   // skip CatchPlayer: no popup, no security rise, no furniture lock
+    }
+
+    // A camera or drone that has watched the player for detectionTime locks on: it adds awareness
+    // every frame, seen or not, until the catch. With the catch skipped, clear the lock on all of
+    // them so awareness only rises again on a fresh sighting.
+    static void ResetDetectors()
+    {
+        try
+        {
+            var cameras = SecurityCamera.instances;
+            if (cameras == null) return;
+            foreach (var camera in cameras)
+                if (camera != null) camera.playerVisibilityTime = 0f;
+        }
+        catch (Exception e) { KitPlugin.L.LogWarning($"Tuning.Catch: could not reset detectors: {e.Message}"); }
+    }
+
+    /// <summary>Default awareness the kit sets when a catch is cancelled.</summary>
+    public const float DefaultAwarenessAfterCancel = 0.5f;
+
     /// <summary>How many crops a greenhouse module yields when harvested.</summary>
     public static event Action<CropYieldContext> CropYield { add => cropYield.Add(value); remove => cropYield.Remove(value); }
 
@@ -247,4 +300,22 @@ public sealed class AwarenessGainContext
         GameAmount = Amount = amount;
         ByDrone = byDrone;
     }
+}
+
+/// <summary>Arguments for <see cref="Tuning.Catch"/>.</summary>
+public sealed class CatchContext
+{
+    /// <summary>True if a drone is catching the player, false for a camera (or theft).</summary>
+    public bool ByDrone { get; }
+
+    /// <summary>Set to true to cancel the catch.</summary>
+    public bool Cancel { get; set; }
+
+    /// <summary>
+    /// Awareness (0 to 0.99) to set when the catch is cancelled. Lower gives the player longer
+    /// before the next catch. Default <see cref="Tuning.DefaultAwarenessAfterCancel"/>.
+    /// </summary>
+    public float AwarenessAfterCancel { get; set; } = Tuning.DefaultAwarenessAfterCancel;
+
+    internal CatchContext(bool byDrone) => ByDrone = byDrone;
 }

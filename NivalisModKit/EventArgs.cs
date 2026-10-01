@@ -529,14 +529,21 @@ public sealed class StaffPaidArgs
     /// <summary>The staff member.</summary>
     public Person Person { get; }
 
-    /// <summary>The wage paid (RuntimePersonData.LastPaidWage), in hundredths.</summary>
-    public float Wage { get; }
+    /// <summary>The wage due (RuntimePersonData.Wage), in hundredths.</summary>
+    public int Wage { get; }
 
-    internal StaffPaidArgs(VenueAreaGhost area, Person person, float wage)
+    /// <summary>
+    /// True if the owner was charged. False when the owner couldn't afford it; the game then lowers
+    /// the employee's happiness instead of paying.
+    /// </summary>
+    public bool Paid { get; }
+
+    internal StaffPaidArgs(VenueAreaGhost area, Person person, int wage, bool paid)
     {
         Area = area;
         Person = person;
         Wage = wage;
+        Paid = paid;
     }
 }
 
@@ -636,5 +643,58 @@ public sealed class BoatRefueledArgs
     {
         FuelAdded = added;
         Fuel = fuel;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.DayEnded"/>.</summary>
+public sealed class DayEndedArgs
+{
+    /// <summary>The game day that ended.</summary>
+    public int Day { get; }
+
+    internal DayEndedArgs(int day) => Day = day;
+}
+
+/// <summary>Arguments for <see cref="GameEvents.PlayerCaught"/>.</summary>
+public sealed class PlayerCaughtArgs
+{
+    /// <summary>True if a drone caught the player, false for a camera (or theft).</summary>
+    public bool ByDrone { get; }
+
+    /// <summary>The district the player was caught in.</summary>
+    public WorldLocation District { get; }
+
+    /// <summary>The district's security level after the catch (the game raises it).</summary>
+    public int SecurityLevel { get; }
+
+    internal PlayerCaughtArgs(bool byDrone, WorldLocation district, int level)
+    {
+        ByDrone = byDrone;
+        District = district;
+        SecurityLevel = level;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.StaffHoursChanged"/>.</summary>
+public sealed class StaffHoursArgs
+{
+    /// <summary>The venue the staff member works at.</summary>
+    public Venue Venue { get; }
+
+    /// <summary>The staff member's live data.</summary>
+    public RuntimePersonData Person { get; }
+
+    /// <summary>Shift start and end hours before the change (x = start, y = end; past 24 is after midnight).</summary>
+    public UnityEngine.Vector2 Before { get; }
+
+    /// <summary>Shift start and end hours after the change.</summary>
+    public UnityEngine.Vector2 After { get; }
+
+    internal StaffHoursArgs(Venue venue, RuntimePersonData person, UnityEngine.Vector2 before, UnityEngine.Vector2 after)
+    {
+        Venue = venue;
+        Person = person;
+        Before = before;
+        After = after;
     }
 }

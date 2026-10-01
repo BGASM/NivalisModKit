@@ -64,6 +64,9 @@ public class Plugin : BasePlugin
         nameof(GameEvents.RentStopped),
         nameof(GameEvents.FurniturePlaced),
         nameof(GameEvents.FurnitureStored),
+        nameof(GameEvents.FurniturePickedUp),
+        nameof(GameEvents.DayEnded),
+        nameof(GameEvents.EndOfDayShown),
         nameof(GameEvents.ApartmentEntered),
         nameof(GameEvents.ApartmentLeft),
         nameof(GameEvents.VenueOwnerChanged),
@@ -103,6 +106,13 @@ public class Plugin : BasePlugin
     public override void Load()
     {
         L = Log;
+
+        // Off: subscribe to nothing, so no tuning patches install and nothing is logged.
+        if (!Config.Bind("General", "Enabled", true, "Run the kit tester (restart to apply).").Value)
+        {
+            L.LogInfo("Disabled ([General] Enabled = false)");
+            return;
+        }
 
         // Phase 6 check: set [Snapshot] Print = true in bgasm.nivalis.kittester.cfg while the game
         // runs (live config reload) to print a snapshot. It resets itself to false.
@@ -206,10 +216,31 @@ public class Plugin : BasePlugin
         GameEvents.QuestMarkerRemoved += a => L.LogInfo($"QuestMarkerRemoved: {a.PointId} scene {a.SceneIndex} for {a.Quest.Title}");
         GameEvents.VenueSetupQuestUpdated += a => L.LogInfo($"VenueSetupQuestUpdated: {a.Title} state={a.State}");
         // Phase 9 batch (a)
-        GameEvents.PlayerCaught += () => L.LogInfo("PlayerCaught");
-        GameEvents.AwarenessIncreased += a => L.LogInfo($"AwarenessIncreased: +{a.Delta:0.##} -> {a.Awareness:0.##}");
+        GameEvents.PlayerCaught += a => L.LogInfo($"PlayerCaught: byDrone={a.ByDrone} in {World.NameOf(a.District)}, security {a.SecurityLevel}");
+        var letOff = Config.Bind("Tuning", "CancelCatch", false, "Cancel being caught (Tuning.Catch).");
+        var letOffTo = Config.Bind("Tuning", "CancelCatchAwareness", Tuning.DefaultAwarenessAfterCancel,
+            "Awareness after a cancelled catch (0 to 0.99).");
+        int cancels = 0;
+        Tuning.Catch += c =>
+        {
+            if (!letOff.Value) return;
+            c.Cancel = true;
+            c.AwarenessAfterCancel = letOffTo.Value;
+            if (++cancels == 1 || cancels % 25 == 0)   // a drone overhead can cancel many times a minute
+                L.LogInfo($"Tuning.Catch: cancelled #{cancels} (byDrone={c.ByDrone}), awareness -> {c.AwarenessAfterCancel:0.##}");
+        };
+        // Awareness ticks every frame while the player is watched: log only each new tenth reached.
+        int awareTenth = -1;
+        GameEvents.AwarenessIncreased += a =>
+        {
+            int tenth = (int)(a.Awareness * 10);
+            if (tenth == awareTenth) return;
+            awareTenth = tenth;
+            L.LogInfo($"AwarenessIncreased: +{a.Delta:0.####} -> {a.Awareness:0.####}");
+        };
         GameEvents.SecurityLevelChanged += a => L.LogInfo($"SecurityLevelChanged: {World.NameOf(a.District)} -> {a.Level}");
-        GameEvents.CurfewStarted += () => L.LogInfo($"CurfewStarted at {GameTime.Hour:00}:{GameTime.Minute:00}");
+        GameEvents.CurfewStarted += () => L.LogInfo($"CurfewStarted at {GameTime.Hour:00}:{GameTime.Minute:00} " +
+            $"(Security: curfew={Security.IsCurfew} active={Security.IsSecurityActive} level={Security.Level} awareness={Security.Awareness:0.##})");
         GameEvents.CurfewEnded += () => L.LogInfo($"CurfewEnded at {GameTime.Hour:00}:{GameTime.Minute:00}");
         GameEvents.CurfewWarning += () => L.LogInfo($"CurfewWarning at {GameTime.Hour:00}:{GameTime.Minute:00}");
         GameEvents.FishCaught += a => L.LogInfo($"FishCaught: {NameOf(a.Item)}");
@@ -227,10 +258,13 @@ public class Plugin : BasePlugin
         // Phase 9 batch (b)
         GameEvents.StaffHired += a => L.LogInfo($"StaffHired: {NameOf(a.Person)} at {NameOf(a.Venue)}");
         GameEvents.StaffFired += a => L.LogInfo($"StaffFired: {NameOf(a.Person)} at {NameOf(a.Venue)}");
-        GameEvents.StaffPaid += a => { if (a.Area != null && a.Area.PlayerOwned) L.LogInfo($"StaffPaid: {NameOf(a.Person)} {a.Wage:0}"); };
+        GameEvents.StaffPaid += a => { if (a.Area != null && a.Area.PlayerOwned) L.LogInfo($"StaffPaid: {NameOf(a.Person)} wage {a.Wage} paid={a.Paid}"); };
+        GameEvents.FurniturePickedUp += a => L.LogInfo($"FurniturePickedUp: {NameOf(a.Entity)}");
+        GameEvents.DayEnded += a => L.LogInfo($"DayEnded: day {a.Day} at {GameTime.Hour:00}:{GameTime.Minute:00}");
+        GameEvents.EndOfDayShown += () => L.LogInfo($"EndOfDayShown at {GameTime.Hour:00}:{GameTime.Minute:00}");
         GameEvents.StaffSkillGained += a => { if (++skillGains <= 5) L.LogInfo($"StaffSkillGained: {NameOf(a.Person)} {NameOf(a.Skill)} +{a.Amount:0.###}"); };
         GameEvents.StaffRolesChanged += a => L.LogInfo($"StaffRolesChanged: {NameOf(a.Venue)} -> {a.Roles}");
-        GameEvents.StaffHoursChanged += a => L.LogInfo($"StaffHoursChanged: {NameOf(a.Area?.Venue)}");
+        GameEvents.StaffHoursChanged += a => L.LogInfo($"StaffHoursChanged: {NameOf(a.Venue)} {a.Before.x:0}-{a.Before.y:0} -> {a.After.x:0}-{a.After.y:0}");
         GameEvents.TheftCommitted += a => L.LogInfo($"TheftCommitted: {NameOf(a.Furniture)} at {NameOf(a.Area?.Venue)}");
         GameEvents.CameraDisabled += a => L.LogInfo($"CameraDisabled: {NameOf(a.Camera)}");
         GameEvents.BoatBoarded += () => L.LogInfo("BoatBoarded");
@@ -252,7 +286,14 @@ public class Plugin : BasePlugin
         Tuning.CropYield += c => { if (cropMul.Value != 1f) { c.Yield = (int)Math.Round(c.Yield * cropMul.Value); L.LogInfo($"Tuning.CropYield: {NameOf(c.Plant)} {c.GameYield} -> {c.Yield}"); } };
         Tuning.CropGrowthSpeed += c => { if (growMul.Value != 1f) c.Speed *= growMul.Value; };
         Tuning.PropertyPrice += c => { if (propMul.Value != 1f) c.Price = (int)Math.Round(c.Price * propMul.Value); };
-        Tuning.AwarenessGain += c => { if (awareMul.Value != 1f) { c.Amount *= awareMul.Value; L.LogInfo($"Tuning.AwarenessGain: {c.GameAmount:0.##} -> {c.Amount:0.##}"); } };
+        int gains = 0;
+        Tuning.AwarenessGain += c =>
+        {
+            if (awareMul.Value == 1f) return;
+            c.Amount *= awareMul.Value;
+            if (++gains == 1 || gains % 500 == 0)   // per frame while watched
+                L.LogInfo($"Tuning.AwarenessGain #{gains}: {c.GameAmount:0.####} -> {c.Amount:0.####} byDrone={c.ByDrone}");
+        };
         GameEvents.MoneyChanged += a => L.LogInfo($"MoneyChanged: {a.Old} -> {a.New} ({a.Delta:+#;-#;0})");
         GameEvents.ShopOpened += a => L.LogInfo($"ShopOpened: {NameOf(a.Vendor)}");
         GameEvents.ShopClosed += a => L.LogInfo($"ShopClosed: {NameOf(a.Vendor)}");

@@ -153,8 +153,11 @@ public static partial class GameEvents
     internal static void RaiseQuestMarkerRemoved(QuestMarkerArgs a) => Raise(nameof(QuestMarkerRemoved), QuestMarkerRemoved, a);
     internal static void RaiseVenueSetupQuestUpdated(VenueSetupQuestArgs a) => Raise(nameof(VenueSetupQuestUpdated), VenueSetupQuestUpdated, a);
 
-    /// <summary>The player was caught breaking curfew (by a camera or drone).</summary>
-    public static event Action PlayerCaught;
+    /// <summary>
+    /// The player was caught: awareness reached 1. The game shows a popup, raises the district's
+    /// security level, and locks furniture against theft for the rest of the curfew.
+    /// </summary>
+    public static event Action<PlayerCaughtArgs> PlayerCaught;
     /// <summary>Security awareness of the player rose (being seen during curfew, theft).</summary>
     public static event Action<AwarenessArgs> AwarenessIncreased;
     /// <summary>A district's security level changed.</summary>
@@ -189,7 +192,7 @@ public static partial class GameEvents
     public static event Action<ApartmentArgs> ApartmentLeft;
     /// <summary>A venue was bought, sold, given or rented, by the player or an NPC owner.</summary>
     public static event Action<VenueOwnerArgs> VenueOwnerChanged;
-    internal static void RaisePlayerCaught() => Raise(nameof(PlayerCaught), PlayerCaught);
+    internal static void RaisePlayerCaught(PlayerCaughtArgs a) => Raise(nameof(PlayerCaught), PlayerCaught, a);
     internal static void RaiseAwarenessIncreased(AwarenessArgs a) => Raise(nameof(AwarenessIncreased), AwarenessIncreased, a);
     internal static void RaiseSecurityLevelChanged(SecurityLevelArgs a) => Raise(nameof(SecurityLevelChanged), SecurityLevelChanged, a);
     internal static void RaiseCurfewStarted() => Raise(nameof(CurfewStarted), CurfewStarted);
@@ -212,14 +215,14 @@ public static partial class GameEvents
     public static event Action<StaffArgs> StaffHired;
     /// <summary>Staff were fired from a venue.</summary>
     public static event Action<StaffArgs> StaffFired;
-    /// <summary>A venue paid a staff member's wage.</summary>
+    /// <summary>A venue's wage payment to a staff member came due (Paid says whether it went through).</summary>
     public static event Action<StaffPaidArgs> StaffPaid;
     /// <summary>A person gained experience in a skill.</summary>
     public static event Action<StaffSkillArgs> StaffSkillGained;
     /// <summary>A staff member's roles (serving, cooking, cleaning, managing) were changed.</summary>
     public static event Action<StaffRolesArgs> StaffRolesChanged;
     /// <summary>A venue's staff working hours changed.</summary>
-    public static event Action<VenueArgs> StaffHoursChanged;
+    public static event Action<StaffHoursArgs> StaffHoursChanged;
     /// <summary>The player stole furniture from a venue they don't own (during curfew).</summary>
     public static event Action<TheftArgs> TheftCommitted;
     /// <summary>The player disabled a security camera.</summary>
@@ -245,7 +248,7 @@ public static partial class GameEvents
     internal static void RaiseStaffPaid(StaffPaidArgs x) => Raise(nameof(StaffPaid), StaffPaid, x);
     internal static void RaiseStaffSkillGained(StaffSkillArgs x) => Raise(nameof(StaffSkillGained), StaffSkillGained, x);
     internal static void RaiseStaffRolesChanged(StaffRolesArgs x) => Raise(nameof(StaffRolesChanged), StaffRolesChanged, x);
-    internal static void RaiseStaffHoursChanged(VenueArgs x) => Raise(nameof(StaffHoursChanged), StaffHoursChanged, x);
+    internal static void RaiseStaffHoursChanged(StaffHoursArgs x) => Raise(nameof(StaffHoursChanged), StaffHoursChanged, x);
     internal static void RaiseTheftCommitted(TheftArgs x) => Raise(nameof(TheftCommitted), TheftCommitted, x);
     internal static void RaiseCameraDisabled(CameraArgs x) => Raise(nameof(CameraDisabled), CameraDisabled, x);
     internal static void RaiseBoatBoarded() => Raise(nameof(BoatBoarded), BoatBoarded);
@@ -256,6 +259,21 @@ public static partial class GameEvents
     internal static void RaiseBoatRefueled(BoatRefueledArgs x) => Raise(nameof(BoatRefueled), BoatRefueled, x);
     internal static void RaiseVenueOpened(VenueArgs x) => Raise(nameof(VenueOpened), VenueOpened, x);
     internal static void RaiseVenueClosed(VenueArgs x) => Raise(nameof(VenueClosed), VenueClosed, x);
+
+    /// <summary>The player picked up a piece of furniture (or another holdable object) into their hands.</summary>
+    public static event Action<FurnitureArgs> FurniturePickedUp;
+    internal static void RaiseFurniturePickedUp(FurnitureArgs x) => Raise(nameof(FurniturePickedUp), FurniturePickedUp, x);
+
+    /// <summary>
+    /// The game day ended: curfew began (02:00) or the player slept. Rent is collected and the
+    /// end-of-day summary follows. The next day starts at 08:00 (<see cref="DayStarted"/>).
+    /// </summary>
+    public static event Action<DayEndedArgs> DayEnded;
+    internal static void RaiseDayEnded(DayEndedArgs x) => Raise(nameof(DayEnded), DayEnded, x);
+
+    /// <summary>The end-of-day summary screen opened (venues, finances, debt, progress).</summary>
+    public static event Action EndOfDayShown;
+    internal static void RaiseEndOfDayShown() => Raise(nameof(EndOfDayShown), EndOfDayShown);
 
     internal static void RaiseMoneyChanged(MoneyChangedArgs a) => Raise(nameof(MoneyChanged), MoneyChanged, a);
 

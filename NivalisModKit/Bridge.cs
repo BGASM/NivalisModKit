@@ -52,6 +52,11 @@ internal static class Bridge
         ["/items"] = ("All item names; ?name= to look one up", q => ItemList(q)),
         ["/recipes"] = ("Recipes with inputs; ?known=1 for discovered ones", q => RecipeList(q.ContainsKey("known"))),
         ["/restock"] = ("Per owned venue: the shopping list's low ingredients and active venue setup quest objectives", _ => Restock()),
+        ["/security"] = ("Curfew, awareness, caught, security level", _ => new
+        {
+            curfew = Security.IsCurfew, securityActive = Security.IsSecurityActive,
+            awareness = Security.Awareness, caught = Security.IsCaught, level = Security.Level,
+        }),
         ["/districts"] = ("Districts, with hops from the current one", _ => Districts()),
         ["/object"] = ("?type=Full.Type.Name: fields and properties of the first live instance", q => Inspect(q)),
     };
@@ -224,6 +229,8 @@ internal static class Bridge
             venue = Venues.NameOf(a),
             playerOwned = Try(() => a.PlayerOwned),
             district = World.NameOf(Venues.DistrictOf(a)),
+            isOpen = Try(() => a.IsOpen?.Value ?? false),
+            inStaffHours = Try(() => a.IsInStaffHours),
         }).ToArray();
 
     static object VendorList(Dictionary<string, string> query)
