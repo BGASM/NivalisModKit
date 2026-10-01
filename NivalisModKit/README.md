@@ -93,6 +93,23 @@ Purchasing.OrderQuantity += ctx =>
 - Several handlers run in the order added, each seeing the previous one's result.
 - `Purchasing.Decision` reports each offer as bought, skipped or failed. Subscribing to it alone doesn't turn the pipeline on.
 
+### Pricing
+
+Change what vendors charge and pay. The result is both shown in the shop and actually charged,
+for the player and for venue managers. Installed only when a mod subscribes.
+
+```csharp
+// Chicken 20% cheaper at every vendor.
+var chicken = Items.ByName("Chicken");
+Pricing.BuyPrice += ctx =>
+{
+    if (ctx.Item?.Pointer == chicken?.Pointer) ctx.Price = (int)(ctx.Price * 0.8f);
+};
+```
+
+`PriceContext` has `Vendor`, `Item`, `Freshness`, `GamePrice` and the settable `Price`. Prices and money are whole numbers in hundredths: 611 shows in game as 6.11. The shop's offer list and the amount charged use the adjusted price; the shop's Bonuses breakdown panel computes its own figures and still shows the game's price. Prices are
+looked up very often (shop screens, manager restocks), so keep handlers cheap: cache item lookups.
+
 ### Queries
 
 Read-only lookups. Each returns a fresh list you can keep, or empty/null outside gameplay. Call them from the main thread: `Load`, kit event handlers, or Unity callbacks.
@@ -101,7 +118,7 @@ Read-only lookups. Each returns a fresh list you can keep, or empty/null outside
 |---|---|
 | `GameTime` | `Day`, `Hour`, `Minute`, `TotalHours`, `DayOfWeek`. The day turns over at 08:00. |
 | `Venues` | `All`, `PlayerOwned`, `InDistrict(district)`, `DistrictOf(area)`, `NameOf(area)`, `Stock(area, item)` |
-| `Economy` | `PlayerMoney`, `Vendors`, `VendorsFor(item)`, `Offers`, `Price`, `SellPrice`, `Stock(vendor, item)`, `DistrictOf(vendor)`, `IsUnlocked(vendor)` |
+| `Economy` | (amounts in hundredths: 37526 = 375.26 in game) `PlayerMoney`, `Vendors`, `VendorsFor(item)`, `Offers`, `Price`, `SellPrice`, `Stock(vendor, item)`, `DistrictOf(vendor)`, `IsUnlocked(vendor)` |
 | `Items` | `All`, `ByName("chicken")` (ignores case, spaces, underscores), `ById(guid)`, `NameOf(item)` |
 | `Recipes` | `All`, `Known`, `ForDish(item)`, `InputsOf(recipe)` (item and amount per serving), `OutputOf(recipe)` |
 | `Quests` | `Active`, `Completed`, `Pinned` |

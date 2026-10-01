@@ -51,6 +51,7 @@ internal static class Bridge
         ["/vendors"] = ("?item=Name: vendors selling it, with price, stock, district, hops from you", q => VendorList(q)),
         ["/items"] = ("All item names; ?name= to look one up", q => ItemList(q)),
         ["/recipes"] = ("Recipes with inputs; ?known=1 for discovered ones", q => RecipeList(q.ContainsKey("known"))),
+        ["/restock"] = ("Per owned venue: the shopping list's low ingredients and active venue setup quest objectives", _ => Restock()),
         ["/districts"] = ("Districts, with hops from the current one", _ => Districts()),
         ["/object"] = ("?type=Full.Type.Name: fields and properties of the first live instance", q => Inspect(q)),
     };
@@ -265,6 +266,70 @@ internal static class Bridge
             dish = Items.NameOf(Recipes.OutputOf(r)),
             inputs = Recipes.InputsOf(r).Select(i => $"{Items.NameOf(i.Item)} x{i.Amount}").ToArray(),
         }).OrderBy(r => r.dish).ToArray();
+
+    // The game's runtime class name of an IL2CPP object (the interop wrapper type may be a base class).
+    static string ClassName(Il2CppSystem.Object o)
+    {
+        try
+        {
+            if (o == null) return null;
+            IntPtr klass = IL2CPP.il2cpp_object_get_class(o.Pointer);
+            return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(IL2CPP.il2cpp_class_get_name(klass));
+        }
+        catch { return null; }
+    }
+
+    static object Restock()
+    {
+        var low = new Dictionary<string, object>();
+        try
+        {
+            if (Singleton<ShoppingListManager>.InstanceExist(out var sl) && sl.VenuesLowOnIngredientsMap != null)
+                foreach (var kv in sl.VenuesLowOnIngredientsMap)
+                {
+                    var items = new List<string>();
+                    if (kv.Value?.LowIngredients != null)
+                        foreach (var li in kv.Value.LowIngredients)
+                            items.Add($"{Items.NameOf(li.Key)} {li.Value.amount}/{li.Value.demand}");
+                    low[Name(kv.Key) ?? "?"] = items.OrderBy(i => i).ToArray();
+                }
+        }
+        catch (Exception e) { low["error"] = e.Message; }
+
+        var quests = new List<object>();
+        try
+        {
+            if (Singleton<Nivalis.VenueSupplyQuest.VenueSetupManager>.InstanceExist(out var vsm) && vsm._activeSetupQuests != null)
+                foreach (var kv in vsm._activeSetupQuests)
+                {
+                    var q = kv.Value;
+                    object Objectives(Il2CppSystem.Collections.Generic.List<Nivalis.VenueSupplyQuest.VenueSupplyObjective.RuntimeTracker> list)
+                    {
+                        var r = new List<object>();
+                        if (list == null) return r;
+                        foreach (var t in list)
+                            r.Add(new
+                            {
+                                type = ClassName(Try(() => t.Objective)),
+                                state = Try(() => t.State.ToString()),
+                                text = Try(() => t.StateEntry?.GetText()),
+                            });
+                        return r;
+                    }
+                    quests.Add(new
+                    {
+                        venue = Name(kv.Key),
+                        title = Try(() => q?.Title),
+                        state = Try(() => q?.State.ToString()),
+                        active = Objectives(Try(() => q?._activeObjectives)),
+                        completed = Objectives(Try(() => q?._completedObjectives)),
+                    });
+                }
+        }
+        catch (Exception e) { quests.Add(new { error = e.Message }); }
+
+        return new { lowIngredients = low, setupQuests = quests };
+    }
 
     static object Districts()
     {

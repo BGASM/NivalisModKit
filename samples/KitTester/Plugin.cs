@@ -55,6 +55,10 @@ public class Plugin : BasePlugin
     static int dishes, sales, deliveries, salesTotal;
 
     static ConfigEntry<string> snapshotItem;
+    static ConfigEntry<string> priceItem;
+    static ConfigEntry<float> priceMultiplier;
+    static string priceItemName;
+    static IntPtr priceItemPtr;   // cached: price lookups happen constantly
     static readonly ModSaveData save = SaveData.For("bgasm.nivalis.kittester");
     static int hourUpdates;
     static bool worldChecked;
@@ -69,6 +73,22 @@ public class Plugin : BasePlugin
         // runs (live config reload) to print a snapshot. It resets itself to false.
         snapshotItem = Config.Bind("Snapshot", "Item", "Chicken", "Item to list vendors for in the snapshot.");
         var print = Config.Bind("Snapshot", "Print", false, "Set to true to print a snapshot of the query API.");
+
+        // Phase 8 tier 1 check: change Multiplier while the game runs; the item's price at every
+        // vendor follows (check with tools/bridge.sh "vendors?item=Chicken").
+        priceItem = Config.Bind("Pricing", "Item", "Chicken", "Item whose vendor prices are multiplied.");
+        priceMultiplier = Config.Bind("Pricing", "Multiplier", 1.0f, "Price multiplier for that item. 1 = unchanged.");
+        Pricing.BuyPrice += ctx =>
+        {
+            if (priceMultiplier.Value == 1f || ctx.Item == null) return;
+            if (priceItemPtr == IntPtr.Zero || priceItemName != priceItem.Value)
+            {
+                priceItemName = priceItem.Value;
+                priceItemPtr = Items.ByName(priceItemName)?.Pointer ?? IntPtr.Zero;
+            }
+            if (ctx.Item.Pointer == priceItemPtr)
+                ctx.Price = (int)Math.Round(ctx.Price * priceMultiplier.Value);
+        };
         print.SettingChanged += (_, _) =>
         {
             if (!print.Value) return;
