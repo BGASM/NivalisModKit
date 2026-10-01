@@ -49,6 +49,40 @@ public class Plugin : BasePlugin
         nameof(GameEvents.QuestMarkerAdded),
         nameof(GameEvents.QuestMarkerRemoved),
         nameof(GameEvents.VenueSetupQuestUpdated),
+        nameof(GameEvents.PlayerCaught),
+        nameof(GameEvents.AwarenessIncreased),
+        nameof(GameEvents.SecurityLevelChanged),
+        nameof(GameEvents.CurfewStarted),
+        nameof(GameEvents.CurfewEnded),
+        nameof(GameEvents.CurfewWarning),
+        nameof(GameEvents.FishCaught),
+        nameof(GameEvents.FishDiscovered),
+        nameof(GameEvents.CropPlanted),
+        nameof(GameEvents.CropHarvested),
+        nameof(GameEvents.PropertyOwnerChanged),
+        nameof(GameEvents.RentStarted),
+        nameof(GameEvents.RentStopped),
+        nameof(GameEvents.FurniturePlaced),
+        nameof(GameEvents.FurnitureStored),
+        nameof(GameEvents.ApartmentEntered),
+        nameof(GameEvents.ApartmentLeft),
+        nameof(GameEvents.VenueOwnerChanged),
+        nameof(GameEvents.StaffHired),
+        nameof(GameEvents.StaffFired),
+        nameof(GameEvents.StaffPaid),
+        nameof(GameEvents.StaffSkillGained),
+        nameof(GameEvents.StaffRolesChanged),
+        nameof(GameEvents.StaffHoursChanged),
+        nameof(GameEvents.TheftCommitted),
+        nameof(GameEvents.CameraDisabled),
+        nameof(GameEvents.BoatBoarded),
+        nameof(GameEvents.BoatLeft),
+        nameof(GameEvents.BoatDocked),
+        nameof(GameEvents.BoatUndocked),
+        nameof(GameEvents.BoatTravel),
+        nameof(GameEvents.BoatRefueled),
+        nameof(GameEvents.VenueOpened),
+        nameof(GameEvents.VenueClosed),
     };
 
     // City-wide counts since the last HourStarted; the player's venues are logged line by line.
@@ -61,6 +95,7 @@ public class Plugin : BasePlugin
     static IntPtr priceItemPtr;   // cached: price lookups happen constantly
     static readonly ModSaveData save = SaveData.For("bgasm.nivalis.kittester");
     static int hourUpdates;
+    static int skillGains;   // skill gains are frequent; log the first few
     static bool worldChecked;
     static bool pipelineChecked;
     static int bought, skipped, failed;
@@ -170,6 +205,54 @@ public class Plugin : BasePlugin
         GameEvents.QuestMarkerAdded += a => L.LogInfo($"QuestMarkerAdded: {a.PointId} scene {a.SceneIndex} for {a.Quest.Title}");
         GameEvents.QuestMarkerRemoved += a => L.LogInfo($"QuestMarkerRemoved: {a.PointId} scene {a.SceneIndex} for {a.Quest.Title}");
         GameEvents.VenueSetupQuestUpdated += a => L.LogInfo($"VenueSetupQuestUpdated: {a.Title} state={a.State}");
+        // Phase 9 batch (a)
+        GameEvents.PlayerCaught += () => L.LogInfo("PlayerCaught");
+        GameEvents.AwarenessIncreased += a => L.LogInfo($"AwarenessIncreased: +{a.Delta:0.##} -> {a.Awareness:0.##}");
+        GameEvents.SecurityLevelChanged += a => L.LogInfo($"SecurityLevelChanged: {World.NameOf(a.District)} -> {a.Level}");
+        GameEvents.CurfewStarted += () => L.LogInfo($"CurfewStarted at {GameTime.Hour:00}:{GameTime.Minute:00}");
+        GameEvents.CurfewEnded += () => L.LogInfo($"CurfewEnded at {GameTime.Hour:00}:{GameTime.Minute:00}");
+        GameEvents.CurfewWarning += () => L.LogInfo($"CurfewWarning at {GameTime.Hour:00}:{GameTime.Minute:00}");
+        GameEvents.FishCaught += a => L.LogInfo($"FishCaught: {NameOf(a.Item)}");
+        GameEvents.FishDiscovered += a => L.LogInfo($"FishDiscovered: {NameOf(a.Item)}");
+        GameEvents.CropPlanted += a => L.LogInfo($"CropPlanted: {NameOf(a.Item)}");
+        GameEvents.CropHarvested += a => L.LogInfo($"CropHarvested: {NameOf(a.Plant)} firstTime={a.FirstTime}");
+        GameEvents.PropertyOwnerChanged += a => L.LogInfo($"PropertyOwnerChanged: {NameOf(a.Property)} playerOwned={a.PlayerOwned}");
+        GameEvents.RentStarted += a => L.LogInfo($"RentStarted: {NameOf(a.Property)}");
+        GameEvents.RentStopped += a => L.LogInfo($"RentStopped: {NameOf(a.Property)}");
+        GameEvents.FurniturePlaced += a => L.LogInfo($"FurniturePlaced: {NameOf(a.Entity)}");
+        GameEvents.FurnitureStored += a => L.LogInfo($"FurnitureStored: {NameOf(a.Entity)}");
+        GameEvents.ApartmentEntered += a => L.LogInfo($"ApartmentEntered: {NameOf(a.Apartment)}");
+        GameEvents.ApartmentLeft += a => L.LogInfo($"ApartmentLeft: {NameOf(a.Apartment)}");
+        GameEvents.VenueOwnerChanged += a => L.LogInfo($"VenueOwnerChanged: {NameOf(a.Venue)} playerOwned={a.PlayerOwned}");
+        // Phase 9 batch (b)
+        GameEvents.StaffHired += a => L.LogInfo($"StaffHired: {NameOf(a.Person)} at {NameOf(a.Venue)}");
+        GameEvents.StaffFired += a => L.LogInfo($"StaffFired: {NameOf(a.Person)} at {NameOf(a.Venue)}");
+        GameEvents.StaffPaid += a => { if (a.Area != null && a.Area.PlayerOwned) L.LogInfo($"StaffPaid: {NameOf(a.Person)} {a.Wage:0}"); };
+        GameEvents.StaffSkillGained += a => { if (++skillGains <= 5) L.LogInfo($"StaffSkillGained: {NameOf(a.Person)} {NameOf(a.Skill)} +{a.Amount:0.###}"); };
+        GameEvents.StaffRolesChanged += a => L.LogInfo($"StaffRolesChanged: {NameOf(a.Venue)} -> {a.Roles}");
+        GameEvents.StaffHoursChanged += a => L.LogInfo($"StaffHoursChanged: {NameOf(a.Area?.Venue)}");
+        GameEvents.TheftCommitted += a => L.LogInfo($"TheftCommitted: {NameOf(a.Furniture)} at {NameOf(a.Area?.Venue)}");
+        GameEvents.CameraDisabled += a => L.LogInfo($"CameraDisabled: {NameOf(a.Camera)}");
+        GameEvents.BoatBoarded += () => L.LogInfo("BoatBoarded");
+        GameEvents.BoatLeft += () => L.LogInfo("BoatLeft");
+        GameEvents.BoatDocked += a => L.LogInfo($"BoatDocked: {NameOf(a.Dock)}");
+        GameEvents.BoatUndocked += a => L.LogInfo($"BoatUndocked: {NameOf(a.Dock)}");
+        GameEvents.BoatTravel += a => L.LogInfo($"BoatTravel: to {NameOf(a.Destination)}");
+        GameEvents.BoatRefueled += a => L.LogInfo($"BoatRefueled: +{a.FuelAdded:0.##} -> {a.Fuel:0.##}");
+        GameEvents.VenueOpened += a => { if (a.Area != null && a.Area.PlayerOwned) L.LogInfo($"VenueOpened: {NameOf(a.Area.Venue)} at {GameTime.Hour:00}:00"); };
+        GameEvents.VenueClosed += a => { if (a.Area != null && a.Area.PlayerOwned) L.LogInfo($"VenueClosed: {NameOf(a.Area.Venue)} at {GameTime.Hour:00}:00"); };
+
+        // Phase 9 batch (c): tuning multipliers, live-reloadable. 1 = unchanged (handler does nothing).
+        var fishMul = Config.Bind("Tuning", "FishYieldMultiplier", 1f, "Multiply fish yield.");
+        var cropMul = Config.Bind("Tuning", "CropYieldMultiplier", 1f, "Multiply crop yield.");
+        var growMul = Config.Bind("Tuning", "CropGrowthMultiplier", 1f, "Multiply crop growth speed.");
+        var propMul = Config.Bind("Tuning", "PropertyPriceMultiplier", 1f, "Multiply property purchase prices.");
+        var awareMul = Config.Bind("Tuning", "AwarenessGainMultiplier", 1f, "Multiply security awareness gains (0 = never noticed).");
+        Tuning.FishYield += c => { if (fishMul.Value != 1f) { c.Yield = (int)Math.Round(c.Yield * fishMul.Value); L.LogInfo($"Tuning.FishYield: {NameOf(c.Item)} {c.GameYield} -> {c.Yield}"); } };
+        Tuning.CropYield += c => { if (cropMul.Value != 1f) { c.Yield = (int)Math.Round(c.Yield * cropMul.Value); L.LogInfo($"Tuning.CropYield: {NameOf(c.Plant)} {c.GameYield} -> {c.Yield}"); } };
+        Tuning.CropGrowthSpeed += c => { if (growMul.Value != 1f) c.Speed *= growMul.Value; };
+        Tuning.PropertyPrice += c => { if (propMul.Value != 1f) c.Price = (int)Math.Round(c.Price * propMul.Value); };
+        Tuning.AwarenessGain += c => { if (awareMul.Value != 1f) { c.Amount *= awareMul.Value; L.LogInfo($"Tuning.AwarenessGain: {c.GameAmount:0.##} -> {c.Amount:0.##}"); } };
         GameEvents.MoneyChanged += a => L.LogInfo($"MoneyChanged: {a.Old} -> {a.New} ({a.Delta:+#;-#;0})");
         GameEvents.ShopOpened += a => L.LogInfo($"ShopOpened: {NameOf(a.Vendor)}");
         GameEvents.ShopClosed += a => L.LogInfo($"ShopClosed: {NameOf(a.Vendor)}");

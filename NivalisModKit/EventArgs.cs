@@ -383,3 +383,258 @@ public sealed class VenueSetupQuestArgs
         try { State = setupQuest?.State ?? QuestState.None; } catch { }
     }
 }
+
+/// <summary>Arguments for <see cref="GameEvents.AwarenessIncreased"/>.</summary>
+public sealed class AwarenessArgs
+{
+    /// <summary>How much awareness rose.</summary>
+    public float Delta { get; }
+
+    /// <summary>Awareness after the rise.</summary>
+    public float Awareness { get; }
+
+    internal AwarenessArgs(float delta, float awareness)
+    {
+        Delta = delta;
+        Awareness = awareness;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.SecurityLevelChanged"/>.</summary>
+public sealed class SecurityLevelArgs
+{
+    /// <summary>The district.</summary>
+    public WorldLocation District { get; }
+
+    /// <summary>Its new security level.</summary>
+    public int Level { get; }
+
+    internal SecurityLevelArgs(WorldLocation district, int level)
+    {
+        District = district;
+        Level = level;
+    }
+}
+
+/// <summary>Arguments for events about one item type (fish caught, crop planted).</summary>
+public sealed class ItemArgs
+{
+    /// <summary>The item.</summary>
+    public ItemType Item { get; }
+
+    internal ItemArgs(ItemType item) => Item = item;
+}
+
+/// <summary>Arguments for <see cref="GameEvents.CropHarvested"/>.</summary>
+public sealed class CropHarvestedArgs
+{
+    /// <summary>The plant harvested.</summary>
+    public ItemType Plant { get; }
+
+    /// <summary>True the first time the player harvests this plant.</summary>
+    public bool FirstTime { get; }
+
+    internal CropHarvestedArgs(ItemType plant, bool firstTime)
+    {
+        Plant = plant;
+        FirstTime = firstTime;
+    }
+}
+
+/// <summary>Arguments for the property events.</summary>
+public sealed class PropertyArgs
+{
+    /// <summary>The property: a Venue, Apartment or greenhouse, all BaseProperty.</summary>
+    public BaseProperty Property { get; }
+
+    /// <summary>True if the player owns or rents it now.</summary>
+    public bool PlayerOwned { get; }
+
+    internal PropertyArgs(BaseProperty property)
+    {
+        Property = property;
+        try { PlayerOwned = property != null && property.PlayerOwned; } catch { }
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.FurniturePlaced"/> and <see cref="GameEvents.FurnitureStored"/>.</summary>
+public sealed class FurnitureArgs
+{
+    /// <summary>The placed or stored object.</summary>
+    public HoldableEntity Entity { get; }
+
+    internal FurnitureArgs(HoldableEntity entity) => Entity = entity;
+}
+
+/// <summary>Arguments for <see cref="GameEvents.ApartmentEntered"/> and <see cref="GameEvents.ApartmentLeft"/>.</summary>
+public sealed class ApartmentArgs
+{
+    /// <summary>The apartment's scene controller.</summary>
+    public Nivalis.Apartment.ApartmentController Apartment { get; }
+
+    internal ApartmentArgs(Nivalis.Apartment.ApartmentController apartment) => Apartment = apartment;
+}
+
+/// <summary>Arguments for <see cref="GameEvents.VenueOwnerChanged"/>.</summary>
+public sealed class VenueOwnerArgs
+{
+    /// <summary>The venue.</summary>
+    public Venue Venue { get; }
+
+    /// <summary>Its live data (staff, storage, menu), or null.</summary>
+    public VenueAreaGhost Area { get; }
+
+    /// <summary>True if the player owns or rents it now.</summary>
+    public bool PlayerOwned { get; }
+
+    internal VenueOwnerArgs(Venue venue)
+    {
+        Venue = venue;
+        try { Area = venue?.RuntimeData; } catch { }
+        try { PlayerOwned = venue != null && venue.PlayerOwned; } catch { }
+    }
+}
+
+/// <summary>Arguments for events about one venue.</summary>
+public sealed class VenueArgs
+{
+    /// <summary>The venue's live data.</summary>
+    public VenueAreaGhost Area { get; }
+
+    internal VenueArgs(VenueAreaGhost area) => Area = area;
+}
+
+/// <summary>Arguments for <see cref="GameEvents.StaffHired"/> and <see cref="GameEvents.StaffFired"/>.</summary>
+public sealed class StaffArgs
+{
+    /// <summary>The venue.</summary>
+    public Venue Venue { get; }
+
+    /// <summary>The staff member.</summary>
+    public Person Person { get; }
+
+    internal StaffArgs(Venue venue, Person person)
+    {
+        Venue = venue;
+        Person = person;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.StaffPaid"/>.</summary>
+public sealed class StaffPaidArgs
+{
+    /// <summary>The venue paying.</summary>
+    public VenueAreaGhost Area { get; }
+
+    /// <summary>The staff member.</summary>
+    public Person Person { get; }
+
+    /// <summary>The wage paid (RuntimePersonData.LastPaidWage), in hundredths.</summary>
+    public float Wage { get; }
+
+    internal StaffPaidArgs(VenueAreaGhost area, Person person, float wage)
+    {
+        Area = area;
+        Person = person;
+        Wage = wage;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.StaffSkillGained"/>.</summary>
+public sealed class StaffSkillArgs
+{
+    /// <summary>The person.</summary>
+    public Person Person { get; }
+
+    /// <summary>The skill.</summary>
+    public Nivalis.SkillSystem.SkillDefinition Skill { get; }
+
+    /// <summary>Experience gained.</summary>
+    public float Amount { get; }
+
+    internal StaffSkillArgs(Person person, Nivalis.SkillSystem.SkillDefinition skill, float amount)
+    {
+        Person = person;
+        Skill = skill;
+        Amount = amount;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.StaffRolesChanged"/>.</summary>
+public sealed class StaffRolesArgs
+{
+    /// <summary>The venue.</summary>
+    public Venue Venue { get; }
+
+    /// <summary>The staff member's live data.</summary>
+    public RuntimePersonData Person { get; }
+
+    /// <summary>The new roles (flags: Serving, Cooking, Cleaning, Managing).</summary>
+    public VenueTasks Roles { get; }
+
+    internal StaffRolesArgs(Venue venue, RuntimePersonData person, VenueTasks roles)
+    {
+        Venue = venue;
+        Person = person;
+        Roles = roles;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.TheftCommitted"/>.</summary>
+public sealed class TheftArgs
+{
+    /// <summary>The venue stolen from.</summary>
+    public VenueAreaGhost Area { get; }
+
+    /// <summary>The stolen furniture.</summary>
+    public Nivalis.GhostSystem.Ghost Furniture { get; }
+
+    internal TheftArgs(VenueAreaGhost area, Nivalis.GhostSystem.Ghost furniture)
+    {
+        Area = area;
+        Furniture = furniture;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.CameraDisabled"/>.</summary>
+public sealed class CameraArgs
+{
+    /// <summary>The camera.</summary>
+    public SecurityCamera Camera { get; }
+
+    internal CameraArgs(SecurityCamera camera) => Camera = camera;
+}
+
+/// <summary>Arguments for <see cref="GameEvents.BoatDocked"/> and <see cref="GameEvents.BoatUndocked"/>.</summary>
+public sealed class BoatDockArgs
+{
+    /// <summary>The dock.</summary>
+    public Nivalis.Boat.BoatDock Dock { get; }
+
+    internal BoatDockArgs(Nivalis.Boat.BoatDock dock) => Dock = dock;
+}
+
+/// <summary>Arguments for <see cref="GameEvents.BoatTravel"/>.</summary>
+public sealed class BoatTravelArgs
+{
+    /// <summary>The destination portal.</summary>
+    public PortalKey Destination { get; }
+
+    internal BoatTravelArgs(PortalKey destination) => Destination = destination;
+}
+
+/// <summary>Arguments for <see cref="GameEvents.BoatRefueled"/>.</summary>
+public sealed class BoatRefueledArgs
+{
+    /// <summary>Fuel added.</summary>
+    public float FuelAdded { get; }
+
+    /// <summary>Fuel now.</summary>
+    public float Fuel { get; }
+
+    internal BoatRefueledArgs(float added, float fuel)
+    {
+        FuelAdded = added;
+        Fuel = fuel;
+    }
+}

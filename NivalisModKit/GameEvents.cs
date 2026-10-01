@@ -153,6 +153,110 @@ public static partial class GameEvents
     internal static void RaiseQuestMarkerRemoved(QuestMarkerArgs a) => Raise(nameof(QuestMarkerRemoved), QuestMarkerRemoved, a);
     internal static void RaiseVenueSetupQuestUpdated(VenueSetupQuestArgs a) => Raise(nameof(VenueSetupQuestUpdated), VenueSetupQuestUpdated, a);
 
+    /// <summary>The player was caught breaking curfew (by a camera or drone).</summary>
+    public static event Action PlayerCaught;
+    /// <summary>Security awareness of the player rose (being seen during curfew, theft).</summary>
+    public static event Action<AwarenessArgs> AwarenessIncreased;
+    /// <summary>A district's security level changed.</summary>
+    public static event Action<SecurityLevelArgs> SecurityLevelChanged;
+    /// <summary>Curfew began (02:00). Cameras and drones switch on.</summary>
+    public static event Action CurfewStarted;
+    /// <summary>Curfew ended (08:00).</summary>
+    public static event Action CurfewEnded;
+    /// <summary>The curfew warning period began (an hour before curfew).</summary>
+    public static event Action CurfewWarning;
+    /// <summary>A fish (or other catch) went into the player's inventory.</summary>
+    public static event Action<ItemArgs> FishCaught;
+    /// <summary>The player caught a fish species for the first time.</summary>
+    public static event Action<ItemArgs> FishDiscovered;
+    /// <summary>A crop was planted in a greenhouse module. Item is the plant.</summary>
+    public static event Action<ItemArgs> CropPlanted;
+    /// <summary>A crop was harvested.</summary>
+    public static event Action<CropHarvestedArgs> CropHarvested;
+    /// <summary>Any property (venue, apartment, greenhouse) was bought, sold, rented or given up.</summary>
+    public static event Action<PropertyArgs> PropertyOwnerChanged;
+    /// <summary>A property started being rented.</summary>
+    public static event Action<PropertyArgs> RentStarted;
+    /// <summary>A property stopped being rented.</summary>
+    public static event Action<PropertyArgs> RentStopped;
+    /// <summary>The player placed a piece of furniture or another holdable object.</summary>
+    public static event Action<FurnitureArgs> FurniturePlaced;
+    /// <summary>The player picked up and stored a piece of furniture or another holdable object.</summary>
+    public static event Action<FurnitureArgs> FurnitureStored;
+    /// <summary>The player entered an apartment.</summary>
+    public static event Action<ApartmentArgs> ApartmentEntered;
+    /// <summary>The player left an apartment.</summary>
+    public static event Action<ApartmentArgs> ApartmentLeft;
+    /// <summary>A venue was bought, sold, given or rented, by the player or an NPC owner.</summary>
+    public static event Action<VenueOwnerArgs> VenueOwnerChanged;
+    internal static void RaisePlayerCaught() => Raise(nameof(PlayerCaught), PlayerCaught);
+    internal static void RaiseAwarenessIncreased(AwarenessArgs a) => Raise(nameof(AwarenessIncreased), AwarenessIncreased, a);
+    internal static void RaiseSecurityLevelChanged(SecurityLevelArgs a) => Raise(nameof(SecurityLevelChanged), SecurityLevelChanged, a);
+    internal static void RaiseCurfewStarted() => Raise(nameof(CurfewStarted), CurfewStarted);
+    internal static void RaiseCurfewEnded() => Raise(nameof(CurfewEnded), CurfewEnded);
+    internal static void RaiseCurfewWarning() => Raise(nameof(CurfewWarning), CurfewWarning);
+    internal static void RaiseFishCaught(ItemArgs a) => Raise(nameof(FishCaught), FishCaught, a);
+    internal static void RaiseFishDiscovered(ItemArgs a) => Raise(nameof(FishDiscovered), FishDiscovered, a);
+    internal static void RaiseCropPlanted(ItemArgs a) => Raise(nameof(CropPlanted), CropPlanted, a);
+    internal static void RaiseCropHarvested(CropHarvestedArgs a) => Raise(nameof(CropHarvested), CropHarvested, a);
+    internal static void RaisePropertyOwnerChanged(PropertyArgs a) => Raise(nameof(PropertyOwnerChanged), PropertyOwnerChanged, a);
+    internal static void RaiseRentStarted(PropertyArgs a) => Raise(nameof(RentStarted), RentStarted, a);
+    internal static void RaiseRentStopped(PropertyArgs a) => Raise(nameof(RentStopped), RentStopped, a);
+    internal static void RaiseFurniturePlaced(FurnitureArgs a) => Raise(nameof(FurniturePlaced), FurniturePlaced, a);
+    internal static void RaiseFurnitureStored(FurnitureArgs a) => Raise(nameof(FurnitureStored), FurnitureStored, a);
+    internal static void RaiseApartmentEntered(ApartmentArgs a) => Raise(nameof(ApartmentEntered), ApartmentEntered, a);
+    internal static void RaiseApartmentLeft(ApartmentArgs a) => Raise(nameof(ApartmentLeft), ApartmentLeft, a);
+    internal static void RaiseVenueOwnerChanged(VenueOwnerArgs a) => Raise(nameof(VenueOwnerChanged), VenueOwnerChanged, a);
+
+    /// <summary>Staff were hired at a venue.</summary>
+    public static event Action<StaffArgs> StaffHired;
+    /// <summary>Staff were fired from a venue.</summary>
+    public static event Action<StaffArgs> StaffFired;
+    /// <summary>A venue paid a staff member's wage.</summary>
+    public static event Action<StaffPaidArgs> StaffPaid;
+    /// <summary>A person gained experience in a skill.</summary>
+    public static event Action<StaffSkillArgs> StaffSkillGained;
+    /// <summary>A staff member's roles (serving, cooking, cleaning, managing) were changed.</summary>
+    public static event Action<StaffRolesArgs> StaffRolesChanged;
+    /// <summary>A venue's staff working hours changed.</summary>
+    public static event Action<VenueArgs> StaffHoursChanged;
+    /// <summary>The player stole furniture from a venue they don't own (during curfew).</summary>
+    public static event Action<TheftArgs> TheftCommitted;
+    /// <summary>The player disabled a security camera.</summary>
+    public static event Action<CameraArgs> CameraDisabled;
+    /// <summary>The player took the boat's helm.</summary>
+    public static event Action BoatBoarded;
+    /// <summary>The player left the boat's helm.</summary>
+    public static event Action BoatLeft;
+    /// <summary>The boat docked.</summary>
+    public static event Action<BoatDockArgs> BoatDocked;
+    /// <summary>The boat left a dock.</summary>
+    public static event Action<BoatDockArgs> BoatUndocked;
+    /// <summary>The player fast-travelled by boat.</summary>
+    public static event Action<BoatTravelArgs> BoatTravel;
+    /// <summary>The boat finished refuelling at a pump.</summary>
+    public static event Action<BoatRefueledArgs> BoatRefueled;
+    /// <summary>A venue opened. Detected on its hourly update, so up to an hour late.</summary>
+    public static event Action<VenueArgs> VenueOpened;
+    /// <summary>A venue closed. Detected on its hourly update, so up to an hour late.</summary>
+    public static event Action<VenueArgs> VenueClosed;
+    internal static void RaiseStaffHired(StaffArgs x) => Raise(nameof(StaffHired), StaffHired, x);
+    internal static void RaiseStaffFired(StaffArgs x) => Raise(nameof(StaffFired), StaffFired, x);
+    internal static void RaiseStaffPaid(StaffPaidArgs x) => Raise(nameof(StaffPaid), StaffPaid, x);
+    internal static void RaiseStaffSkillGained(StaffSkillArgs x) => Raise(nameof(StaffSkillGained), StaffSkillGained, x);
+    internal static void RaiseStaffRolesChanged(StaffRolesArgs x) => Raise(nameof(StaffRolesChanged), StaffRolesChanged, x);
+    internal static void RaiseStaffHoursChanged(VenueArgs x) => Raise(nameof(StaffHoursChanged), StaffHoursChanged, x);
+    internal static void RaiseTheftCommitted(TheftArgs x) => Raise(nameof(TheftCommitted), TheftCommitted, x);
+    internal static void RaiseCameraDisabled(CameraArgs x) => Raise(nameof(CameraDisabled), CameraDisabled, x);
+    internal static void RaiseBoatBoarded() => Raise(nameof(BoatBoarded), BoatBoarded);
+    internal static void RaiseBoatLeft() => Raise(nameof(BoatLeft), BoatLeft);
+    internal static void RaiseBoatDocked(BoatDockArgs x) => Raise(nameof(BoatDocked), BoatDocked, x);
+    internal static void RaiseBoatUndocked(BoatDockArgs x) => Raise(nameof(BoatUndocked), BoatUndocked, x);
+    internal static void RaiseBoatTravel(BoatTravelArgs x) => Raise(nameof(BoatTravel), BoatTravel, x);
+    internal static void RaiseBoatRefueled(BoatRefueledArgs x) => Raise(nameof(BoatRefueled), BoatRefueled, x);
+    internal static void RaiseVenueOpened(VenueArgs x) => Raise(nameof(VenueOpened), VenueOpened, x);
+    internal static void RaiseVenueClosed(VenueArgs x) => Raise(nameof(VenueClosed), VenueClosed, x);
+
     internal static void RaiseMoneyChanged(MoneyChangedArgs a) => Raise(nameof(MoneyChanged), MoneyChanged, a);
 
     internal static void RaiseShopOpened(ShopArgs a) => Raise(nameof(ShopOpened), ShopOpened, a);

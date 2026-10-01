@@ -19,7 +19,7 @@ namespace NivalisModKit;
 
 // Installs one patch per event, each in its own try, so a game update that breaks one
 // target leaves the rest working. Every event goes through Install.
-static class EventPatches
+static partial class EventPatches
 {
     static Harmony harmony;
     static HashSet<string> simulated;
@@ -153,6 +153,9 @@ static class EventPatches
         Install(nameof(GameEvents.VenueSetupQuestUpdated),
             () => typeof(VenueSetupManager), nameof(VenueSetupManager.SetupQuestUpdatedListener),
             postfix: nameof(VenueSetupPostfix));
+
+        InstallBreadth();   // Phase 9 batch (a), EventPatches.Breadth.cs
+        InstallPatched();   // Phase 9 batch (b), EventPatches.Patched.cs
 
         KitPlugin.L.LogInfo($"Events: {GameEvents.Live.Count} of {attempted} live" +
                             (waiting > 0 ? $", {waiting} waiting for the game" : ""));
@@ -634,7 +637,11 @@ static class EventPatches
 
     static void VenueHourPostfix(VenueAreaGhost __instance)
     {
-        try { GameEvents.RaiseVenueHour(new VenueHourArgs(__instance)); }
+        try
+        {
+            GameEvents.RaiseVenueHour(new VenueHourArgs(__instance));
+            CheckVenueOpen(__instance);
+        }
         catch (Exception e) { KitPlugin.L.LogError($"VenueHourPostfix: {e}"); }
     }
 

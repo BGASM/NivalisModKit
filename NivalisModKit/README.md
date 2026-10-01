@@ -17,7 +17,7 @@ Event BuyIngredientsStarting: live
 Event BuyIngredientsFinished: live
 ...
 Event PlayerSold: live
-Events: 28 of 28 live
+Events: 62 of 62 live
 ```
 
 After a game update, an event whose hook no longer matches shows as `missing` and never fires. The rest keep working. Mods that use a missing event can check for it and switch the feature off. The log line names the method that couldn't be found, which is the thing to report.
@@ -59,7 +59,35 @@ public class Plugin : BasePlugin
 | `QuestPinnedChanged` | The player pinned or unpinned a quest. |
 | `QuestMarkerAdded`, `QuestMarkerRemoved` | A quest marker in the world was switched on or off. A refresh shows as Added, Removed, Added. |
 | `VenueSetupQuestUpdated` | A venue setup quest changed state or progress. |
+| **Curfew and security** | |
+| `CurfewWarning`, `CurfewStarted`, `CurfewEnded` | Warning at 01:00, curfew 02:00 to 08:00. |
+| `PlayerCaught` | Caught breaking curfew by a camera or drone. |
+| `AwarenessIncreased` | Security awareness rose: the rise and the new level. |
+| `SecurityLevelChanged` | A district's security level changed. |
+| **Fishing and farming** | |
+| `FishCaught`, `FishDiscovered` | A catch went into the inventory; a species caught for the first time. |
+| `CropPlanted`, `CropHarvested` | A greenhouse crop was planted or harvested (with "first time"). |
+| **Property** | |
+| `PropertyOwnerChanged` | Any venue, apartment or greenhouse bought, sold, rented or given up. |
+| `RentStarted`, `RentStopped` | A property started or stopped being rented. |
+| `FurniturePlaced`, `FurnitureStored` | The player placed or stored furniture (or another holdable object). |
+| `ApartmentEntered`, `ApartmentLeft` | The player entered or left an apartment. |
+| **Staff** | |
+| `StaffHired`, `StaffFired` | Staff hired at or fired from a venue. |
+| `StaffPaid` | A venue paid a staff member (wage, in hundredths). |
+| `StaffSkillGained` | Someone gained experience in a skill. Frequent. |
+| `StaffRolesChanged`, `StaffHoursChanged` | Roles (serving, cooking, cleaning, managing) or working hours changed. |
+| **Theft and security (patched)** | |
+| `TheftCommitted` | The player stole furniture from a venue they don't own. |
+| `CameraDisabled` | The player disabled a security camera. |
+| **Boat** | |
+| `BoatBoarded`, `BoatLeft` | The player took or left the helm. |
+| `BoatDocked`, `BoatUndocked` | The boat docked or left a dock. |
+| `BoatTravel` | Fast travel by boat, with the destination. |
+| `BoatRefueled` | A refuel finished: fuel added and fuel now. |
 | **Venues** (NPC venues included, check `Area.PlayerOwned`) | |
+| `VenueOpened`, `VenueClosed` | A venue opened or closed. Detected hourly, so up to an hour late. |
+| `VenueOwnerChanged` | A venue changed owner, the player's or an NPC's. |
 | `VenueHour` | Every venue's hourly update. |
 | `BuyIngredientsStarting` | A venue is about to buy ingredients for one recipe. |
 | `BuyIngredientsFinished` | That buying finished. Runs after other mods' patches, so purchases are final. |
@@ -109,6 +137,26 @@ Pricing.BuyPrice += ctx =>
 
 `PriceContext` has `Vendor`, `Item`, `Freshness`, `GamePrice` and the settable `Price`. Prices and money are whole numbers in hundredths: 611 shows in game as 6.11. The shop's offer list and the amount charged use the adjusted price; the shop's Bonuses breakdown panel computes its own figures and still shows the game's price. Prices are
 looked up very often (shop screens, manager restocks), so keep handlers cheap: cache item lookups.
+
+### Tuning
+
+Change game rules. Like `Pricing`, each is an event whose handlers adjust a value, and nothing is
+patched until a mod subscribes to that one.
+
+| Event | Adjust |
+|---|---|
+| `Tuning.CropYield` | Crops a greenhouse module yields (`Yield`) |
+| `Tuning.CropGrowthSpeed` | A module's growth speed multiplier (`Speed`) |
+| `Tuning.FishYield` | Items a catch gives (`Yield`) |
+| `Tuning.PropertyPrice` | Purchase price of a venue, apartment or greenhouse (`Price`, hundredths) |
+| `Tuning.AwarenessGain` | How much security awareness rises (`Amount`; 0 = not noticed) |
+
+```csharp
+Tuning.FishYield += c => c.Yield *= 2;                 // double catches
+Tuning.AwarenessGain += c => c.Amount *= 0.5f;         // cameras notice you half as fast
+```
+
+Each context also has the game's original value (`GameYield`, `GameSpeed`, `GamePrice`, `GameAmount`).
 
 ### Queries
 
