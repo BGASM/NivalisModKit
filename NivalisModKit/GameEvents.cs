@@ -57,6 +57,14 @@ public static partial class GameEvents
     /// </summary>
     public static event Action<HourStartedArgs> HourStarted;
 
+    /// <summary>
+    /// The player started a new game. Fires as the world begins loading; the starting district
+    /// follows as <see cref="DistrictEntered"/>. Loading a save fires <see cref="GameLoaded"/> instead.
+    /// </summary>
+    public static event Action NewGameStarted;
+
+    internal static void RaiseNewGameStarted() => Raise(nameof(NewGameStarted), NewGameStarted);
+
     /// <summary>A save finished loading into gameplay.</summary>
     public static event Action<GameLoadedArgs> GameLoaded;
 
@@ -123,7 +131,10 @@ public static partial class GameEvents
     /// <summary>The player pinned or unpinned a quest as their target.</summary>
     public static event Action<QuestPinnedArgs> QuestPinnedChanged;
 
-    /// <summary>A quest marker (world point) was switched on.</summary>
+    /// <summary>
+    /// A quest marker (world point) was switched on. When the game refreshes a marker it switches
+    /// it on, off and on again within a moment, so expect brief Added/Removed/Added sequences.
+    /// </summary>
     public static event Action<QuestMarkerArgs> QuestMarkerAdded;
 
     /// <summary>A quest marker was switched off.</summary>
@@ -180,8 +191,15 @@ public static partial class GameEvents
     // Each subscriber runs in its own try, so one failing mod can't stop the others
     // or throw into game code.
 
+    // How often each event fired and when last, for the dev bridge. Main thread only.
+    internal static readonly Dictionary<string, (int count, DateTime last)> Fired = new();
+
+    static void Count(string name) =>
+        Fired[name] = (Fired.TryGetValue(name, out var f) ? f.count + 1 : 1, DateTime.Now);
+
     internal static void Raise(string name, Action handler)
     {
+        Count(name);
         if (handler == null) return;
         foreach (Delegate d in handler.GetInvocationList())
         {
@@ -192,6 +210,7 @@ public static partial class GameEvents
 
     internal static void Raise<T>(string name, Action<T> handler, T arg)
     {
+        Count(name);
         if (handler == null) return;
         foreach (Delegate d in handler.GetInvocationList())
         {

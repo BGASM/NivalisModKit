@@ -17,7 +17,7 @@ Event BuyIngredientsStarting: live
 Event BuyIngredientsFinished: live
 ...
 Event PlayerSold: live
-Events: 27 of 27 live
+Events: 28 of 28 live
 ```
 
 After a game update, an event whose hook no longer matches shows as `missing` and never fires. The rest keep working. Mods that use a missing event can check for it and switch the feature off. The log line names the method that couldn't be found, which is the thing to report.
@@ -43,6 +43,7 @@ public class Plugin : BasePlugin
 | Event | Fires |
 |---|---|
 | **Game** | |
+| `NewGameStarted` | A new game started. The starting district follows as `DistrictEntered`. |
 | `GameLoaded` | A save finished loading. Has the save name and starting district. |
 | `GameSaved` | A save was written, manual or autosave. |
 | `DayStarted` | A new game day. The game's day turns over at 08:00, not midnight. |
@@ -56,7 +57,7 @@ public class Plugin : BasePlugin
 | `QuestStarted`, `QuestCompleted`, `QuestFailed` | A quest changed state. Has the quest, its id and title. |
 | `QuestObjectiveStarted`, `QuestObjectiveCompleted` | An objective (the game calls them sub-quests) started or was completed. |
 | `QuestPinnedChanged` | The player pinned or unpinned a quest. |
-| `QuestMarkerAdded`, `QuestMarkerRemoved` | A quest marker in the world was switched on or off. |
+| `QuestMarkerAdded`, `QuestMarkerRemoved` | A quest marker in the world was switched on or off. A refresh shows as Added, Removed, Added. |
 | `VenueSetupQuestUpdated` | A venue setup quest changed state or progress. |
 | **Venues** (NPC venues included, check `Area.PlayerOwned`) | |
 | `VenueHour` | Every venue's hourly update. |
@@ -120,12 +121,30 @@ A mod picks up the change the next time it reads the setting. For modders: read 
 
 Some settings only matter at startup, such as ones that decide whether a mod hooks anything at all. Those still need a restart.
 
+## Dev bridge (for mod developers)
+
+A read-only HTTP endpoint for inspecting the running game from scripts or a terminal. Off by default; turn on `[DevBridge] Enabled` and restart. It only listens on `127.0.0.1`, so nothing outside your computer can reach it, and it can't change anything in the game.
+
+```
+curl http://127.0.0.1:5710/status      kit and game version, game time, live events
+curl http://127.0.0.1:5710/events      how often each kit event fired
+curl http://127.0.0.1:5710/money
+curl http://127.0.0.1:5710/quests
+curl http://127.0.0.1:5710/venues?owned=1
+curl http://127.0.0.1:5710/districts
+curl "http://127.0.0.1:5710/object?type=Nivalis.NotificationHudUi"
+```
+
+`/object` lists the fields and properties of the first live instance of any Unity component or asset type, like a text-only UnityExplorer inspector.
+
 ## Settings
 
 `BepInEx\config\bgasm.nivalis.modkit.cfg`
 
 | Setting | Default | Effect |
 |---|---|---|
+| `[DevBridge] Enabled` | false | Read-only HTTP endpoint on 127.0.0.1 for development tools. Restart to apply. |
+| `[DevBridge] Port` | 5710 | Its port. |
 | `[General] LiveConfigReload` | true | Reload mods' settings when their `.cfg` file is saved. Takes effect after a restart. |
 | `[Debug] SimulateMissing` | empty | Comma-separated event names to treat as missing. For testing a mod's fallback. |
 

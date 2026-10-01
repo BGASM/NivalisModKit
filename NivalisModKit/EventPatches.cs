@@ -70,6 +70,11 @@ static class EventPatches
             nameof(SerializationManager.Load), prefix: nameof(LoadPrefix));
         Subscribe(nameof(GameEvents.GameLoaded), () => Via(() => SerializationManager.OnPostLoad, OnPostLoad));
 
+        // A new game doesn't load a save, so OnPostLoad never fires for it.
+        Install(nameof(GameEvents.NewGameStarted),
+            () => typeof(GameSceneManager), nameof(GameSceneManager.StartGame),
+            postfix: nameof(StartGamePostfix), args: () => Type.EmptyTypes);
+
         // The one top-level save, manual and autosave alike.
         Install(nameof(GameEvents.GameSaved),
             () => typeof(SerializationManager), nameof(SerializationManager.Save),
@@ -443,6 +448,31 @@ static class EventPatches
             GameEvents.RaiseGameLoaded(new GameLoadedArgs(loadingSave, district));
         }
         catch (Exception e) { KitPlugin.L.LogError($"OnPostLoad: {e}"); }
+    }
+
+    // StartGame begins loading the world, so the managers that instance events attach to don't
+    // exist yet. Retry the re-attach each frame until all succeed (or ~10 s at 60 fps).
+    static void StartGamePostfix()
+    {
+        try
+        {
+            lastDistrict = IntPtr.Zero;   // the first arrival in the new game is reported
+            GameEvents.RaiseNewGameStarted();
+
+            int frames = 0;
+            Action retry = null;
+            retry = () =>
+            {
+                bool done = true;
+                foreach (var attach in reattach)
+                {
+                    try { done &= attach(); } catch { done = false; }
+                }
+                if (done || ++frames > 600) KitLoop.Tick -= retry;
+            };
+            KitLoop.Tick += retry;
+        }
+        catch (Exception e) { KitPlugin.L.LogError($"StartGamePostfix: {e}"); }
     }
 
     static void SavePostfix(string saveName, bool isAutoSave, bool __result)

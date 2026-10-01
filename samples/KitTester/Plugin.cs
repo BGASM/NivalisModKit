@@ -27,6 +27,7 @@ public class Plugin : BasePlugin
         nameof(GameEvents.EquipmentPurchased),
         nameof(GameEvents.DayStarted),
         nameof(GameEvents.HourStarted),
+        nameof(GameEvents.NewGameStarted),
         nameof(GameEvents.GameLoaded),
         nameof(GameEvents.GameSaved),
         nameof(GameEvents.DistrictEntered),
@@ -98,6 +99,7 @@ public class Plugin : BasePlugin
             dishes = sales = deliveries = salesTotal = 0;
         };
 
+        GameEvents.NewGameStarted += () => L.LogInfo("NewGameStarted");
         GameEvents.GameLoaded += a => L.LogInfo($"GameLoaded: {a.SaveName ?? "?"} in {World.NameOf(a.District)}");
         GameEvents.GameSaved += a => L.LogInfo($"GameSaved: {a.SaveName} autosave={a.IsAutoSave}");
         GameEvents.DistrictEntered += a => L.LogInfo($"DistrictEntered: {World.NameOf(a.District)}");

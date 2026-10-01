@@ -13,6 +13,8 @@ public class KitPlugin : BasePlugin
 {
     internal static ManualLogSource L;
     internal static ConfigEntry<string> SimulateMissing;
+    internal static ConfigEntry<bool> BridgeEnabled;
+    internal static ConfigEntry<int> BridgePort;
 
     /// <summary>Called by BepInEx.</summary>
     public override void Load()
@@ -23,6 +25,10 @@ public class KitPlugin : BasePlugin
             "to test the missing-event fallback. Leave empty.");
         var liveReload = Config.Bind("General", "LiveConfigReload", true,
             "Reload a mod's settings when its .cfg file in BepInEx\\config is saved, while the game runs.");
+        BridgeEnabled = Config.Bind("DevBridge", "Enabled", false,
+            "Read-only HTTP endpoint on 127.0.0.1 for development tools to query the running game. " +
+            "Only this computer can reach it. Takes effect after a restart.");
+        BridgePort = Config.Bind("DevBridge", "Port", 5710, "Port for the dev bridge.");
 
         L.LogInfo($"{ModKit.Name} {ModKit.Version} loaded");
         CheckGameVersion();
@@ -39,9 +45,17 @@ public class KitPlugin : BasePlugin
             return;
         }
 
-        if (!liveReload) return;
-        try { ConfigWatcher.Start(); }
-        catch (Exception e) { L.LogError($"Live config reload: missing ({e.Message})"); }
+        if (liveReload)
+        {
+            try { ConfigWatcher.Start(); }
+            catch (Exception e) { L.LogError($"Live config reload: missing ({e.Message})"); }
+        }
+
+        if (BridgeEnabled.Value)
+        {
+            try { Bridge.Start(BridgePort.Value); }
+            catch (Exception e) { L.LogError($"Dev bridge: could not start on port {BridgePort.Value} ({e.Message})"); }
+        }
     }
 
     static void CheckGameVersion()
