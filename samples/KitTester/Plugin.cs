@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using Nivalis;
@@ -53,6 +54,7 @@ public class Plugin : BasePlugin
     // City-wide counts since the last HourStarted; the player's venues are logged line by line.
     static int dishes, sales, deliveries, salesTotal;
 
+    static ConfigEntry<string> snapshotItem;
     static int hourUpdates;
     static bool worldChecked;
     static bool pipelineChecked;
@@ -61,6 +63,17 @@ public class Plugin : BasePlugin
     public override void Load()
     {
         L = Log;
+
+        // Phase 6 check: set [Snapshot] Print = true in bgasm.nivalis.kittester.cfg while the game
+        // runs (live config reload) to print a snapshot. It resets itself to false.
+        snapshotItem = Config.Bind("Snapshot", "Item", "Chicken", "Item to list vendors for in the snapshot.");
+        var print = Config.Bind("Snapshot", "Print", false, "Set to true to print a snapshot of the query API.");
+        print.SettingChanged += (_, _) =>
+        {
+            if (!print.Value) return;
+            PrintSnapshot();
+            print.Value = false;
+        };
         L.LogInfo($"Kit Tester loaded against {ModKit.Name} {ModKit.Version}");
 
         foreach (string ev in Events)
@@ -221,6 +234,47 @@ public class Plugin : BasePlugin
             L.LogInfo($"World.Hops from Meridian Market: {string.Join(", ", hops)}");
         }
         catch (Exception e) { L.LogError($"World check failed: {e}"); }
+    }
+
+    // ---------- Phase 6: query API snapshot ----------
+
+    static void PrintSnapshot()
+    {
+        try
+        {
+            L.LogInfo($"Snapshot: day {GameTime.Day} {GameTime.Hour:00}:{GameTime.Minute:00} {GameTime.DayOfWeek}, " +
+                      $"money {NivalisModKit.Economy.PlayerMoney}, {Venues.All.Count} venues, " +
+                      $"{NivalisModKit.Economy.Vendors.Count} vendors, {Items.All.Count} items, " +
+                      $"{Recipes.Known.Count}/{Recipes.All.Count} recipes known");
+
+            var quests = Quests.Active;
+            L.LogInfo($"Snapshot: {quests.Count} active quests, pinned: {Quests.Pinned?.Quest?.Title ?? "none"}");
+
+            // Ingredients the player's known recipes use.
+            var ingredients = Recipes.Known.SelectMany(Recipes.InputsOf).Select(i => i.Item)
+                .GroupBy(i => i.Pointer).Select(g => g.First()).OrderBy(Items.NameOf).ToList();
+
+            foreach (var area in Venues.PlayerOwned)
+            {
+                var stock = ingredients.Select(i => $"{Items.NameOf(i)} {Venues.Stock(area, i)}");
+                L.LogInfo($"Snapshot: {Venues.NameOf(area)} in {World.NameOf(Venues.DistrictOf(area))}: " +
+                          string.Join(", ", stock));
+            }
+
+            var item = Items.ByName(snapshotItem.Value);
+            if (item == null) { L.LogInfo($"Snapshot: no item named {snapshotItem.Value}"); return; }
+            var home = Venues.PlayerOwned.Select(Venues.DistrictOf).FirstOrDefault(d => d != null);
+            var vendors = NivalisModKit.Economy.VendorsFor(item)
+                .OrderBy(v => NivalisModKit.Economy.Price(v, item) ?? int.MaxValue).ToList();
+            L.LogInfo($"Snapshot: {vendors.Count} vendors for {Items.NameOf(item)}" +
+                      (home == null ? "" : $", hops from {World.NameOf(home)}"));
+            foreach (var v in vendors)
+                L.LogInfo($"Snapshot:   {NameOf(v)} ({World.NameOf(NivalisModKit.Economy.DistrictOf(v))}" +
+                          (home == null ? "" : $", {World.Hops(home, NivalisModKit.Economy.DistrictOf(v))} hops") +
+                          $") price {NivalisModKit.Economy.Price(v, item)}, stock {NivalisModKit.Economy.Stock(v, item)}" +
+                          (NivalisModKit.Economy.IsUnlocked(v) ? "" : ", locked"));
+        }
+        catch (Exception e) { L.LogError($"Snapshot failed: {e}"); }
     }
 
     // ---------- names ----------

@@ -93,6 +93,29 @@ Purchasing.OrderQuantity += ctx =>
 - Several handlers run in the order added, each seeing the previous one's result.
 - `Purchasing.Decision` reports each offer as bought, skipped or failed. Subscribing to it alone doesn't turn the pipeline on.
 
+### Queries
+
+Read-only lookups. Each returns a fresh list you can keep, or empty/null outside gameplay. Call them from the main thread: `Load`, kit event handlers, or Unity callbacks.
+
+| Class | Members |
+|---|---|
+| `GameTime` | `Day`, `Hour`, `Minute`, `TotalHours`, `DayOfWeek`. The day turns over at 08:00. |
+| `Venues` | `All`, `PlayerOwned`, `InDistrict(district)`, `DistrictOf(area)`, `NameOf(area)`, `Stock(area, item)` |
+| `Economy` | `PlayerMoney`, `Vendors`, `VendorsFor(item)`, `Offers`, `Price`, `SellPrice`, `Stock(vendor, item)`, `DistrictOf(vendor)`, `IsUnlocked(vendor)` |
+| `Items` | `All`, `ByName("chicken")` (ignores case, spaces, underscores), `ById(guid)`, `NameOf(item)` |
+| `Recipes` | `All`, `Known`, `ForDish(item)`, `InputsOf(recipe)` (item and amount per serving), `OutputOf(recipe)` |
+| `Quests` | `Active`, `Completed`, `Pinned` |
+
+```csharp
+// Cheapest vendor for chicken, and how far it is from your first venue.
+var chicken = Items.ByName("Chicken");
+var home = Venues.DistrictOf(Venues.PlayerOwned.FirstOrDefault());
+var best = Economy.VendorsFor(chicken).OrderBy(v => Economy.Price(v, chicken)).FirstOrDefault();
+int hops = World.Hops(home, Economy.DistrictOf(best));
+```
+
+Prices change every game day and when a save loads. If your own namespace starts with `Nivalis.`, write `NivalisModKit.Economy`, since the game also has a `Nivalis.Economy` namespace.
+
 ### Helpers
 
 | Helper | Does |

@@ -40,9 +40,17 @@ internal static class Bridge
         ["/"] = ("This list", _ => routes.ToDictionary(r => r.Key, r => r.Value.help)),
         ["/status"] = ("Kit and game version, game time, event status", _ => Status()),
         ["/events"] = ("How often each kit event fired, and when last", _ => Events()),
-        ["/money"] = ("The player's money", _ => Money()),
-        ["/quests"] = ("Active and completed quests", _ => Quests()),
-        ["/venues"] = ("All venues; ?owned=1 for the player's", q => Venues(q.ContainsKey("owned"))),
+        ["/time"] = ("Game day, clock and day of week", _ => new
+        {
+            day = GameTime.Day, time = $"{GameTime.Hour:00}:{GameTime.Minute:00}",
+            dayOfWeek = GameTime.DayOfWeek.ToString(), totalHours = GameTime.TotalHours,
+        }),
+        ["/money"] = ("The player's money", _ => new { money = Economy.PlayerMoney }),
+        ["/quests"] = ("Active and completed quests", _ => QuestList()),
+        ["/venues"] = ("All venues; ?owned=1 for the player's", q => VenueList(q.ContainsKey("owned"))),
+        ["/vendors"] = ("?item=Name: vendors selling it, with price, stock, district, hops from you", q => VendorList(q)),
+        ["/items"] = ("All item names; ?name= to look one up", q => ItemList(q)),
+        ["/recipes"] = ("Recipes with inputs; ?known=1 for discovered ones", q => RecipeList(q.ContainsKey("known"))),
         ["/districts"] = ("Districts, with hops from the current one", _ => Districts()),
         ["/object"] = ("?type=Full.Type.Name: fields and properties of the first live instance", q => Inspect(q)),
     };
@@ -192,56 +200,71 @@ internal static class Bridge
         GameEvents.Fired.OrderBy(kv => kv.Key)
             .ToDictionary(kv => kv.Key, kv => new { kv.Value.count, last = kv.Value.last.ToString("HH:mm:ss") });
 
-    static object Money()
+    static object QuestList()
     {
-        if (!Singleton<PlayerManager>.InstanceExist(out var pm) || pm.LocalPlayer?.Inventory == null)
-            return new { error = "no player (not in gameplay)" };
-        return new { money = pm.LocalPlayer.Inventory.Money };
+        object Describe(RuntimeQuest rq) => new
+        {
+            id = Try(() => rq.Quest?.Guid),
+            title = Try(() => rq.Quest?.Title),
+            number = Try(() => rq.QuestNumber),
+            state = Try(() => rq.currentState.ToString()),
+            pinned = Try(() => rq.Pinned),
+        };
+        return new
+        {
+            active = Quests.Active.Select(Describe).ToArray(),
+            completed = Quests.Completed.Select(Describe).ToArray(),
+        };
     }
 
-    static object Quests()
-    {
-        if (!Singleton<QuestManager>.InstanceExist(out var qm)) return new { error = "no QuestManager (not in gameplay)" };
-        object List(Il2CppSystem.Collections.Generic.Dictionary<string, RuntimeQuest> d)
+    static object VenueList(bool ownedOnly) =>
+        (ownedOnly ? Venues.PlayerOwned : Venues.All).Select(a => new
         {
-            var list = new List<object>();
-            if (d == null) return list;
-            foreach (var kv in d)
+            venue = Venues.NameOf(a),
+            playerOwned = Try(() => a.PlayerOwned),
+            district = World.NameOf(Venues.DistrictOf(a)),
+        }).ToArray();
+
+    static object VendorList(Dictionary<string, string> query)
+    {
+        if (!query.TryGetValue("item", out var name) || name == "") return new { error = "pass ?item=Name" };
+        var item = Items.ByName(name);
+        if (item == null) return new { error = $"no item named {name}" };
+
+        WorldLocation here = null;
+        try { if (Singleton<GameSceneManager>.InstanceExist(out var gsm)) here = gsm.CurrentWorldLocation; } catch { }
+        return new
+        {
+            item = Items.NameOf(item),
+            vendors = Economy.VendorsFor(item).Select(v => new
             {
-                var rq = kv.Value;
-                list.Add(new
-                {
-                    id = kv.Key,
-                    title = Try(() => rq.Quest?.Title),
-                    number = Try(() => rq.QuestNumber),
-                    state = Try(() => rq.currentState.ToString()),
-                    pinned = Try(() => rq.Pinned),
-                });
-            }
-            return list;
-        }
-        return new { active = List(qm._activeQuests), completed = List(qm._completedQuests) };
+                vendor = Name(v),
+                district = World.NameOf(Economy.DistrictOf(v)),
+                hops = here == null ? (int?)null : World.Hops(here, Economy.DistrictOf(v)),
+                price = Economy.Price(v, item),
+                stock = Economy.Stock(v, item),
+                unlocked = Economy.IsUnlocked(v),
+            }).OrderBy(v => v.price ?? int.MaxValue).ToArray(),
+        };
     }
 
-    static object Venues(bool ownedOnly)
+    static object ItemList(Dictionary<string, string> query)
     {
-        if (!Singleton<VenueManager>.InstanceExist(out var vm) || vm._venueGhosts == null)
-            return new { error = "no VenueManager (not in gameplay)" };
-        var list = new List<object>();
-        foreach (var area in vm._venueGhosts)
+        if (query.TryGetValue("name", out var name) && name != "")
         {
-            if (area == null) continue;
-            bool owned = Try(() => area.PlayerOwned);
-            if (ownedOnly && !owned) continue;
-            list.Add(new
-            {
-                venue = Name(Try(() => area.Venue)),
-                playerOwned = owned,
-                district = World.NameOf(Try(() => area.Venue?.Location)),
-            });
+            var item = Items.ByName(name);
+            return item == null ? new { error = $"no item named {name}" }
+                : new { name = Items.NameOf(item), id = Try(() => item.Guid), vendors = Economy.VendorsFor(item).Count };
         }
-        return list;
+        return Items.All.Select(Items.NameOf).Where(n => n != null).OrderBy(n => n).ToArray();
     }
+
+    static object RecipeList(bool knownOnly) =>
+        (knownOnly ? Recipes.Known : Recipes.All).Select(r => new
+        {
+            dish = Items.NameOf(Recipes.OutputOf(r)),
+            inputs = Recipes.InputsOf(r).Select(i => $"{Items.NameOf(i.Item)} x{i.Amount}").ToArray(),
+        }).OrderBy(r => r.dish).ToArray();
 
     static object Districts()
     {
