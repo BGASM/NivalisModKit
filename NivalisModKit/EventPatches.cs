@@ -445,6 +445,8 @@ static class EventPatches
                 try { attach(); }
                 catch (Exception e) { KitPlugin.L.LogError($"Re-attach after load: {e.Message}"); }
             }
+            Scheduler.Reset();
+            SaveData.OnLoaded(loadingSave);
             GameEvents.RaiseGameLoaded(new GameLoadedArgs(loadingSave, district));
         }
         catch (Exception e) { KitPlugin.L.LogError($"OnPostLoad: {e}"); }
@@ -457,6 +459,8 @@ static class EventPatches
         try
         {
             lastDistrict = IntPtr.Zero;   // the first arrival in the new game is reported
+            Scheduler.Reset();
+            SaveData.OnNewGame();
             GameEvents.RaiseNewGameStarted();
 
             int frames = 0;
@@ -477,7 +481,12 @@ static class EventPatches
 
     static void SavePostfix(string saveName, bool isAutoSave, bool __result)
     {
-        try { if (__result) GameEvents.RaiseGameSaved(new GameSavedArgs(saveName, isAutoSave)); }
+        try
+        {
+            if (!__result) return;
+            SaveData.OnSaved(saveName);
+            GameEvents.RaiseGameSaved(new GameSavedArgs(saveName, isAutoSave));
+        }
         catch (Exception e) { KitPlugin.L.LogError($"SavePostfix: {e}"); }
     }
 

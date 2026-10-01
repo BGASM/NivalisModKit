@@ -116,6 +116,36 @@ int hops = World.Hops(home, Economy.DistrictOf(best));
 
 Prices change every game day and when a save loads. If your own namespace starts with `Nivalis.`, write `NivalisModKit.Economy`, since the game also has a `Nivalis.Economy` namespace.
 
+### Per-save data
+
+Values that belong to one save, kept next to it as `<save>.modkit.json` in the game's save folder. Read and set them any time in gameplay; the kit writes the file when the game saves (manual or autosave) and reads it back when that save loads. A new game starts empty.
+
+```csharp
+static readonly ModSaveData data = SaveData.For("you.nivalis.yourmod");
+
+GameEvents.GameLoaded += _ =>
+{
+    int visits = data.Get("visits", 0);        // 0 when the save has no value yet
+    data.Set("visits", visits + 1);            // any JSON-serializable value
+};
+SaveData.Saving += () => data.Set("snapshot", myState);   // store cached state before the file is written
+```
+
+`SaveData.Loaded` fires just before `GameLoaded` / `NewGameStarted`, so the data is ready in those handlers. The file sits beside the game's `.sav`; it isn't known whether Steam Cloud syncs it.
+
+### Scheduler
+
+Run code later on the main thread. Each call returns an `IDisposable`; dispose it to cancel.
+
+| Call | Runs |
+|---|---|
+| `Scheduler.NextFrame(a)` | Next frame |
+| `Scheduler.AfterGameHours(h, a)` | Once `h` game hours have passed |
+| `Scheduler.AtHour(h, a)` | Next time the clock reaches hour `h`; tomorrow if already past |
+| `Scheduler.AfterDays(n, a)` | When `n` game days have started (days turn over at 08:00) |
+
+Game-time jobs compare against the clock each frame, so sleeping past the moment still runs them, once. Pending jobs are cancelled when a save loads or a new game starts; store longer plans in per-save data.
+
 ### Helpers
 
 | Helper | Does |

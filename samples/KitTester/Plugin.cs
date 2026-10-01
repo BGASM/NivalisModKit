@@ -55,6 +55,7 @@ public class Plugin : BasePlugin
     static int dishes, sales, deliveries, salesTotal;
 
     static ConfigEntry<string> snapshotItem;
+    static readonly ModSaveData save = SaveData.For("bgasm.nivalis.kittester");
     static int hourUpdates;
     static bool worldChecked;
     static bool pipelineChecked;
@@ -112,8 +113,17 @@ public class Plugin : BasePlugin
             dishes = sales = deliveries = salesTotal = 0;
         };
 
-        GameEvents.NewGameStarted += () => L.LogInfo("NewGameStarted");
-        GameEvents.GameLoaded += a => L.LogInfo($"GameLoaded: {a.SaveName ?? "?"} in {World.NameOf(a.District)}");
+        GameEvents.NewGameStarted += () => { L.LogInfo("NewGameStarted"); CheckPhase7(); };
+        GameEvents.GameLoaded += a =>
+        {
+            L.LogInfo($"GameLoaded: {a.SaveName ?? "?"} in {World.NameOf(a.District)}");
+            CheckPhase7();
+        };
+        SaveData.Saving += () =>
+        {
+            save.Set("lastSaved", $"day {GameTime.Day} {GameTime.Hour:00}:{GameTime.Minute:00}");
+            L.LogInfo($"SaveData: storing loads={save.Get("loads", 0)}, lastSaved={save.Get<string>("lastSaved")}");
+        };
         GameEvents.GameSaved += a => L.LogInfo($"GameSaved: {a.SaveName} autosave={a.IsAutoSave}");
         GameEvents.DistrictEntered += a => L.LogInfo($"DistrictEntered: {World.NameOf(a.District)}");
 
@@ -275,6 +285,26 @@ public class Plugin : BasePlugin
                           (NivalisModKit.Economy.IsUnlocked(v) ? "" : ", locked"));
         }
         catch (Exception e) { L.LogError($"Snapshot failed: {e}"); }
+    }
+
+    // ---------- Phase 7: per-save data and scheduler ----------
+
+    // What this save remembers from earlier sessions, then count this load. After saving and
+    // loading the same save, loads and lastSaved should come back.
+    static void CheckPhase7()
+    {
+        int loads = save.Get("loads", 0);
+        L.LogInfo($"SaveData: read loads={loads}, lastSaved={save.Get<string>("lastSaved") ?? "none"}, " +
+                  $"keys=[{string.Join(", ", save.Keys)}]");
+        save.Set("loads", loads + 1);
+
+        string Now() => $"day {GameTime.Day} {GameTime.Hour:00}:{GameTime.Minute:00}";
+        L.LogInfo($"Scheduler: queued at {Now()}");
+        Scheduler.NextFrame(() => L.LogInfo($"Scheduler: NextFrame ran at {Now()}"));
+        Scheduler.AfterGameHours(0.5f, () => L.LogInfo($"Scheduler: AfterGameHours(0.5) ran at {Now()}"));
+        int nextHour = (GameTime.Hour + 1) % 24;
+        Scheduler.AtHour(nextHour, () => L.LogInfo($"Scheduler: AtHour({nextHour}) ran at {Now()}"));
+        Scheduler.AfterDays(1, () => L.LogInfo($"Scheduler: AfterDays(1) ran at {Now()}"));
     }
 
     // ---------- names ----------
