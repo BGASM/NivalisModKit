@@ -15,9 +15,9 @@ To confirm it loaded, open `BepInEx\LogOutput.log` and look for `Nivalis ModKit 
 ```
 Event BuyIngredientsStarting: live
 Event BuyIngredientsFinished: live
-Event VenueHour: live
-Event IngredientsPurchased: live
-Events: 4 of 4 live
+...
+Event PlayerSold: live
+Events: 27 of 27 live
 ```
 
 After a game update, an event whose hook no longer matches shows as `missing` and never fires. The rest keep working. Mods that use a missing event can check for it and switch the feature off. The log line names the method that couldn't be found, which is the thing to report.
@@ -42,10 +42,31 @@ public class Plugin : BasePlugin
 
 | Event | Fires |
 |---|---|
-| `BuyIngredientsStarting` | A venue area is about to buy ingredients for one recipe. |
+| **Game** | |
+| `GameLoaded` | A save finished loading. Has the save name and starting district. |
+| `GameSaved` | A save was written, manual or autosave. |
+| `DayStarted` | A new game day. The game's day turns over at 08:00, not midnight. |
+| `HourStarted` | The world clock reached a new hour. Once per change: sleeping from 21:00 fires once at the new hour. |
+| `DistrictEntered` | The player arrived in a different district. Building doors don't count. |
+| **Player shopping** | |
+| `ShopOpened`, `ShopClosed` | The player opened or closed a vendor's shop window. |
+| `PlayerBought`, `PlayerSold` | The player bought or sold something, with vendor, item, count and price. |
+| `MoneyChanged` | The player's money changed: old, new and the difference. |
+| **Quests** | |
+| `QuestStarted`, `QuestCompleted`, `QuestFailed` | A quest changed state. Has the quest, its id and title. |
+| `QuestObjectiveStarted`, `QuestObjectiveCompleted` | An objective (the game calls them sub-quests) started or was completed. |
+| `QuestPinnedChanged` | The player pinned or unpinned a quest. |
+| `QuestMarkerAdded`, `QuestMarkerRemoved` | A quest marker in the world was switched on or off. |
+| `VenueSetupQuestUpdated` | A venue setup quest changed state or progress. |
+| **Venues** (NPC venues included, check `Area.PlayerOwned`) | |
+| `VenueHour` | Every venue's hourly update. |
+| `BuyIngredientsStarting` | A venue is about to buy ingredients for one recipe. |
 | `BuyIngredientsFinished` | That buying finished. Runs after other mods' patches, so purchases are final. |
-| `VenueHour` | Every venue's hourly update, NPC venues included. Check `Area.PlayerOwned`. |
-| `IngredientsPurchased` | One successful ingredient purchase inside a restock round. Not equipment. |
+| `IngredientsPurchased` | One successful ingredient purchase inside a restock round. |
+| `EquipmentPurchased` | A venue bought equipment or furniture, such as a drinks machine or chairs. |
+| `DeliveryCompleted` | Staff put a delivery into a venue's storage. Reports what actually went in. |
+| `DishCooked` | A dish finished cooking, by staff or the player. |
+| `SaleMade` | A customer paid. Vending machine sales have no venue. |
 
 `GameEvents.IsAvailable(nameof(GameEvents.VenueHour))` is false if that event's hook failed to install.
 

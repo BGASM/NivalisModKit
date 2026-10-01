@@ -24,7 +24,33 @@ public class Plugin : BasePlugin
         nameof(GameEvents.BuyIngredientsFinished),
         nameof(GameEvents.VenueHour),
         nameof(GameEvents.IngredientsPurchased),
+        nameof(GameEvents.EquipmentPurchased),
+        nameof(GameEvents.DayStarted),
+        nameof(GameEvents.HourStarted),
+        nameof(GameEvents.GameLoaded),
+        nameof(GameEvents.GameSaved),
+        nameof(GameEvents.DistrictEntered),
+        nameof(GameEvents.DishCooked),
+        nameof(GameEvents.SaleMade),
+        nameof(GameEvents.DeliveryCompleted),
+        nameof(GameEvents.ShopOpened),
+        nameof(GameEvents.ShopClosed),
+        nameof(GameEvents.PlayerBought),
+        nameof(GameEvents.PlayerSold),
+        nameof(GameEvents.MoneyChanged),
+        nameof(GameEvents.QuestStarted),
+        nameof(GameEvents.QuestCompleted),
+        nameof(GameEvents.QuestFailed),
+        nameof(GameEvents.QuestObjectiveStarted),
+        nameof(GameEvents.QuestObjectiveCompleted),
+        nameof(GameEvents.QuestPinnedChanged),
+        nameof(GameEvents.QuestMarkerAdded),
+        nameof(GameEvents.QuestMarkerRemoved),
+        nameof(GameEvents.VenueSetupQuestUpdated),
     };
+
+    // City-wide counts since the last HourStarted; the player's venues are logged line by line.
+    static int dishes, sales, deliveries, salesTotal;
 
     static int hourUpdates;
     static bool worldChecked;
@@ -62,6 +88,58 @@ public class Plugin : BasePlugin
         GameEvents.IngredientsPurchased += a =>
             L.LogInfo($"IngredientsPurchased: {NameOf(a.Area?.Venue)} / {NameOf(a.Item)} x{a.Count} for {a.TotalPrice}");
         GameEvents.VenueHour += OnVenueHour;
+        GameEvents.EquipmentPurchased += a =>
+            L.LogInfo($"EquipmentPurchased: {NameOf(a.Area?.Venue)} / {NameOf(a.Item)} x{a.Count} for {a.TotalPrice}");
+        GameEvents.DayStarted += a => L.LogInfo($"DayStarted: day {a.Day}, {a.DayOfWeek}");
+        GameEvents.HourStarted += a =>
+        {
+            L.LogInfo($"HourStarted: day {a.Day}, {a.Hour:00}:00 (last hour, city: {dishes} dishes, " +
+                      $"{sales} sales for {salesTotal}, {deliveries} deliveries)");
+            dishes = sales = deliveries = salesTotal = 0;
+        };
+
+        GameEvents.GameLoaded += a => L.LogInfo($"GameLoaded: {a.SaveName ?? "?"} in {World.NameOf(a.District)}");
+        GameEvents.GameSaved += a => L.LogInfo($"GameSaved: {a.SaveName} autosave={a.IsAutoSave}");
+        GameEvents.DistrictEntered += a => L.LogInfo($"DistrictEntered: {World.NameOf(a.District)}");
+
+        GameEvents.DishCooked += a =>
+        {
+            dishes++;
+            if (a.Area != null && a.Area.PlayerOwned)
+                L.LogInfo($"DishCooked: {NameOf(a.Area.Venue)} / {NameOf(a.Meal?.Type)} failed={a.Meal?.IsFailed}");
+        };
+        GameEvents.SaleMade += a =>
+        {
+            sales++;
+            salesTotal += a.Price;
+            if (a.Area == null || a.Area.PlayerOwned)
+                L.LogInfo($"SaleMade: {(a.Area == null ? "vending machine" : NameOf(a.Area.Venue))} / " +
+                          $"{NameOf(a.Meal)} for {a.Price} to {NameOf(a.Customer)}");
+        };
+        GameEvents.QuestStarted += a => L.LogInfo($"QuestStarted: {a.Title} [{a.Id}]");
+        GameEvents.QuestCompleted += a => L.LogInfo($"QuestCompleted: {a.Title} [{a.Id}]");
+        GameEvents.QuestFailed += a => L.LogInfo($"QuestFailed: {a.Title} [{a.Id}]");
+        GameEvents.QuestObjectiveStarted += a => L.LogInfo($"QuestObjectiveStarted: {a.Quest.Title} / {a.Text} [{a.Id}]");
+        GameEvents.QuestObjectiveCompleted += a => L.LogInfo($"QuestObjectiveCompleted: {a.Quest.Title} / {a.Text} [{a.Id}]");
+        GameEvents.QuestPinnedChanged += a => L.LogInfo($"QuestPinnedChanged: {a.Quest.Title} pinned={a.Pinned}");
+        GameEvents.QuestMarkerAdded += a => L.LogInfo($"QuestMarkerAdded: {a.PointId} scene {a.SceneIndex} for {a.Quest.Title}");
+        GameEvents.QuestMarkerRemoved += a => L.LogInfo($"QuestMarkerRemoved: {a.PointId} scene {a.SceneIndex} for {a.Quest.Title}");
+        GameEvents.VenueSetupQuestUpdated += a => L.LogInfo($"VenueSetupQuestUpdated: {a.Title} state={a.State}");
+        GameEvents.MoneyChanged += a => L.LogInfo($"MoneyChanged: {a.Old} -> {a.New} ({a.Delta:+#;-#;0})");
+        GameEvents.ShopOpened += a => L.LogInfo($"ShopOpened: {NameOf(a.Vendor)}");
+        GameEvents.ShopClosed += a => L.LogInfo($"ShopClosed: {NameOf(a.Vendor)}");
+        GameEvents.PlayerBought += a =>
+            L.LogInfo($"PlayerBought: {NameOf(a.Item)} x{a.Count} for {a.TotalPrice} at {NameOf(a.Vendor)}");
+        GameEvents.PlayerSold += a =>
+            L.LogInfo($"PlayerSold: {NameOf(a.Item)} x{a.Count} for {a.TotalPrice} at {NameOf(a.Vendor)}");
+
+        GameEvents.DeliveryCompleted += a =>
+        {
+            deliveries++;
+            if (a.Area != null && a.Area.PlayerOwned)
+                L.LogInfo($"DeliveryCompleted: {NameOf(a.Area.Venue)} by {NameOf(a.Staff)}: " +
+                          string.Join(", ", a.Items.Select(kv => $"{NameOf(kv.Key)} x{kv.Value}")));
+        };
     }
 
     // VenueHour fires for every venue in the world, so only the player's are logged,
