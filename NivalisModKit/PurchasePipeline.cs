@@ -131,8 +131,13 @@ static unsafe class PurchasePipeline
                 return;
             }
 
+            // The game's quantity for this item: 1.0 put the full need in every call's temp stack;
+            // patch 1 sizes it to this vendor's amount, min(stock, need, budget cap). Nothing is
+            // bought while calls are deferred, so each call asks for the full need capped by that
+            // vendor; the largest across the round is the need (works for both builds).
             IntPtr item = *(IntPtr*)(request + OffItemType);
-            if (!ToBuy.ContainsKey(item)) ToBuy[item] = *(int*)(tempItem + OffStackCount);
+            int asked = Math.Max(*(int*)(tempItem + OffStackCount), *(int*)(request + OffAmount));
+            if (!ToBuy.TryGetValue(item, out int known) || asked > known) ToBuy[item] = asked;
 
             Defer(self, request, discount, tempItem, method, item);
             // the purchase happens in FlushAll, in the chosen order
