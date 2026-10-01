@@ -17,7 +17,8 @@
     <Reference Include="UnityEngine.CoreModule"><HintPath>$(GameDir)\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
 
-  <Target Name="CopyToPlugins" AfterTargets="Build">
+  <!-- NoDeploy=true keeps a project out of the game folder (e.g. the Order Fix editions share a GUID). -->
+  <Target Name="CopyToPlugins" AfterTargets="Build" Condition="'$(NoDeploy)' != 'true'">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GameDir)\BepInEx\plugins" />
   </Target>
 
