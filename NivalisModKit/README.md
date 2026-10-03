@@ -17,7 +17,7 @@ Event BuyIngredientsStarting: live
 Event BuyIngredientsFinished: live
 ...
 Event PlayerSold: live
-Events: 65 of 65 live
+Events: 68 of 68 live
 ```
 
 After a game update, an event whose hook no longer matches shows as `missing` and never fires. The rest keep working. Mods that use a missing event can check for it and switch the feature off. The log line names the method that couldn't be found, which is the thing to report.
@@ -46,6 +46,8 @@ public class Plugin : BasePlugin
 | `NewGameStarted` | A new game started. The starting district follows as `DistrictEntered`. |
 | `GameLoaded` | A save finished loading. Has the save name and starting district. |
 | `GameSaved` | A save was written, manual or autosave. |
+| **UI** | |
+| `PanelShown`, `PanelHidden` | Any UI screen (`UIPanel`) shown or hidden: shops, venue tabs, dialogs, the end-of-day summary. `Name` is the panel's type name. |
 | `DayStarted` | A new game day. The game's day turns over at 08:00, not midnight. |
 | `DayEnded` | The day closed: curfew began (02:00) or the player slept. Rent is collected around now. |
 | `EndOfDayShown` | The end-of-day summary screen opened. |
@@ -90,6 +92,7 @@ public class Plugin : BasePlugin
 | **Venues** (NPC venues included, check `Area.PlayerOwned`) | |
 | `VenueOpened`, `VenueClosed` | A venue opened or closed. Detected hourly, so up to an hour late. |
 | `VenueOwnerChanged` | A venue changed owner, the player's or an NPC's. |
+| `VenueStorageChanged` | Storage furniture added to or removed from a venue (since game patch 2, decorations with storage count too), with the amounts it provides. |
 | `VenueHour` | Every venue's hourly update. |
 | `BuyIngredientsStarting` | A venue is about to buy ingredients for one recipe. |
 | `BuyIngredientsFinished` | That buying finished. Runs after other mods' patches, so purchases are final. |
@@ -153,6 +156,7 @@ patched until a mod subscribes to that one.
 | `Tuning.PropertyPrice` | Purchase price of a venue, apartment or greenhouse (`Price`, hundredths) |
 | `Tuning.AwarenessGain` | How much security awareness rises (`Amount`; 0 = not noticed) |
 | `Tuning.Catch` | About to be caught: set `Cancel` to let the player off (awareness drops to `AwarenessAfterCancel`, 0.5 by default; furniture stays unlocked) |
+| `Tuning.UseOrder` | Which items in a stack get used first (cooking, selling, moving). Since game patch 2 the game uses least-fresh first, spoiled included; `ctx.Sort(...)` overrides that |
 
 ```csharp
 Tuning.FishYield += c => c.Yield *= 2;                 // double catches
@@ -173,6 +177,7 @@ Read-only lookups. Each returns a fresh list you can keep, or empty/null outside
 | `Items` | `All`, `ByName("chicken")` (ignores case, spaces, underscores), `ById(guid)`, `NameOf(item)` |
 | `Recipes` | `All`, `Known`, `ForDish(item)`, `InputsOf(recipe)` (item and amount per serving), `OutputOf(recipe)` |
 | `Quests` | `Active`, `Completed`, `Pinned` |
+| `Venues.StorageOf(area)` | Items stored and capacity, normal and refrigerated |
 | `Security` | `IsCurfew`, `IsSecurityActive`, `Awareness` (0 to 1), `IsCaught`, `Level`, `LevelOf(district)` |
 
 ```csharp
@@ -200,7 +205,7 @@ GameEvents.GameLoaded += _ =>
 SaveData.Saving += () => data.Set("snapshot", myState);   // store cached state before the file is written
 ```
 
-`SaveData.Loaded` fires just before `GameLoaded` / `NewGameStarted`, so the data is ready in those handlers. The file sits beside the game's `.sav`; it isn't known whether Steam Cloud syncs it.
+`SaveData.Loaded` fires just before `GameLoaded` / `NewGameStarted`, so the data is ready in those handlers. The file sits beside the game's `.sav`; it isn't known whether Steam Cloud syncs it. The game's own save-crash recovery (since patch 2) only covers `.sav` and `.png` files: if the game crashes mid-save and restores the previous `.sav`, the `.modkit.json` may be one save newer.
 
 ### Scheduler
 
@@ -209,11 +214,43 @@ Run code later on the main thread. Each call returns an `IDisposable`; dispose i
 | Call | Runs |
 |---|---|
 | `Scheduler.NextFrame(a)` | Next frame |
+| `Scheduler.AfterSeconds(s, a)` | After `s` real seconds (counts while paused) |
 | `Scheduler.AfterGameHours(h, a)` | Once `h` game hours have passed |
 | `Scheduler.AtHour(h, a)` | Next time the clock reaches hour `h`; tomorrow if already past |
 | `Scheduler.AfterDays(n, a)` | When `n` game days have started (days turn over at 08:00) |
 
 Game-time jobs compare against the clock each frame, so sleeping past the moment still runs them, once. Pending jobs are cancelled when a save loads or a new game starts; store longer plans in per-save data.
+
+### UI
+
+`Ui`. The game's screens are `UIPanel` prefabs the game shows and hides; the kit reports them and lets you use the game's own notifications and dialogs. Main thread only.
+
+| Member | What |
+|---|---|
+| `Ui.Notify(header, text)` | A toast in the game's notification feed |
+| `Ui.Dialog(title, message, (label, action)...)` | The game's popup dialog with your buttons; each closes it and runs its action. Pass `closeOnClick: false` (after `message`) to keep it open; the player closes it with its X |
+| `Ui.OpenPanels`, `Ui.Find(typeName)`, `Ui.NameOf(panel)` | Which screens are open; find one by type name |
+| `Ui.IsVisible`, `Ui.IsDialogOpen` | UI shown (not hidden for screenshots); a dialog on screen |
+| `Ui.ButtonsIn(panel)`, `Ui.LabelOf(button)` | A panel's buttons with paths and labels, to pick a template |
+| `Ui.CloneButton(template, label, onClick)` | Adds your button by copying one of the game's (experimental) |
+| `Ui.Clone(template)`, `Ui.CloneText(template, text)`, `Ui.TextsIn(panel)`, `Ui.FindChild(panel, path)`, `Ui.SetText(element, text)` | Copy any element or label, find templates, set text (experimental) |
+| `Ui.Tooltip(element, text)` | The game's hover tooltip on any element |
+| `Ui.OpenMenu(tab)`, `Ui.OpenJournal(quest)`, `Ui.OpenMap()`, `Ui.OpenVenue(area, tab)` | Open the game's screens |
+| `Ui.CreateWindow(title, WindowStyle.Popup / Panel)` | A window of your own from the game's parts: `AddText`, `AddButton`, `AddToggle`, `AddSlider`, `AddFooterButton`, `Show`, `Hide`, `Closed`. Popup = the game's small confirm popup; Panel = the Settings frame with a scrolling list (experimental) |
+| `Ui.MakeLive(element)` | Make a copy usable: controls interactable, canvas groups clickable, its layout on (Clone and windows do this) |
+| `Ui.Relayout(element)` | Recompute a copy's layout after changing it (Clone/SetText do this) |
+| `Ui.RadialMenu((label, action)...)`, `Ui.AddRadialAction(label, action)`, `Ui.IsRadialOpen` | The game's radial wheel: open it with your actions, or add to it while open (experimental) |
+
+```csharp
+GameEvents.PanelShown += a =>
+{
+    if (a.Name == "EndOfDayWindow") Ui.Notify("My Mod", "Day summary is up");
+};
+```
+
+The button helpers use `UnityEngine.UI.Button` and the text helpers `TMPro.TMP_Text`: add references to `BepInEx\interop\UnityEngine.UI.dll` and `Unity.TextMeshPro.dll` in your project to call them.
+
+The dev bridge's `/ui` path lists the open panels, the quickest way to learn a screen's name; `/ui?panel=Name` lists that panel's buttons.
 
 ### Helpers
 

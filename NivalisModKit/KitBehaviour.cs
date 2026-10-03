@@ -21,12 +21,15 @@ internal static class KitLoop
 
     internal static void Run()
     {
+        Perf.OnFrame();
         var tick = Tick;
         if (tick == null) return;
         foreach (Action a in tick.GetInvocationList())
         {
+            long t = Perf.Start();
             try { a(); }
             catch (Exception e) { KitPlugin.L.LogError($"Kit tick {a.Method.DeclaringType?.Name}.{a.Method.Name}: {e}"); }
+            if (Perf.On) Perf.Stop($"tick {a.Method.DeclaringType?.Name}.{a.Method.Name}", t);
         }
     }
 }

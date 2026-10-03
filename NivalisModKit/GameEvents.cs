@@ -275,6 +275,24 @@ public static partial class GameEvents
     public static event Action EndOfDayShown;
     internal static void RaiseEndOfDayShown() => Raise(nameof(EndOfDayShown), EndOfDayShown);
 
+    /// <summary>
+    /// A UI screen (any <c>UIPanel</c>) became visible: a shop, a venue tab, a dialog, the end-of-day
+    /// summary. <see cref="PanelArgs.Name"/> is the panel's type name.
+    /// </summary>
+    public static event Action<PanelArgs> PanelShown;
+    internal static void RaisePanelShown(PanelArgs x) => Raise(nameof(PanelShown), PanelShown, x);
+
+    /// <summary>A UI screen (any <c>UIPanel</c>) was hidden.</summary>
+    public static event Action<PanelArgs> PanelHidden;
+    internal static void RaisePanelHidden(PanelArgs x) => Raise(nameof(PanelHidden), PanelHidden, x);
+
+    /// <summary>
+    /// Storage furniture was added to or removed from a venue, changing its storage capacity. Since game
+    /// patch 2, decorations with storage count too. <see cref="Venues.StorageOf"/> has the new totals.
+    /// </summary>
+    public static event Action<VenueStorageArgs> VenueStorageChanged;
+    internal static void RaiseVenueStorageChanged(VenueStorageArgs x) => Raise(nameof(VenueStorageChanged), VenueStorageChanged, x);
+
     internal static void RaiseMoneyChanged(MoneyChangedArgs a) => Raise(nameof(MoneyChanged), MoneyChanged, a);
 
     internal static void RaiseShopOpened(ShopArgs a) => Raise(nameof(ShopOpened), ShopOpened, a);
@@ -325,8 +343,10 @@ public static partial class GameEvents
         if (handler == null) return;
         foreach (Delegate d in handler.GetInvocationList())
         {
+            long t = Perf.Start();
             try { ((Action)d)(); }
             catch (Exception e) { LogFailure(name, d, e); }
+            Perf.Stop(name, t);
         }
     }
 
@@ -336,8 +356,10 @@ public static partial class GameEvents
         if (handler == null) return;
         foreach (Delegate d in handler.GetInvocationList())
         {
+            long t = Perf.Start();
             try { ((Action<T>)d)(arg); }
             catch (Exception e) { LogFailure(name, d, e); }
+            Perf.Stop(name, t);
         }
     }
 

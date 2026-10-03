@@ -103,8 +103,10 @@ static partial class EventPatches
     // Every handler body runs through here: never throw into game code.
     static void Raise(string what, Action raise)
     {
+        long t = Perf.Start();
         try { raise(); }
         catch (Exception e) { KitPlugin.L.LogError($"{what}: {e}"); }
+        Perf.Stop("patch " + what, t);
     }
 
     static T Single<T>() where T : UnityEngine.MonoBehaviour =>

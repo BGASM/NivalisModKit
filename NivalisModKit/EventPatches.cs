@@ -156,6 +156,7 @@ static partial class EventPatches
 
         InstallBreadth();   // Phase 9 batch (a), EventPatches.Breadth.cs
         InstallPatched();   // Phase 9 batch (b), EventPatches.Patched.cs
+        InstallUi();        // Phase 10, EventPatches.Ui.cs
 
         KitPlugin.L.LogInfo($"Events: {GameEvents.Live.Count} of {attempted} live" +
                             (waiting > 0 ? $", {waiting} waiting for the game" : ""));
@@ -177,6 +178,20 @@ static partial class EventPatches
     // ---------- subscriptions to the game's own events ----------
 
     static readonly List<object> keepAlive = new();   // the game holds these delegates by pointer
+    static readonly List<(string ev, Func<bool> tryAdd)> waitingEvents = new();   // not attachable before gameplay
+
+    // Attaches events still waiting for the game; true when none are left.
+    static bool TryWaiting()
+    {
+        for (int i = waitingEvents.Count - 1; i >= 0; i--)
+        {
+            bool added;
+            try { added = TryAdd(waitingEvents[i].ev, waitingEvents[i].tryAdd); }
+            catch { added = false; }   // some throw until the game object exists
+            if (added) waitingEvents.RemoveAt(i);
+        }
+        return waitingEvents.Count == 0;
+    }
     static int waiting;
 
     // make() builds the delegate and returns tryAdd, which subscribes and returns true, or returns
@@ -193,13 +208,10 @@ static partial class EventPatches
 
             waiting++;
             KitPlugin.L.LogInfo($"Event {ev}: waiting for the game");
-            Action retry = null;
-            retry = () =>
-            {
-                if (!TryAdd(ev, tryAdd)) return;
-                KitLoop.Tick -= retry;
-            };
-            KitLoop.Tick += retry;
+            // No retry loop: on the start menu the game's managers don't exist and attempts are expensive
+            // (every frame cost ~0.5 s; once a second still hitched). These attach when a save loads or a new
+            // game starts (TryWaiting from OnPostLoad / ReattachSoon).
+            waitingEvents.Add((ev, tryAdd));
         }
         catch (Exception e)
         {
@@ -448,6 +460,8 @@ static partial class EventPatches
                 try { attach(); }
                 catch (Exception e) { KitPlugin.L.LogError($"Re-attach after load: {e.Message}"); }
             }
+            if (!TryWaiting()) ReattachSoon();
+            GameClock.OnGameStarted();
             Scheduler.Reset();
             SaveData.OnLoaded(loadingSave);
             GameEvents.RaiseGameLoaded(new GameLoadedArgs(loadingSave, district));
@@ -466,20 +480,36 @@ static partial class EventPatches
             SaveData.OnNewGame();
             GameEvents.RaiseNewGameStarted();
 
-            int frames = 0;
-            Action retry = null;
-            retry = () =>
-            {
-                bool done = true;
-                foreach (var attach in reattach)
-                {
-                    try { done &= attach(); } catch { done = false; }
-                }
-                if (done || ++frames > 600) KitLoop.Tick -= retry;
-            };
-            KitLoop.Tick += retry;
+            ReattachSoon();
+            GameClock.OnGameStarted();
         }
         catch (Exception e) { KitPlugin.L.LogError($"StartGamePostfix: {e}"); }
+    }
+
+    // After a load or new game: re-attach instance events, 4 times a second for up to 10 seconds
+    // (not every frame; attempts before the game is ready can be expensive).
+    static void ReattachSoon()
+    {
+        float until = UnityEngine.Time.unscaledTime + 10f, next = 0f;
+        Action retry = null;
+        retry = () =>
+        {
+            float now = UnityEngine.Time.unscaledTime;
+            if (now < next) return;
+            next = now + 0.25f;
+            bool done = TryWaiting();
+            foreach (var attach in reattach)
+            {
+                try { done &= attach(); } catch { done = false; }
+            }
+            if (done || now > until)
+            {
+                KitLoop.Tick -= retry;
+                foreach (var w in waitingEvents)
+                    KitPlugin.L.LogWarning($"Event {w.ev}: still waiting 10 s after the game started; retries on the next load");
+            }
+        };
+        KitLoop.Tick += retry;
     }
 
     static void SavePostfix(string saveName, bool isAutoSave, bool __result)

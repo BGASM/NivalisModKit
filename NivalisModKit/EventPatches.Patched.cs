@@ -64,6 +64,14 @@ static partial class EventPatches
         Install(nameof(GameEvents.CameraDisabled), () => typeof(CurfewManager), nameof(CurfewManager.RegisterDisabledSecurityCamera),
             postfix: nameof(CameraDisabledPostfix), args: () => Args(typeof(SecurityCamera)));
 
+        // ---------- venue storage ----------
+        // Storage furniture (and since patch 2, decorations with storage) adds to the venue's capacity.
+        Install(nameof(GameEvents.VenueStorageChanged), () => typeof(VenueAreaGhost), nameof(VenueAreaGhost.RegisterStorage),
+            postfix: nameof(StorageAddedPostfix), args: () => Args(typeof(Ghost)));
+        if (GameEvents.Live.Contains(nameof(GameEvents.VenueStorageChanged)))
+            Helper("UnRegisterStorage for VenueStorageChanged", () => typeof(VenueAreaGhost), nameof(VenueAreaGhost.UnRegisterStorage),
+                postfix: nameof(StorageRemovedPostfix));
+
         // ---------- boat ----------
         Install(nameof(GameEvents.BoatBoarded), () => typeof(BoatCockpit), nameof(BoatCockpit.Enter),
             postfix: nameof(BoatBoardedPostfix), args: () => Args(typeof(PlayerCharacter)));
@@ -214,6 +222,22 @@ static partial class EventPatches
 
     static void CameraDisabledPostfix(SecurityCamera camera) =>
         Raise(nameof(GameEvents.CameraDisabled), () => GameEvents.RaiseCameraDisabled(new CameraArgs(camera)));
+
+    // ---------- venue storage ----------
+
+    static void StorageAddedPostfix(VenueAreaGhost __instance, Ghost ghost) => StorageChanged(__instance, ghost, true);
+    static void StorageRemovedPostfix(VenueAreaGhost __instance, Ghost ghost) => StorageChanged(__instance, ghost, false);
+
+    static void StorageChanged(VenueAreaGhost area, Ghost ghost, bool added) =>
+        Raise(nameof(GameEvents.VenueStorageChanged), () =>
+        {
+            var storage = ghost?.TryCast<IStorageGhost>();
+            if (storage == null) return;   // not storage furniture: the game ignored it too
+            int normal = 0, fridge = 0;
+            try { normal = storage.BasicStorage; fridge = storage.RefridgeratedStorage; } catch { }
+            if (normal <= 0 && fridge <= 0) return;
+            GameEvents.RaiseVenueStorageChanged(new VenueStorageArgs(area, ghost, added, normal, fridge));
+        });
 
     // ---------- boat ----------
 

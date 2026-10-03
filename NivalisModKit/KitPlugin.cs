@@ -29,6 +29,14 @@ public class KitPlugin : BasePlugin
             "Read-only HTTP endpoint on 127.0.0.1 for development tools to query the running game. " +
             "Only this computer can reach it. Takes effect after a restart.");
         BridgePort = Config.Bind("DevBridge", "Port", 5710, "Port for the dev bridge.");
+        var frameTiming = Config.Bind("Debug", "FrameTiming", false,
+            "Log frames slower than FrameThresholdMs with how much of them was the kit's own work, and keep " +
+            "per-event timings (dev bridge /perf). For diagnosing lag; leave off otherwise.");
+        var frameThreshold = Config.Bind("Debug", "FrameThresholdMs", 50f, "Frame time (ms) that counts as slow for FrameTiming.");
+        Perf.On = frameTiming.Value;
+        Perf.ThresholdMs = frameThreshold.Value;
+        frameTiming.SettingChanged += (_, _) => { Perf.On = frameTiming.Value; if (Perf.On) Perf.Reset(); };
+        frameThreshold.SettingChanged += (_, _) => Perf.ThresholdMs = frameThreshold.Value;
 
         L.LogInfo($"{ModKit.Name} {ModKit.Version} loaded");
         CheckGameVersion();

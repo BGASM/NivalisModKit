@@ -698,3 +698,47 @@ public sealed class StaffHoursArgs
         After = after;
     }
 }
+
+/// <summary>Arguments for <see cref="GameEvents.PanelShown"/> and <see cref="GameEvents.PanelHidden"/>.</summary>
+public sealed class PanelArgs
+{
+    /// <summary>The panel.</summary>
+    public UIPanel Panel { get; }
+
+    /// <summary>The panel's type name, e.g. <c>ShopUiVendorPanel</c> (see <see cref="Ui.NameOf"/>).</summary>
+    public string Name { get; }
+
+    internal PanelArgs(UIPanel panel, string name)
+    {
+        Panel = panel;
+        Name = name;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.VenueStorageChanged"/>.</summary>
+public sealed class VenueStorageArgs
+{
+    /// <summary>The venue area.</summary>
+    public VenueAreaGhost Area { get; }
+
+    /// <summary>The furniture (storage unit, table, or decoration with storage).</summary>
+    public Nivalis.GhostSystem.Ghost Furniture { get; }
+
+    /// <summary>True if added (placed), false if removed.</summary>
+    public bool Added { get; }
+
+    /// <summary>Normal storage the piece provides.</summary>
+    public int Normal { get; }
+
+    /// <summary>Refrigerated storage the piece provides.</summary>
+    public int Refrigerated { get; }
+
+    internal VenueStorageArgs(VenueAreaGhost area, Nivalis.GhostSystem.Ghost furniture, bool added, int normal, int refrigerated)
+    {
+        Area = area;
+        Furniture = furniture;
+        Added = added;
+        Normal = normal;
+        Refrigerated = refrigerated;
+    }
+}

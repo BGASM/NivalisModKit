@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
@@ -67,6 +68,9 @@ public class Plugin : BasePlugin
         nameof(GameEvents.FurniturePickedUp),
         nameof(GameEvents.DayEnded),
         nameof(GameEvents.EndOfDayShown),
+        nameof(GameEvents.PanelShown),
+        nameof(GameEvents.VenueStorageChanged),
+        nameof(GameEvents.PanelHidden),
         nameof(GameEvents.ApartmentEntered),
         nameof(GameEvents.ApartmentLeft),
         nameof(GameEvents.VenueOwnerChanged),
@@ -139,6 +143,161 @@ public class Plugin : BasePlugin
             if (!print.Value) return;
             PrintSnapshot();
             print.Value = false;
+        };
+        // Phase 10 check: set [Ui] Notify or Dialog = true while the game runs (live reload); each
+        // resets itself to false.
+        var uiNotify = Config.Bind("Ui", "Notify", false, "Set to true to show a test notification (Ui.Notify).");
+        var uiDialog = Config.Bind("Ui", "Dialog", false, "Set to true to show a test dialog with two buttons (Ui.Dialog).");
+        uiNotify.SettingChanged += (_, _) =>
+        {
+            if (!uiNotify.Value) return;
+            L.LogInfo($"Ui.Notify -> {Ui.Notify("Kit Tester", $"Test notification at {GameTime.Hour:00}:{GameTime.Minute:00}")}");
+            uiNotify.Value = false;
+        };
+        uiDialog.SettingChanged += (_, _) =>
+        {
+            if (!uiDialog.Value) return;
+            // Step 1 stays open; Next replaces it in place with step 2, whose Done closes it.
+            bool shown = Ui.Dialog("Kit Tester", "Step 1 of 2: multi-step dialog test. Stay stays open; Next shows step 2.", false,
+                ("Stay", () => L.LogInfo("Ui.Dialog: Stay clicked (dialog should stay open)")),
+                ("Next", () =>
+                {
+                    L.LogInfo("Ui.Dialog: Next clicked");
+                    bool replaced = Ui.Dialog("Kit Tester", "Step 2 of 2: replaced in place. Done closes it.",
+                        ("Done", () => L.LogInfo("Ui.Dialog: Done clicked (dialog should close)")));
+                    L.LogInfo($"Ui.Dialog step 2 -> {replaced}");
+                }));
+            L.LogInfo($"Ui.Dialog -> {shown}");
+            uiDialog.Value = false;
+        };
+        // [Ui] CloneInto = a panel type name (see the bridge's /ui): the next time it opens, its first
+        // active button is copied as "Kit Test", which logs when clicked. Once per panel per session.
+        var cloneInto = Config.Bind("Ui", "CloneInto", "", "Panel to add a test button to (Ui.CloneButton): Type or Type:GameObject. Empty = off.");
+        var cloned = new HashSet<IntPtr>();
+        GameEvents.PanelShown += a =>
+        {
+            L.LogInfo($"PanelShown: {a.Name} ({a.Panel?.gameObject?.name})");
+            // "Type" or "Type:GameObject" (e.g. MainMenuUI:P_PauseMenuUI = the Escape menu, not the start menu).
+            var want = cloneInto.Value.Split(':');
+            if (cloneInto.Value == "" || a.Name != want[0] || a.Panel == null) return;
+            if (want.Length > 1 && a.Panel.gameObject.name != want[1]) return;
+            if (!cloned.Add(a.Panel.Pointer)) return;
+            var template = Ui.ButtonsIn(a.Panel).FirstOrDefault(b => b.button.gameObject.activeInHierarchy);
+            if (template.button == null) { L.LogInfo($"Ui.CloneButton: no active button in {a.Name}"); return; }
+            var go = Ui.CloneButton(template.button, "Kit Test", () => L.LogInfo("Ui.CloneButton: Kit Test clicked"));
+            L.LogInfo($"Ui.CloneButton: copied {template.path} ('{template.label}') -> {(go != null ? go.name : "failed")}");
+            L.LogInfo($"Ui.Tooltip on Kit Test -> {Ui.Tooltip(go, "Added by the Nivalis ModKit (Ui.Tooltip)")}");
+            LogRect("template", template.button.gameObject);
+            if (go != null) Scheduler.NextFrame(() => LogRect("copy", go));   // after layout has run
+        };
+        GameEvents.PanelHidden += a => L.LogInfo($"PanelHidden: {a.Name}");
+
+        // [Ui] Radial = true: opens the game's radial wheel with two kit actions (resets itself).
+        // [Ui] RadialAdd = true: when the game opens the wheel (greenhouse module), adds a kit action.
+        var uiRadial = Config.Bind("Ui", "Radial", false, "Set to true to open the radial wheel with test actions (Ui.RadialMenu).");
+        var uiRadialAdd = Config.Bind("Ui", "RadialAdd", false, "Add a test action whenever the game opens the radial wheel (Ui.AddRadialAction).");
+        uiRadial.SettingChanged += (_, _) =>
+        {
+            if (!uiRadial.Value) return;
+            bool ok = Ui.RadialMenu(("Kit A", () => L.LogInfo("Ui.RadialMenu: Kit A chosen")),
+                                    ("Kit B", () => L.LogInfo("Ui.RadialMenu: Kit B chosen")));
+            L.LogInfo($"Ui.RadialMenu -> {ok}");
+            uiRadial.Value = false;
+        };
+        GameEvents.PanelShown += a =>
+        {
+            if (a.Name != "RadialMenuUI" || !uiRadialAdd.Value) return;
+            Scheduler.NextFrame(() =>   // after the game has added its own actions
+                L.LogInfo($"Ui.AddRadialAction -> {Ui.AddRadialAction("Kit Extra", () => L.LogInfo("Ui.AddRadialAction: Kit Extra chosen"))}"));
+        };
+
+        // [Ui] Demo = Popup or Panel: opens a Ui.CreateWindow demo in that style, one of each component
+        // (resets itself). The window logs what you do with it.
+        var uiDemo = Config.Bind("Ui", "Demo", "", "Open a Ui.CreateWindow demo: Popup or Panel (resets itself).");
+        var demos = new Dictionary<WindowStyle, KitWindow>();
+        uiDemo.SettingChanged += (_, _) =>
+        {
+            string what = uiDemo.Value.Trim();
+            if (what == "") return;
+            uiDemo.Value = "";
+            if (!Enum.TryParse<WindowStyle>(what, true, out var style)) { L.LogInfo($"Ui demo: unknown style '{what}' (Popup or Panel)"); return; }
+            if (demos.TryGetValue(style, out var old) && old.Root != null) { old.Show(); L.LogInfo($"Ui.CreateWindow {style} demo: shown again"); return; }
+            var w = Ui.CreateWindow($"ModKit {style} demo", style);
+            if (w == null) { L.LogInfo($"Ui.CreateWindow({style}) -> null (load a save first)"); return; }
+            demos[style] = w;
+            w.AddText($"A {style.ToString().ToLower()} window built at runtime from the game's own parts, " +
+                      "with rows added by the Nivalis ModKit.");
+            var toggle = w.AddToggle("Example toggle", true, v => L.LogInfo($"{style} demo toggle -> {v}"));
+            var slider = w.AddSlider("Example slider", 0f, 10f, 5f, v => L.LogInfo($"{style} demo slider -> {v:0.0}"), "0.0");
+            w.AddButton("Show a notification", () => Ui.Notify($"{style} demo", "Notification from a kit window"));
+            w.AddButton("Open a dialog", () => Ui.Dialog($"{style} demo", "A dialog opened from a kit window.", ("OK", null)));
+            var tip = w.AddButton("Hover me (tooltip)", () => L.LogInfo($"{style} demo: tooltip button clicked"));
+            Ui.Tooltip(tip, "A tooltip from Ui.Tooltip inside a kit window");
+            if (style == WindowStyle.Panel)
+            {
+                w.AddText("Panels scroll when their rows don't fit. A few more rows to show it:");
+                w.AddSlider("Whole numbers slider", 1f, 20f, 3f, v => L.LogInfo($"Panel demo whole slider -> {v}"), "0", wholeNumbers: true);
+                w.AddToggle("Second toggle", false, v => L.LogInfo($"Panel demo toggle 2 -> {v}"));
+                w.AddSlider("Percent slider", 0f, 1f, 0.25f, v => L.LogInfo($"Panel demo percent -> {v:0%}"), "0%");
+                for (int i = 1; i <= 4; i++) { int n = i; w.AddButton($"List button {n}", () => L.LogInfo($"Panel demo list button {n}")); }
+            }
+            w.AddFooterButton("Close", w.Hide);
+            w.Closed += () => L.LogInfo($"Ui.CreateWindow {style} demo: closed");
+            w.Show();
+            L.LogInfo($"Ui.CreateWindow {style} demo: shown (toggle {(toggle != null ? "ok" : "missing")}, slider {(slider != null ? "ok" : "missing")})");
+        };
+
+        // [Time] ClockSpeed / SimulationSpeed: GameClock factors under KitTester's name (1 = off). Live.
+        var clockSpeed = Config.Bind("Time", "ClockSpeed", 1f, "GameClock.SetClockSpeed factor (2 = days pass twice as fast). 1 = off.");
+        var simSpeed = Config.Bind("Time", "SimulationSpeed", 1f, "GameClock.SetSimulationSpeed factor (2 = everything twice as fast). 1 = off.");
+        void ApplyTime()
+        {
+            if (clockSpeed.Value == 1f) GameClock.ClearClockSpeed("bgasm.nivalis.kittester"); else GameClock.SetClockSpeed("bgasm.nivalis.kittester", clockSpeed.Value);
+            if (simSpeed.Value == 1f) GameClock.ClearSimulationSpeed("bgasm.nivalis.kittester"); else GameClock.SetSimulationSpeed("bgasm.nivalis.kittester", simSpeed.Value);
+        }
+        clockSpeed.SettingChanged += (_, _) => ApplyTime();
+        simSpeed.SettingChanged += (_, _) => ApplyTime();
+        ApplyTime();
+        GameClock.TimeSpeedChanged += () => L.LogInfo($"TimeSpeedChanged: clock x{GameClock.ClockSpeed:0.##}, simulation x{GameClock.SimulationSpeed:0.##}");
+
+        // [Ui] Open = Map, Venue, or an in-game menu tab (Inventory, Journal, Characters, Skills,
+        // Achievements, Recipes, FishDatabase): opens that screen (resets itself).
+        var uiOpen = Config.Bind("Ui", "Open", "", "Screen to open: Map, Venue, or a menu tab name (Ui.OpenMap/OpenVenue/OpenMenu).");
+        uiOpen.SettingChanged += (_, _) =>
+        {
+            string what = uiOpen.Value.Trim();
+            if (what == "") return;
+            bool ok;
+            if (what == "Map") ok = Ui.OpenMap();
+            else if (what == "Venue") ok = Ui.OpenVenue(Venues.PlayerOwned.FirstOrDefault());
+            else ok = Enum.TryParse<Nivalis.UI.InGameMenu.InGameMenuTab>(what, out var tab) && Ui.OpenMenu(tab);
+            L.LogInfo($"Ui.Open {what} -> {ok}");
+            uiOpen.Value = "";
+        };
+
+        // [Ui] HudText = a panel type name (e.g. WorldStateDisplayUI): copies its first active text label
+        // as a kit label showing the game time, updated hourly. Once per session. (No tooltip: the HUD has no cursor.)
+        var uiHud = Config.Bind("Ui", "HudText", "", "Panel to add a kit text label to (Ui.CloneText + Ui.Tooltip). Empty = off.");
+        TMPro.TMP_Text hudLabel = null;
+        void AddHudLabel()
+        {
+            if (hudLabel != null || uiHud.Value == "") return;
+            var panel = Ui.Find(uiHud.Value);
+            var template = panel == null ? default : Ui.TextsIn(panel).FirstOrDefault(t => t.text.gameObject.activeInHierarchy);
+            if (template.text == null) { L.LogInfo($"Ui.CloneText: no active text in {uiHud.Value}"); return; }
+            hudLabel = Ui.CloneText(template.text, $"Kit {GameTime.Hour:00}:00", Ui.Below(template.text.gameObject));   // not on top of the template
+            L.LogInfo($"Ui.CloneText: copied {template.path} ('{template.value}') -> {(hudLabel != null ? "ok" : "failed")}");
+
+        }
+        uiHud.SettingChanged += (_, _) => AddHudLabel();
+        GameEvents.GameLoaded += _ => Scheduler.NextFrame(AddHudLabel);
+        GameEvents.HourStarted += _ => { if (hudLabel != null) hudLabel.text = $"Kit {GameTime.Hour:00}:00"; };
+        GameEvents.VenueStorageChanged += a =>
+        {
+            if (a.Area == null || !a.Area.PlayerOwned) return;
+            var st = Venues.StorageOf(a.Area);
+            L.LogInfo($"VenueStorageChanged: {Venues.NameOf(a.Area)} {(a.Added ? "+" : "-")}{NameOf(a.Furniture)} " +
+                      $"(normal {a.Normal}, fridge {a.Refrigerated}) -> capacity {st?.NormalCapacity} / {st?.RefrigeratedCapacity}");
         };
         L.LogInfo($"Kit Tester loaded against {ModKit.Name} {ModKit.Version}");
 
@@ -281,6 +440,24 @@ public class Plugin : BasePlugin
         var cropMul = Config.Bind("Tuning", "CropYieldMultiplier", 1f, "Multiply crop yield.");
         var growMul = Config.Bind("Tuning", "CropGrowthMultiplier", 1f, "Multiply crop growth speed.");
         var propMul = Config.Bind("Tuning", "PropertyPriceMultiplier", 1f, "Multiply property purchase prices.");
+        // Tuning.UseOrder check: skip spoiled items while usable ones remain (what Use Oldest First does).
+        // Subscribing installs the hook, so only subscribe when the option is on at startup.
+        if (Config.Bind("Tuning", "SkipSpoiled", false, "Never use spoiled items ahead of usable ones (Tuning.UseOrder). Restart to apply.").Value)
+        {
+            int orders = 0;
+            Tuning.UseOrder += ctx =>
+            {
+                ctx.Sort((a, b) =>
+                {
+                    bool sa = a.remainingDecayTime <= 0, sb = b.remainingDecayTime <= 0;
+                    if (sa != sb) return sa ? 1 : -1;
+                    return a.remainingDecayTime.CompareTo(b.remainingDecayTime);
+                });
+                if (++orders == 1 || orders % 200 == 0)
+                    L.LogInfo($"Tuning.UseOrder #{orders}: {NameOf(ctx.Item)} x{ctx.Count} of {ctx.Items.Count}, " +
+                              $"first {ctx.Items[0].remainingDecayTime}, last {ctx.Items[ctx.Items.Count - 1].remainingDecayTime}");
+            };
+        }
         var awareMul = Config.Bind("Tuning", "AwarenessGainMultiplier", 1f, "Multiply security awareness gains (0 = never noticed).");
         Tuning.FishYield += c => { if (fishMul.Value != 1f) { c.Yield = (int)Math.Round(c.Yield * fishMul.Value); L.LogInfo($"Tuning.FishYield: {NameOf(c.Item)} {c.GameYield} -> {c.Yield}"); } };
         Tuning.CropYield += c => { if (cropMul.Value != 1f) { c.Yield = (int)Math.Round(c.Yield * cropMul.Value); L.LogInfo($"Tuning.CropYield: {NameOf(c.Plant)} {c.GameYield} -> {c.Yield}"); } };
@@ -460,6 +637,21 @@ public class Plugin : BasePlugin
     }
 
     // Unity objects print as "name (Type)"; keep the name.
+    // Layout diagnostics for Ui.Clone placement: rect values and the parent's layout components.
+    static void LogRect(string what, UnityEngine.GameObject go)
+    {
+        try
+        {
+            var rt = go.transform.TryCast<UnityEngine.RectTransform>();
+            var parent = go.transform.parent;
+            var comps = parent == null ? "" : string.Join(", ", parent.GetComponents<UnityEngine.Component>().Select(c => c.GetIl2CppType().Name));
+            var own = string.Join(", ", go.GetComponents<UnityEngine.Component>().Select(c => c.GetIl2CppType().Name));
+            L.LogInfo($"Rect {what}: pos {rt?.anchoredPosition} size {rt?.sizeDelta} rect {(rt == null ? "?" : $"{rt.rect.width:0}x{rt.rect.height:0}")} " +
+                      $"pivot {rt?.pivot} anchors {rt?.anchorMin}-{rt?.anchorMax} sibling {go.transform.GetSiblingIndex()} | own: {own} | parent {parent?.name}: {comps}");
+        }
+        catch (Exception e) { L.LogInfo($"Rect {what}: {e.Message}"); }
+    }
+
     static string NameOf(Il2CppSystem.Object o)
     {
         if (o == null) return "?";

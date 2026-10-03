@@ -26,6 +26,16 @@ public static class Scheduler
     /// <summary>Runs <paramref name="action"/> on the next frame. Dispose the result to cancel.</summary>
     public static IDisposable NextFrame(Action action) => Add(action, () => true);
 
+    /// <summary>
+    /// Runs <paramref name="action"/> after <paramref name="seconds"/> of real time (keeps counting while
+    /// the game is paused). Dispose the result to cancel.
+    /// </summary>
+    public static IDisposable AfterSeconds(float seconds, Action action)
+    {
+        float target = UnityEngine.Time.unscaledTime + seconds;
+        return Add(action, () => UnityEngine.Time.unscaledTime >= target);
+    }
+
     /// <summary>Runs <paramref name="action"/> once <paramref name="hours"/> game hours have passed.</summary>
     public static IDisposable AfterGameHours(float hours, Action action)
     {

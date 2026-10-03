@@ -44,6 +44,9 @@ internal static class Bridge
         {
             day = GameTime.Day, time = $"{GameTime.Hour:00}:{GameTime.Minute:00}",
             dayOfWeek = GameTime.DayOfWeek.ToString(), totalHours = GameTime.TotalHours,
+            paused = GameClock.IsPaused, clockSpeed = GameClock.ClockSpeed, simulationSpeed = GameClock.SimulationSpeed,
+            baseGameSecondsPerSecond = GameClock.BaseGameSecondsPerSecond,
+            clockFactors = GameClock.ClockFactors, simulationFactors = GameClock.SimulationFactors,
         }),
         ["/money"] = ("The player's money", _ => new { money = Economy.PlayerMoney }),
         ["/quests"] = ("Active and completed quests", _ => QuestList()),
@@ -52,6 +55,21 @@ internal static class Bridge
         ["/items"] = ("All item names; ?name= to look one up", q => ItemList(q)),
         ["/recipes"] = ("Recipes with inputs; ?known=1 for discovered ones", q => RecipeList(q.ContainsKey("known"))),
         ["/restock"] = ("Per owned venue: the shopping list's low ingredients and active venue setup quest objectives", _ => Restock()),
+        ["/ui"] = ("Open UI panels; ?panel=TypeName lists its buttons, &texts=1 its labels, &rects=1&path=Child/Path the layout of that child's children", q =>
+            q.TryGetValue("panel", out var panelName) && panelName != ""
+                ? (q.ContainsKey("texts") ? UiTexts(panelName) : q.ContainsKey("rects") ? UiRects(panelName, q) : (object)UiButtons(panelName))
+                : new
+                {
+                    visible = Ui.IsVisible, dialogOpen = Ui.IsDialogOpen,
+                    open = Ui.OpenPanels.Select(p => new { type = Ui.NameOf(p), gameObject = Try(() => p.gameObject.name) }).ToArray(),
+                }),
+        ["/priorities"] = ("Action priority lists: each character type's task order, first = most important", _ =>
+            Staff.PriorityLists.Select(l => new
+            {
+                list = Try(() => l.name),
+                order = Staff.Order(l).Select(Staff.NameOf).ToArray(),
+            }).ToArray()),
+        ["/perf"] = ("Frame timing ([Debug] FrameTiming): slow frames, and time spent in the kit per event/hook", _ => Perf.Summary()),
         ["/security"] = ("Curfew, awareness, caught, security level", _ => new
         {
             curfew = Security.IsCurfew, securityActive = Security.IsSecurityActive,
@@ -223,6 +241,64 @@ internal static class Bridge
         };
     }
 
+    static object UiButtons(string panelName)
+    {
+        var panel = Ui.Find(panelName);
+        if (panel == null) return new { error = $"no panel named {panelName} (see /ui for open ones)" };
+        return new
+        {
+            panel = panelName, visible = Try(() => panel.IsVisible),
+            buttons = Ui.ButtonsIn(panel).Select(b => new { path = b.path, label = b.label }).ToArray(),
+        };
+    }
+
+    // Layout of a container's children (default: the parent of the panel's first button).
+    static object UiRects(string panelName, Dictionary<string, string> q)
+    {
+        var panel = Ui.Find(panelName);
+        if (panel == null) return new { error = $"no panel named {panelName} (see /ui for open ones)" };
+        UnityEngine.Transform container = null;
+        if (q.TryGetValue("path", out var path) && path == ".") container = panel.transform;
+        else if (q.TryGetValue("path", out path) && path != "") container = panel.transform.Find(path);
+        else container = Ui.ButtonsIn(panel).FirstOrDefault().button?.transform.parent;
+        if (container == null) return new { error = "container not found; pass &path=Child/Path" };
+        var children = new List<object>();
+        for (int i = 0; i < container.childCount; i++)
+        {
+            var c = container.GetChild(i);
+            var rt = c.TryCast<UnityEngine.RectTransform>();
+            children.Add(new
+            {
+                index = i, name = c.name, active = Try(() => c.gameObject.activeSelf),
+                pos = rt == null ? null : $"{rt.anchoredPosition.x:0.0},{rt.anchoredPosition.y:0.0}",
+                size = rt == null ? null : $"{rt.rect.width:0}x{rt.rect.height:0}",
+                pivot = rt == null ? null : $"{rt.pivot.x:0.##},{rt.pivot.y:0.##}",
+                rotation = $"{c.localEulerAngles.x:0},{c.localEulerAngles.y:0},{c.localEulerAngles.z:0}",
+                scale = $"{c.localScale.x:0.##},{c.localScale.y:0.##}",
+                components = Try(() => string.Join(", ", c.GetComponents<UnityEngine.Component>().Select(k => k.GetIl2CppType().Name))),
+            });
+        }
+        var crt = container.TryCast<UnityEngine.RectTransform>();
+        return new
+        {
+            panel = panelName, container = container.name,
+            containerSize = crt == null ? null : $"{crt.rect.width:0}x{crt.rect.height:0}",
+            containerComponents = Try(() => string.Join(", ", container.GetComponents<UnityEngine.Component>().Select(k => k.GetIl2CppType().Name))),
+            children,
+        };
+    }
+
+    static object UiTexts(string panelName)
+    {
+        var panel = Ui.Find(panelName);
+        if (panel == null) return new { error = $"no panel named {panelName} (see /ui for open ones)" };
+        return new
+        {
+            panel = panelName, visible = Try(() => panel.IsVisible),
+            texts = Ui.TextsIn(panel).Select(t => new { path = t.path, text = t.value, active = Try(() => t.text.gameObject.activeInHierarchy) }).ToArray(),
+        };
+    }
+
     static object VenueList(bool ownedOnly) =>
         (ownedOnly ? Venues.PlayerOwned : Venues.All).Select(a => new
         {
@@ -231,6 +307,9 @@ internal static class Bridge
             district = World.NameOf(Venues.DistrictOf(a)),
             isOpen = Try(() => a.IsOpen?.Value ?? false),
             inStaffHours = Try(() => a.IsInStaffHours),
+            storage = Venues.StorageOf(a) is VenueStorage st
+                ? $"{st.Normal}/{st.NormalCapacity?.ToString() ?? "-"} normal, {st.Refrigerated}/{st.RefrigeratedCapacity?.ToString() ?? "-"} fridge"
+                : null,
         }).ToArray();
 
     static object VendorList(Dictionary<string, string> query)

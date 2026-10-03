@@ -141,6 +141,47 @@ public static class Tuning
         if (ctx != null) amount = Math.Max(ctx.Amount, 0f);
     }
 
+    // ---------- item use order ----------
+
+    static readonly Hook<UseOrderContext> useOrder = new(nameof(UseOrder), () =>
+    {
+        Patch(typeof(ItemStack), "PopItemsInto", new[] { typeof(int), typeof(Il2CppSystem.Collections.Generic.List<ItemInstanceData>) },
+            prefix: nameof(PopIntoPrefix));
+        Patch(typeof(ItemStack), "PopItems", new[] { typeof(int) }, prefix: nameof(PopPrefix));
+    });
+
+    /// <summary>
+    /// Items are about to be taken from a stack (cooking, selling, moving, delivering). Call
+    /// <c>Sort</c> to choose which go first. Since game patch 2 the game itself sorts stacks used for
+    /// cooking by remaining freshness, least first, which puts spoiled items first; this runs after
+    /// that, so your order wins.
+    /// </summary>
+    /// <example><code>
+    /// // Never take spoiled items while fresh ones remain; otherwise least time left first.
+    /// Tuning.UseOrder += ctx => ctx.Sort((a, b) =>
+    /// {
+    ///     bool sa = a.remainingDecayTime &lt;= 0, sb = b.remainingDecayTime &lt;= 0;
+    ///     if (sa != sb) return sa ? 1 : -1;
+    ///     return a.remainingDecayTime.CompareTo(b.remainingDecayTime);
+    /// });
+    /// </code></example>
+    public static event Action<UseOrderContext> UseOrder { add => useOrder.Add(value); remove => useOrder.Remove(value); }
+
+    static void PopIntoPrefix(ItemStack __instance, int count) => RunUseOrder(__instance, count);
+    static void PopPrefix(ItemStack __instance, int count) => RunUseOrder(__instance, count);
+
+    static void RunUseOrder(ItemStack stack, int count)
+    {
+        try
+        {
+            var list = stack?._instanceData;
+            if (list == null || list.Count < 2 || count <= 0) return;
+            var ctx = useOrder.Run(() => new UseOrderContext(stack, count));
+            ctx?.Apply(list);
+        }
+        catch (Exception e) { KitPlugin.L.LogError($"Tuning.UseOrder: {e.Message}"); }
+    }
+
     // ---------- plumbing ----------
 
     static Harmony harmony;
@@ -192,11 +233,13 @@ public static class Tuning
             if (h == null) return null;
             TCtx ctx;
             try { ctx = make(); } catch { return null; }
+            long t = Perf.Start();
             foreach (Delegate d in h.GetInvocationList())
             {
                 try { ((Action<TCtx>)d)(ctx); }
                 catch (Exception e) { GameEvents.LogFailure($"Tuning.{name}", d, e); }
             }
+            Perf.Stop("Tuning." + name, t);
             return ctx;
         }
     }
@@ -318,4 +361,63 @@ public sealed class CatchContext
     public float AwarenessAfterCancel { get; set; } = Tuning.DefaultAwarenessAfterCancel;
 
     internal CatchContext(bool byDrone) => ByDrone = byDrone;
+}
+
+/// <summary>Arguments for <see cref="Tuning.UseOrder"/>.</summary>
+public sealed class UseOrderContext
+{
+    readonly ItemStack stack;
+    System.Collections.Generic.List<ItemInstanceData> order;   // use-first first; null = unchanged
+
+    /// <summary>The item type in the stack.</summary>
+    public ItemType Item { get; }
+
+    /// <summary>How many items are being taken.</summary>
+    public int Count { get; }
+
+    /// <summary>The stack's items in the order they'll be used (first = used first).</summary>
+    public System.Collections.Generic.IReadOnlyList<ItemInstanceData> Items
+    {
+        get
+        {
+            if (order != null) return order;
+            var list = new System.Collections.Generic.List<ItemInstanceData>();
+            var src = stack._instanceData;
+            for (int i = src.Count - 1; i >= 0; i--) list.Add(src[i]);   // the game takes from the end
+            return list;
+        }
+    }
+
+    /// <summary>
+    /// Orders the stack so items that compare lower are used first. Later handlers see this order and can
+    /// sort again. Stable: items that compare equal keep their current order.
+    /// </summary>
+    public void Sort(Comparison<ItemInstanceData> useFirst)
+    {
+        if (useFirst == null) return;
+        var items = new System.Collections.Generic.List<ItemInstanceData>(Items);
+        var index = new System.Collections.Generic.Dictionary<ItemInstanceData, int>();
+        for (int i = 0; i < items.Count; i++) index[items[i]] = i;
+        items.Sort((a, b) =>
+        {
+            int c = useFirst(a, b);
+            return c != 0 ? c : index[a].CompareTo(index[b]);   // stable
+        });
+        order = items;
+    }
+
+    internal UseOrderContext(ItemStack stack, int count)
+    {
+        this.stack = stack;
+        Count = count;
+        try { Item = stack._type; } catch { }
+    }
+
+    // Writes the chosen order back: use-first items at the end, where the game takes from.
+    internal void Apply(Il2CppSystem.Collections.Generic.List<ItemInstanceData> list)
+    {
+        if (order == null || order.Count != list.Count) return;
+        list.Clear();
+        for (int i = order.Count - 1; i >= 0; i--) list.Add(order[i]);
+    }
 }

@@ -89,6 +89,37 @@ public static class Venues
         try { return item == null ? 0 : area?.JointInventory?.GetItemCount(item) ?? 0; } catch { return 0; }
     }
 
+    /// <summary>
+    /// The venue's storage: items stored and capacity, for normal and refrigerated storage. Capacity comes
+    /// from its storage furniture (and, since game patch 2, decorations with storage); null if unlimited.
+    /// </summary>
+    public static VenueStorage StorageOf(VenueAreaGhost area)
+    {
+        try
+        {
+            var inv = area?.JointInventory;
+            if (inv == null) return null;
+            return new VenueStorage(Count(inv.NormalInventory), Capacity(inv.NormalInventory),
+                                    Count(inv.RefridgeratedInventory), Capacity(inv.RefridgeratedInventory));
+        }
+        catch { return null; }
+    }
+
+    static int Count(ItemContainer c)
+    {
+        try { return c?.ItemCount ?? 0; } catch { return 0; }
+    }
+
+    static int? Capacity(ItemContainer c)
+    {
+        try
+        {
+            var max = c?._restriction?.MaxItems;
+            return max != null && max.HasValue ? max.Value : null;
+        }
+        catch { return null; }
+    }
+
     static bool IsPlayerOwned(VenueAreaGhost area)
     {
         try { return area.PlayerOwned; } catch { return false; }
@@ -378,5 +409,29 @@ public static class Security
     public static int LevelOf(WorldLocation district)
     {
         try { return district == null ? 0 : Manager?.GetSecurityLevel(district) ?? 0; } catch { return 0; }
+    }
+}
+
+/// <summary>A venue's storage use (see <see cref="Venues.StorageOf"/>).</summary>
+public sealed class VenueStorage
+{
+    /// <summary>Items in normal storage.</summary>
+    public int Normal { get; }
+
+    /// <summary>Normal storage capacity, or null if unlimited.</summary>
+    public int? NormalCapacity { get; }
+
+    /// <summary>Items in refrigerated storage.</summary>
+    public int Refrigerated { get; }
+
+    /// <summary>Refrigerated storage capacity, or null if unlimited.</summary>
+    public int? RefrigeratedCapacity { get; }
+
+    internal VenueStorage(int normal, int? normalCapacity, int refrigerated, int? refrigeratedCapacity)
+    {
+        Normal = normal;
+        NormalCapacity = normalCapacity;
+        Refrigerated = refrigerated;
+        RefrigeratedCapacity = refrigeratedCapacity;
     }
 }
