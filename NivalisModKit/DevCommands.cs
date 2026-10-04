@@ -133,6 +133,28 @@ public static class DevCommands
 
         Register(kit, "mods", "Open the Mods browser", _ => { ModMenu.Open(); return new { opened = ModMenu.BrowserOwner }; });
 
+        Register(kit, "content", "Custom items and recipes mods added; `content dump` writes every item, recipe and vendor to JSON", a =>
+            a.Has("dump") ? ContentDump.Write() : new
+            {
+                items = Content.AllItems.Select(c => new
+            {
+                name = c.Spec.Name,
+                owner = c.Owner,
+                id = c.Id,
+                template = c.Template,
+                built = c.Item != null,
+                guid = c.Guid,
+                basePrice = c.Item != null ? c.Item.basePrice : (float?)null,
+                vendors = c.Item != null && GameEvents.IsInGame ? Economy.VendorsFor(c.Item).Count : (int?)null,
+            }).ToArray(),
+                recipes = Content.AllRecipes.Select(r => new
+                {
+                    id = r.Id, owner = r.Owner, template = r.Template, built = r.Recipe != null, guid = r.Guid,
+                    output = r.Recipe?.output?.type?.name, knownFromStart = r.Spec.KnownFromStart,
+                }).ToArray(),
+                packs = ContentPacks.Loaded.Select(p => new { file = System.IO.Path.GetFileName(p.Path), p.Owner, p.Items, p.Recipes, problems = p.Problems }).ToArray(),
+            });
+
         Register(kit, "clock", "[speed=X] [sim=X] [pause=on|off]: clock and simulation speed (1 clears), shared pause", a =>
         {
             const string owner = "devbridge";

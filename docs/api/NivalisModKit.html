@@ -145,6 +145,45 @@ Classes
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Content.html">Content</a></dt>
+      <dd><p>Adds new things to the game: items and recipes, each made by copying an existing one and changing what you list.
+A copied item keeps its template's model, tags, decay and cooking use, so vendors that sell by tag stock it like
+its template. A copied recipe keeps its template's ingredient slots, processing and place in the unlock panel.
+Register in your plugin's Load, or ship a <code>*.content.json</code> file (see <a class="xref" href="NivalisModKit.ContentPacks.html">ContentPacks</a>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Content.CustomItem.html">Content.CustomItem</a></dt>
+      <dd><p>An item a mod added.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Content.CustomRecipe.html">Content.CustomRecipe</a></dt>
+      <dd><p>A recipe a mod added.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Content.ItemSpec.html">Content.ItemSpec</a></dt>
+      <dd><p>What to change on a copied item. Anything left null keeps the template's value.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Content.RecipeSpec.html">Content.RecipeSpec</a></dt>
+      <dd><p>What to change on a copied recipe. Anything left null keeps the template's value.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.ContentPacks.html">ContentPacks</a></dt>
+      <dd><p>Content without code: every <code>*.content.json</code> file under <code>BepInEx\plugins</code> (any subfolder) is read at
+startup and its items and recipes added through <a class="xref" href="NivalisModKit.Content.html">Content</a>. Icon paths are relative to the file.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.ContentPacks.Pack.html">ContentPacks.Pack</a></dt>
+      <dd><p>A content file that was read.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.CropGrowthContext.html">CropGrowthContext</a></dt>
       <dd><p>Arguments for <a class="xref" href="NivalisModKit.Tuning.html#NivalisModKit_Tuning_CropGrowthSpeed">CropGrowthSpeed</a>.</p>
 </dd>

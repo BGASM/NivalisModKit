@@ -370,6 +370,25 @@ public class Plugin : BasePlugin
 
         // All of the tester's settings in the kit's browser, and a page of its own (pause menu > Mods).
         ModMenu.ListSettings("bgasm.nivalis.kittester");
+
+        // [Content] TestItem: a copy of Chicken as "Kit Test Chicken" (Content.AddItem). Off by default: the item ends
+        // up in saves. Needs a restart (items are built when the game builds its item database). An icon is used if
+        // KitTesterIcon.png sits next to this DLL. Check with the dev command "content", then "give item=Kit Test Chicken".
+        var testItem = Config.Bind("Content", "TestItem", false, new ConfigDescription(
+            "Add a test item, \"Kit Test Chicken\" (a copy of Chicken). Restart to apply. It is saved in your save file.",
+            null, new ModSetting { RequiresRestart = true }));
+        if (testItem.Value)
+        {
+            string icon = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(typeof(Plugin).Assembly.Location) ?? "", "KitTesterIcon.png");
+            Content.AddItem("bgasm.nivalis.kittester", "test-chicken", "Chicken", item =>
+            {
+                item.Name = "Kit Test Chicken";
+                item.Description = "A chicken added by the Nivalis ModKit (Content.AddItem). Cooks like chicken.";
+                item.BasePrice = 9.99f;
+                if (System.IO.File.Exists(icon)) item.IconPath = icon;
+            });
+            L.LogInfo($"Content: Kit Test Chicken registered{(System.IO.File.Exists(icon) ? " with KitTesterIcon.png" : "")}");
+        }
         int clicks = 0;
         ModMenu.AddPage("bgasm.nivalis.kittester", "Kit Tester page", w =>
         {

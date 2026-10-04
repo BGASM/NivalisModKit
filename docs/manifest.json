@@ -153,6 +153,104 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Content.CustomItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Content.CustomItem.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Content.CustomItem",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Content.CustomItem.yml\" sourcestartlinenumber=\"1\">An item a mod added.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Content.CustomRecipe.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Content.CustomRecipe.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Content.CustomRecipe",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Content.CustomRecipe.yml\" sourcestartlinenumber=\"1\">A recipe a mod added.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Content.ItemSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Content.ItemSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Content.ItemSpec",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Content.ItemSpec.yml\" sourcestartlinenumber=\"1\">What to change on a copied item. Anything left null keeps the template's value.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Content.RecipeSpec.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Content.RecipeSpec.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Content.RecipeSpec",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Content.RecipeSpec.yml\" sourcestartlinenumber=\"1\">What to change on a copied recipe. Anything left null keeps the template's value.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Content.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Content.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Content",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Content.yml\" sourcestartlinenumber=\"1\">Adds new things to the game: items and recipes, each made by copying an existing one and changing what you list.\nA copied item keeps its template's model, tags, decay and cooking use, so vendors that sell by tag stock it like\nits template. A copied recipe keeps its template's ingredient slots, processing and place in the unlock panel.\nRegister in your plugin's Load, or ship a <code>*.content.json</code> file (see <xref href=\"NivalisModKit.ContentPacks\" data-throw-if-not-resolved=\"false\"></xref>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ContentPacks.Pack.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ContentPacks.Pack.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ContentPacks.Pack",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ContentPacks.Pack.yml\" sourcestartlinenumber=\"1\">A content file that was read.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ContentPacks.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ContentPacks.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ContentPacks",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ContentPacks.yml\" sourcestartlinenumber=\"1\">Content without code: every <code>*.content.json</code> file under <code>BepInEx\\plugins</code> (any subfolder) is read at\nstartup and its items and recipes added through <xref href=\"NivalisModKit.Content\" data-throw-if-not-resolved=\"false\"></xref>. Icon paths are relative to the file.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.CropGrowthContext.yml",
       "output": {
         ".html": {

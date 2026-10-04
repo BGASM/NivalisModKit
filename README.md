@@ -376,6 +376,47 @@ The browser also reads BepInEx ConfigurationManager's `ConfigurationManagerAttri
 - If two mods replace it, the kit's `[ModMenu] Browser` setting picks one; otherwise the last one wins, and the log says so.
 - `ModMenu.Pages` gives your browser the pages other mods added.
 
+### Custom content (experimental, untested in game)
+
+Add items and recipes by copying existing ones and changing what you list. A copy keeps everything you don't change: an item keeps its model, tags, decay and cooking use; a recipe keeps its ingredient slots, processing and place in the unlock panel.
+
+```csharp
+public override void Load()   // register before the game builds its databases
+{
+    Content.AddItem(MyGuid, "espresso-tonic", "Galaxy Lemonade", item =>
+    {
+        item.Name = "Espresso Tonic";
+        item.Description = "Tonic water over a shot of espresso.";
+        item.IconPath = Path.Combine(Path.GetDirectoryName(typeof(Plugin).Assembly.Location), "espresso-tonic.png");
+    });
+    Content.AddRecipe(MyGuid, "espresso-tonic", "Galaxy Lemonade", recipe =>
+    {
+        recipe.Output = "Espresso Tonic";
+        recipe.ReplaceIngredient["Butterfly Pea Flower"] = "Coffee Beans";
+        recipe.KnownFromStart = true;
+    });
+}
+```
+
+| | Item (`ItemSpec`) | Recipe (`RecipeSpec`) |
+|---|---|---|
+| Template | An item name | A dish name (its recipe is copied) or a recipe asset name |
+| You can set | `Name` (required), `ShortName`, `Description`, `BasePrice`, `MinStock`, `MaxStock`, `DecayDays`, `IconPath` (PNG) | `Output` (any item, yours included), `OutputAmount`, `ReplaceIngredient` (swap a slot's default ingredient by name), `UnlockCost`, `KnownFromStart` |
+
+**No code needed:** a `*.content.json` file anywhere under `BepInEx\plugins` does the same. See [samples/ContentPack](samples/ContentPack) for a complete example with an icon.
+
+**How players get them:**
+- **Items** are stocked by every vendor that sells the template's tags, at their own daily price. Set `MinStock = 0, MaxStock = 0` for an item vendors shouldn't sell.
+- **Recipes** appear in the cooking screen's unlock panel like the template, unlocked with inspiration points (`UnlockCost`). `KnownFromStart` makes the player know one from the first load. The game saves which recipes are known.
+
+**Finding names:** the dev command `content dump` writes every item, recipe (with ingredient slots) and vendor (with what it stocks) to `BepInEx\cache\NivalisModKit\content\`. `content` alone lists what mods added and whether it was built.
+
+**Rules that keep saves working:**
+- Each item and recipe gets a fixed GUID from your owner name and `id`. Never change an `id` once players have it.
+- Removing a mod whose items are in a save hasn't been tested yet; treat custom content as permanent in a save for now.
+
+**Not yet:** new 3D models (copies use the template's model), custom furniture that survives being placed and reloaded, plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. These are researched and planned.
+
 ### Helpers
 
 | Helper | Does |
@@ -398,6 +439,7 @@ The exception is members marked `[Experimental]`. They may change in any release
 |---|---|
 | `Staff.SetOrder` | Changes the game's shared list directly. Will become a `Tuning` hook so several mods can combine. |
 | `Tuning.UseOrder` | The context may change (for example a perishable flag). |
+| `Content`, `ContentPacks` | First version, not yet tested in game; the API may grow. |
 
 Declare the oldest kit you support with `[BepInDependency(ModKit.Guid, ">=0.2.0")]`. BepInEx then refuses to load your mod with an older kit and says why in the log.
 
@@ -548,6 +590,7 @@ The project references BepInEx and the game's interop assemblies from your game 
 | `NivalisModKit/` | The kit |
 | `samples/KitTester` | Logs every kit event and exercises every feature; the kit's regression test |
 | `samples/QuantityTester` | `Purchasing.OrderQuantity` example |
+| `samples/ContentPack` | Example content pack: a new drink from a JSON file and an icon |
 | `tools/` | `kit.cmd` / `kit.ps1` / `bridge.sh` (dev commands and bridge queries), `lastlog.sh` (log summary), `docs.ps1` (builds the documentation site) |
 | `docfx/`, `docs/` | Documentation site source, and the built site GitHub Pages serves |
 

@@ -93,6 +93,12 @@ public class KitPlugin : BasePlugin
         ModMenu.Install();
         ModMenu.ListSettings(ModKit.Guid);
         DevCommands.RegisterBuiltIns();
+        try
+        {
+            Content.Install(new HarmonyLib.Harmony(ModKit.Guid + ".content"));
+            ContentPacks.LoadAll();
+        }
+        catch (Exception e) { L.LogError($"Content: missing, mods can't add items or recipes ({e.Message})"); }
         MenuMode.Install();
         DevConsole.Install();
         ConfigBrowser.Install();

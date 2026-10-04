@@ -1,0 +1,23 @@
+{
+  // An example content pack for the Nivalis ModKit: one new drink, no code.
+  // Copy this folder into BepInEx\plugins and restart the game.
+  "owner": "bgasm.examples.espressotonic",
+  "items": [
+    {
+      "id": "espresso-tonic",
+      "template": "Galaxy Lemonade",
+      "name": "Espresso Tonic",
+      "description": "Tonic water over a shot of espresso. Bitter, bright, and very awake.",
+      "icon": "espresso-tonic.png"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "espresso-tonic",
+      "template": "Galaxy Lemonade",
+      "output": "Espresso Tonic",
+      "replace": { "Butterfly Pea Flower": "Coffee Beans" },
+      "knownFromStart": true
+    }
+  ]
+}

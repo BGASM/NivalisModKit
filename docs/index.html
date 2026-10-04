@@ -790,6 +790,58 @@ Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&
 <li>If two mods replace it, the kit's <code>[ModMenu] Browser</code> setting picks one; otherwise the last one wins, and the log says so.</li>
 <li><code>ModMenu.Pages</code> gives your browser the pages other mods added.</li>
 </ul>
+<h3 id="custom-content-experimental-untested-in-game">Custom content (experimental, untested in game)</h3>
+<p>Add items and recipes by copying existing ones and changing what you list. A copy keeps everything you don't change: an item keeps its model, tags, decay and cooking use; a recipe keeps its ingredient slots, processing and place in the unlock panel.</p>
+<pre><code class="lang-csharp">public override void Load()   // register before the game builds its databases
+{
+    Content.AddItem(MyGuid, &quot;espresso-tonic&quot;, &quot;Galaxy Lemonade&quot;, item =&gt;
+    {
+        item.Name = &quot;Espresso Tonic&quot;;
+        item.Description = &quot;Tonic water over a shot of espresso.&quot;;
+        item.IconPath = Path.Combine(Path.GetDirectoryName(typeof(Plugin).Assembly.Location), &quot;espresso-tonic.png&quot;);
+    });
+    Content.AddRecipe(MyGuid, &quot;espresso-tonic&quot;, &quot;Galaxy Lemonade&quot;, recipe =&gt;
+    {
+        recipe.Output = &quot;Espresso Tonic&quot;;
+        recipe.ReplaceIngredient[&quot;Butterfly Pea Flower&quot;] = &quot;Coffee Beans&quot;;
+        recipe.KnownFromStart = true;
+    });
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Item (<code>ItemSpec</code>)</th>
+<th>Recipe (<code>RecipeSpec</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Template</td>
+<td>An item name</td>
+<td>A dish name (its recipe is copied) or a recipe asset name</td>
+</tr>
+<tr>
+<td>You can set</td>
+<td><code>Name</code> (required), <code>ShortName</code>, <code>Description</code>, <code>BasePrice</code>, <code>MinStock</code>, <code>MaxStock</code>, <code>DecayDays</code>, <code>IconPath</code> (PNG)</td>
+<td><code>Output</code> (any item, yours included), <code>OutputAmount</code>, <code>ReplaceIngredient</code> (swap a slot's default ingredient by name), <code>UnlockCost</code>, <code>KnownFromStart</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>No code needed:</strong> a <code>*.content.json</code> file anywhere under <code>BepInEx\plugins</code> does the same. See <a href="https://github.com/BGASM/NivalisModKit/tree/main/samples/ContentPack">samples/ContentPack</a> for a complete example with an icon.</p>
+<p><strong>How players get them:</strong></p>
+<ul>
+<li><strong>Items</strong> are stocked by every vendor that sells the template's tags, at their own daily price. Set <code>MinStock = 0, MaxStock = 0</code> for an item vendors shouldn't sell.</li>
+<li><strong>Recipes</strong> appear in the cooking screen's unlock panel like the template, unlocked with inspiration points (<code>UnlockCost</code>). <code>KnownFromStart</code> makes the player know one from the first load. The game saves which recipes are known.</li>
+</ul>
+<p><strong>Finding names:</strong> the dev command <code>content dump</code> writes every item, recipe (with ingredient slots) and vendor (with what it stocks) to <code>BepInEx\cache\NivalisModKit\content\</code>. <code>content</code> alone lists what mods added and whether it was built.</p>
+<p><strong>Rules that keep saves working:</strong></p>
+<ul>
+<li>Each item and recipe gets a fixed GUID from your owner name and <code>id</code>. Never change an <code>id</code> once players have it.</li>
+<li>Removing a mod whose items are in a save hasn't been tested yet; treat custom content as permanent in a save for now.</li>
+</ul>
+<p><strong>Not yet:</strong> new 3D models (copies use the template's model), custom furniture that survives being placed and reloaded, plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. These are researched and planned.</p>
 <h3 id="helpers">Helpers</h3>
 <table>
 <thead>
@@ -840,6 +892,10 @@ Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&
 <tr>
 <td><code>Tuning.UseOrder</code></td>
 <td>The context may change (for example a perishable flag).</td>
+</tr>
+<tr>
+<td><code>Content</code>, <code>ContentPacks</code></td>
+<td>First version, not yet tested in game; the API may grow.</td>
 </tr>
 </tbody>
 </table>
@@ -1115,6 +1171,10 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <tr>
 <td><code>samples/QuantityTester</code></td>
 <td><code>Purchasing.OrderQuantity</code> example</td>
+</tr>
+<tr>
+<td><code>samples/ContentPack</code></td>
+<td>Example content pack: a new drink from a JSON file and an icon</td>
 </tr>
 <tr>
 <td><code>tools/</code></td>

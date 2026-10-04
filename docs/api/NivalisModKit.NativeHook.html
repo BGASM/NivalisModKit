@@ -210,10 +210,11 @@ signature: <code>self</code> first for instance methods, the MethodInfo pointer 
 
   <h3 id="NivalisModKit_NativeHook_Install__2_System_String___1___1__" data-uid="NivalisModKit.NativeHook.Install``2(System.String,``1,``1@)">
   Install&lt;T, TDelegate&gt;(string, TDelegate, out TDelegate)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/NativeHook.cs/#L82"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/NativeHook.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Looks up <code class="paramref">method</code> on <code class="typeparamref">T</code> and detours it.</p>
+  <div class="markdown level1 summary"><p>Looks up <code class="paramref">method</code> on <code class="typeparamref">T</code> and detours it, as
+<a class="xref" href="NivalisModKit.NativeHook.html#NivalisModKit_NativeHook_Install__1_System_IntPtr___0___0__">Install&lt;TDelegate&gt;(IntPtr, TDelegate, out TDelegate)</a> does.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -237,16 +238,17 @@ signature: <code>self</code> first for instance methods, the MethodInfo pointer 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><span class="xref">INativeDetour</span></dt>
-    <dd></dd>
+    <dd><p>The installed detour.</p>
+</dd>
   </dl>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>T</code></dt>
-    <dd></dd>
+    <dd><p>The interop type that declares the method.</p>
+</dd>
     <dt><code>TDelegate</code></dt>
-    <dd><p>An <code>[UnmanagedFunctionPointer(CallingConvention.Cdecl)]</code> delegate matching the native
-signature: <code>self</code> first for instance methods, the MethodInfo pointer last.</p>
+    <dd><p>A delegate matching the native signature.</p>
 </dd>
   </dl>
 
