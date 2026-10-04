@@ -10,6 +10,18 @@ What you'll see with it installed:
 - the kit and game version on the title screen, above the copyright line
 - a **Mods** button in the pause menu, where mods that support it let you change their settings in game
 
+## Contributing
+
+**Tell me what you need exposed.** Building a mod and the kit doesn't reach the part of the game you need? [Open an issue](https://github.com/BGASM/NivalisModKit/issues) describing what you want to do: the game behaviour you want to react to or change, and what your mod would do with it. You don't need to know where it lives in the game's code. I'll do my best to find it and add a hook.
+
+**Pull requests are welcome.** Fork the repository, make your change on a branch, and open a pull request. To keep the kit safe for everyone using it:
+- Shared game behaviour goes through an event or a `Tuning` hook that several mods can subscribe to, not a patch only one mod can own.
+- Each hook installs on its own, so if a game update breaks it, only that hook switches off and the log names the missing method.
+- Document every public member (`///` comments; the build warns otherwise). They become the editor tooltips and the [API reference](https://bgasm.github.io/NivalisModKit).
+- Log new events in `samples/KitTester`, and say in the pull request which game build you tested on.
+
+See [Building from source](#building-from-source) to get set up.
+
 ## Install
 
 1. Install BepInEx 6 (bleeding edge, Unity IL2CPP). See [the setup steps](https://github.com/BGASM/NivalisMods#requirements).

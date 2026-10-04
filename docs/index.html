@@ -81,6 +81,16 @@
 <li>the kit and game version on the title screen, above the copyright line</li>
 <li>a <strong>Mods</strong> button in the pause menu, where mods that support it let you change their settings in game</li>
 </ul>
+<h2 id="contributing">Contributing</h2>
+<p><strong>Tell me what you need exposed.</strong> Building a mod and the kit doesn't reach the part of the game you need? <a href="https://github.com/BGASM/NivalisModKit/issues">Open an issue</a> describing what you want to do: the game behaviour you want to react to or change, and what your mod would do with it. You don't need to know where it lives in the game's code. I'll do my best to find it and add a hook.</p>
+<p><strong>Pull requests are welcome.</strong> Fork the repository, make your change on a branch, and open a pull request. To keep the kit safe for everyone using it:</p>
+<ul>
+<li>Shared game behaviour goes through an event or a <code>Tuning</code> hook that several mods can subscribe to, not a patch only one mod can own.</li>
+<li>Each hook installs on its own, so if a game update breaks it, only that hook switches off and the log names the missing method.</li>
+<li>Document every public member (<code>///</code> comments; the build warns otherwise). They become the editor tooltips and the <a href="https://bgasm.github.io/NivalisModKit">API reference</a>.</li>
+<li>Log new events in <code>samples/KitTester</code>, and say in the pull request which game build you tested on.</li>
+</ul>
+<p>See <a href="#building-from-source">Building from source</a> to get set up.</p>
 <h2 id="install">Install</h2>
 <ol>
 <li>Install BepInEx 6 (bleeding edge, Unity IL2CPP). See <a href="https://github.com/BGASM/NivalisMods#requirements">the setup steps</a>.</li>
