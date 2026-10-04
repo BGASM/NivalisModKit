@@ -148,6 +148,46 @@ public static class DevCommands
 
         Register(kit, "mods", "Open the Mods browser", _ => { ModMenu.Open(); return new { opened = ModMenu.BrowserOwner }; });
 
+        Register(kit, "travel", "to=District: fast travel there as the game's map does (no taxi or train scene); `travel` alone lists districts", a =>
+        {
+            string want = a.Get("to");
+            var districts = World.Locations;
+            if (string.IsNullOrWhiteSpace(want))
+                return new { districts = districts.Select(World.NameOf).Where(n => !string.IsNullOrEmpty(n)).OrderBy(n => n).ToArray() };
+            if (!GameEvents.IsInGame) throw new InvalidOperationException("load a save first");
+            string w = Items.Squash(want);
+            var where = districts.FirstOrDefault(l => Items.Squash(World.NameOf(l)) == w)
+                        ?? throw new ArgumentException($"no district '{want}'; `travel` lists them");
+            // The map's travel (MapTileMenu.RequestTravel): the district's default arrival point, not a cab ride. The
+            // map only offers districts the player has unlocked; this doesn't check.
+            Nivalis.PortalKey key = null;
+            try { key = where.defaultLocation; } catch { }
+            if (key == null) throw new InvalidOperationException($"{World.NameOf(where)} has no arrival point");
+            if (!Nivalis.Singleton<Nivalis.TravelManager>.InstanceExist(out var tm) || tm == null)
+                throw new InvalidOperationException("no travel manager here");
+            tm.RequestTravel(key, false, false);
+            return new { travelling = World.NameOf(where), arrival = key.name };
+        });
+
+        Register(kit, "world","What the world queries see here: player, camera, navigation mesh, places, stalls, venues, quest markers", _ =>
+        {
+            var mesh = Navigation.Triangulate();
+            static object At(UnityEngine.Vector3 p) => new { x = System.Math.Round(p.x, 1), y = System.Math.Round(p.y, 1), z = System.Math.Round(p.z, 1) };
+            return new
+            {
+                scene = Scenes.Active,
+                player = At(Player.Position),
+                heading = System.Math.Round(Player.Heading),
+                camera = Player.Camera != null ? Player.Camera.gameObject.name : null,
+                hudAlpha = System.Math.Round(Ui.GameHudAlpha, 2),
+                navmesh = mesh == null ? null : new { triangles = mesh.Triangles, size = At(mesh.Bounds.size) },
+                places = World.Places().Select(p => new { kind = p.Kind.ToString(), name = p.ToString(), at = At(p.Position) }).ToArray(),
+                stalls = Economy.Stalls().Select(s => new { vendor = Economy.NameOf(s.Vendor), at = At(s.Position) }).ToArray(),
+                venues = Venues.Entrances().Select(v => new { v.Name, mine = v.IsPlayers, forSale = v.IsForSale, v.BuyCost, v.RentCost }).ToArray(),
+                quests = Quests.Markers(pinnedOnly: false).Select(q => new { q.Number, q.Title, q.Pinned, at = At(q.Position) }).ToArray(),
+            };
+        });
+
         Register(kit, "content", "Custom items and recipes mods added; `content dump` writes every item, recipe and vendor to JSON", a =>
             a.Has("dump") ? ContentDump.Write() : new
             {

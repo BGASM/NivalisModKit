@@ -364,6 +364,24 @@ public class Plugin : BasePlugin
 
         GameEvents.NewGameStarted += () => { L.LogInfo("NewGameStarted"); CheckPhase7(); };
         GameEvents.GameReady += () => L.LogInfo($"GameReady (IsInGame={GameEvents.IsInGame}, day {GameTime.Day} {GameTime.Hour:00}:{GameTime.Minute:00})");
+
+        // World APIs (0.4): a summary of what each sees, once the district has filled in. The dev command "world" lists
+        // them in full.
+        GameEvents.GameReady += () => Scheduler.AfterSeconds(8f, () =>
+        {
+            try
+            {
+                var mesh = Navigation.Triangulate();
+                var places = World.Places();
+                var path = mesh != null && places.Count > 0 ? Navigation.Path(Player.Position, places[0].Position) : null;
+                L.LogInfo($"World: scene {Scenes.Active}, player at {Player.Position}, heading {Player.Heading:0}, camera {Player.Camera?.gameObject.name ?? "none"}, " +
+                          $"hud {Ui.GameHudAlpha:0.00}; navmesh {(mesh == null ? "none" : $"{mesh.Triangles} triangles")}; " +
+                          $"places {places.Count} ({string.Join(", ", places.Select(p => p.ToString()))}); stalls {Economy.Stalls().Count}; " +
+                          $"venues {Venues.Entrances().Count}; quest markers {Quests.Markers(pinnedOnly: false).Count}; " +
+                          $"path to {(places.Count > 0 ? places[0].ToString() : "-")}: {(path == null ? "none" : $"{path.Length} corners")}");
+            }
+            catch (Exception e) { L.LogError($"World: {e}"); }
+        });
         GameEvents.GameEnded += () => L.LogInfo($"GameEnded (IsInGame={GameEvents.IsInGame})");
         // Queued at startup (the menu): runs once at the first GameReady.
         GameEvents.WhenInGame(() => L.LogInfo($"WhenInGame ran: IsInGame={GameEvents.IsInGame}"));

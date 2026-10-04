@@ -38,7 +38,7 @@ public static class GameTime
 }
 
 /// <summary>Venues: restaurants, bars and shops the city's managers run, the player's included.</summary>
-public static class Venues
+public static partial class Venues
 {
     /// <summary>Every venue in the city.</summary>
     public static List<VenueAreaGhost> All
@@ -127,7 +127,7 @@ public static class Venues
 }
 
 /// <summary>Vendors, prices, stock, and the player's money.</summary>
-public static class Economy
+public static partial class Economy
 {
     /// <summary>A vendor's name as the game shows it, e.g. "Greengrocer Calypso Island", or null.</summary>
     public static string NameOf(Vendor vendor)
@@ -350,7 +350,7 @@ public static class Recipes
 }
 
 /// <summary>Quests the player has.</summary>
-public static class Quests
+public static partial class Quests
 {
     /// <summary>Active quests.</summary>
     public static List<RuntimeQuest> Active => Collect(qm => qm._activeQuests);

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>NivalisModKit</AssemblyName>
     <RootNamespace>NivalisModKit</RootNamespace>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Ships NivalisModKit.xml so dependents get IntelliSense. Missing docs warn (CS1591). -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -14,6 +14,7 @@
     <Reference Include="Unity.TextMeshPro"><HintPath>$(GameDir)\BepInEx\interop\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine.AssetBundleModule"><HintPath>$(GameDir)\BepInEx\interop\UnityEngine.AssetBundleModule.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine.PhysicsModule"><HintPath>$(GameDir)\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AIModule"><HintPath>$(GameDir)\BepInEx\interop\UnityEngine.AIModule.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(GameDir)\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="Il2CppSystem.Core"><HintPath>$(GameDir)\BepInEx\interop\Il2CppSystem.Core.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="SemanticVersioning"><HintPath>$(GameDir)\BepInEx\core\SemanticVersioning.dll</HintPath><Private>false</Private></Reference>

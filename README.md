@@ -31,7 +31,7 @@ See [Building from source](#building-from-source) to get set up.
 To confirm it loaded, open `BepInEx\LogOutput.log` and look for these lines:
 
 ```
-Nivalis ModKit 0.3.0 loaded
+Nivalis ModKit 0.4.0 loaded
 Game build: 1.0 patch 2, Steam build 25680465 (tested)
 Event BuyIngredientsStarting: live
 ...
@@ -422,6 +422,40 @@ public override void Load()   // register before the game builds its databases
 
 **Not yet:** plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. Researched and planned.
 
+### World and navigation (experimental, kit 0.4.0+)
+
+Where things are, and how to see them: the walkable ground, the player and their view, places, vendors, venues and quest targets, and pictures of the world from above. Built for (and tested by) the [Nivalis Minimap](https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisMinimap).
+
+```csharp
+var mesh = Navigation.Triangulate();                  // the walkable ground: triangles, areas, bounds
+var shot = Photo.TopDown(mesh.Bounds);                 // the district from straight above
+Vector2 me = shot.ToPixel(Player.Position);            // where the player is on it
+float heading = Player.Heading;                        // where they're looking (0 = north)
+
+foreach (var place in World.Places())                  // "Train > Docks", "Shelter", "Your apartment"...
+    Log.LogInfo($"{place} at {place.Position}");
+foreach (var q in Quests.Markers())                    // pinned quests: where the compass points
+    Log.LogInfo($"#{q.Number} {q.Title} at {q.Position}");
+```
+
+| API | Gives |
+|---|---|
+| `Navigation.Triangulate()` | The navigation mesh of everything loaded: vertices, triangles, area types, bounds. The game's build stripped Unity's method for this; the kit calls the engine function behind it by name. |
+| `Navigation.Path(from, to)`, `Navigation.Nearest(position)` | A walking route's corners; the nearest walkable point. |
+| `Player.Transform`, `Position`, `Heading`, `Camera` | The player, and the camera they see through. Unity's `Camera.main` doesn't find it, and the character's body doesn't turn when the player looks around, so the heading comes from the camera. |
+| `Ui.GameHudAlpha`, `Ui.IsGameHudVisible`, `Ui.IsMenuOpen` | Whether a HUD overlay should show: the game HUD's fade (dialogue, cutscenes hide it), and hidden while a menu, the travel map or the loading screen is open (the game's HUD stays up underneath those) or menu mode is requested. Multiply your overlay's alpha by `GameHudAlpha`. |
+| `World.Places()`, `World.CompassIcon(kind, out colour)`, `World.IsPlayers(property)` | Every place the compass can point at, near or far: travel points, trains, boats and lifts with their destinations, greenhouses, shelters (free apartments) and the player's apartments; the compass's own icon and colour for each kind. |
+| `Economy.Stalls()`, `Economy.StallOf(vendor)` | Where vendors physically stand. |
+| `Venues.Entrances()`, `EntranceOf(venue)`, `DisplayNameOf(venue)` | Each venue's entrance (its sign), whether it's the player's or for sale, its prices; venue names as the game shows them (`NameOf` is the asset name). |
+| `Quests.Markers(pinnedOnly)` | Where the compass points for quests: the objective, or the portal towards it when it's in another district (the game routes markers onto portals). |
+| `Photo.TopDown(area, options)` | An orthographic picture straight down over an area, north up, with the numbers that map world positions onto it. People, traffic and floating UI left out, the vegetation that draws black for other cameras hidden, strong lights turned down, highlights tone mapped; everything put back after. `PhotoOptions` sets resolution, a height to cut roofs at, and the rest. |
+| `Scenes.Objects<T>(includeInactive)`, `Scenes.Active` | Components in the loaded scenes, including ones switched off because they're far from the player (scene objects only, no prefabs). |
+| `Layers` | The game's layer names (`Character`, `Player`, `Vehicle`, `WorldUI`...), `Mask(...)`, `AllExcept(...)`. |
+
+**Searches, not events.** `World.Places`, `Economy.Stalls` and `Venues.Entrances` search the whole scene: call them when a scene loads and again a few seconds later (a district fills in over a few seconds), not every frame. `Quests.Markers` is cheap enough for once a second.
+
+**Pictures stay on the player's machine.** A `Photo` is the player's own game rendering itself; save it to `BepInEx\cache` and draw it once. A mod that ships pictures of the game would be shipping game assets.
+
 ### Helpers
 
 | Helper | Does |
@@ -517,6 +551,9 @@ The kit's own commands:
 | `give item=Name [amount=N]` | Puts items in the player's inventory |
 | `config [mod=name] [key=Section.Key] [value=...]` | Lists mods with settings, a mod's settings, one setting in detail, or changes it (saved to the `.cfg`, `SettingChanged` raised). Works on any mod; ignores the browser's opt-in and read-only rules |
 | `clock [speed=X] [sim=X] [pause=on/off]` | Clock and simulation speed (1 clears), shared pause |
+| `content [dump]` | Custom items and recipes mods added; `content dump` writes every item, recipe and vendor to JSON |
+| `world` | What the world queries see here: player, camera, navigation mesh, places, stalls, venues, quest markers |
+| `travel [to=District]` | Fast travels there as the game's map does (no taxi or train scene; doesn't check the district is unlocked); alone, lists the districts |
 
 **Without commands.** Live reload works as a command channel too: saving a `.cfg` applies within a second, so a test mod can treat settings as triggers. [KitTester](samples/KitTester) still accepts `[Ui] Demo = Panel` and `[Ui] Open = Map` in its `.cfg`.
 
@@ -555,6 +592,18 @@ Mods can check the build too: `GameBuild.IsTested`, `GameBuild.Describe()` and `
 Other mods that detour `Vendor.BuyItem` directly will conflict with the purchasing pipeline. Build on `Purchasing` instead.
 
 ## Changes
+
+**0.4.0**
+
+For players:
+- Mods can now build maps, compasses and guides: the kit knows where things are (see the [Nivalis Minimap](https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisMinimap)).
+
+For modders (all experimental):
+- **World and navigation:** `Navigation` (the walkable mesh, walking routes), `Player` (position, heading, the game camera), `World.Places` (travel points with destinations, shelters, the player's apartments, greenhouses, lifts, boats), `Economy.Stalls`, `Venues.Entrances` (the player's venues, venues for sale, prices) and `Venues.DisplayNameOf`, `Quests.Markers` (pinned quest targets, routed through portals).
+- **`Photo.TopDown`:** pictures of the world from above, for maps.
+- **`Ui.GameHudAlpha`** / `IsGameHudVisible` / `IsMenuOpen`: when HUD overlays should show.
+- `Scenes.Objects<T>` (including switched-off objects), `Layers`.
+- Dev command `world`.
 
 **0.3.0**
 
