@@ -17,7 +17,7 @@ public class KitPlugin : BasePlugin
     internal static ConfigEntry<int> BridgePort;
     internal static ConfigEntry<bool> BridgeCommands, ConsoleEnabled;
     internal static ConfigEntry<string> ConsoleKey, ConsoleFont;
-    internal static ConfigEntry<bool> ModMenuEnabled, ShowOtherMods;
+    internal static ConfigEntry<bool> ModMenuEnabled, ShowOtherMods, WarnMissingContent;
     internal static ConfigEntry<UntestedBuildMode> UntestedBuild;
 
     /// <summary>What the kit does on a game build it wasn't tested on.</summary>
@@ -48,6 +48,9 @@ public class KitPlugin : BasePlugin
             "On a game build this kit version wasn't tested on (usually right after a game patch): Warn = run, " +
             "with a warning on the title screen and in game; Disable = the kit installs nothing, so its mods are " +
             "inactive and the game runs unmodded until the kit is updated.", restart));
+        WarnMissingContent = Config.Bind("Content", "WarnMissingContent", true, Desc(
+            "When a save uses items, recipes or placed objects from mods that are no longer installed, say so after it loads: " +
+            "saving would remove them from that save for good.", new ModSetting()));
         ModMenuEnabled = Config.Bind("ModMenu", "Enabled", true,
             "Add a Mods button to the pause menu, for mods' settings and pages.");
         ShowOtherMods = Config.Bind("ModMenu", "ShowOtherMods", false,

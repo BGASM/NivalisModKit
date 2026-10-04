@@ -80,12 +80,27 @@ public static class DevCommands
     {
         if (!commands.TryGetValue(name ?? "", out var c))
             throw new KeyNotFoundException($"no command '{name}' (GET /cmd lists them)");
-        KitPlugin.L.LogInfo($"DevCommands: {c.Name} {string.Join(" ", query.Select(kv => $"{kv.Key}={kv.Value}"))}".TrimEnd());
-        var reply = c.Run(new CommandArgs(query));
-        return reply ?? "ok";
+        string line = $"{c.Name} {string.Join(" ", query.Select(kv => $"{kv.Key}={kv.Value}"))}".TrimEnd();
+        KitPlugin.L.LogInfo($"DevCommands: {line}");
+        try
+        {
+            var reply = c.Run(new CommandArgs(query));
+            return reply ?? "ok";
+        }
+        catch (Exception e)
+        {
+            // Failures go to the log too, not only the console or bridge reply.
+            KitPlugin.L.LogWarning($"DevCommands: {line} failed: {(e.InnerException ?? e).Message}");
+            throw;
+        }
     }
 
     // ---------- the kit's own commands ----------
+
+    static string ShownName(Nivalis.InventorySystem.ItemType item)
+    {
+        try { return item?.Name; } catch { return null; }
+    }
 
     static IDisposable devPause;
 
@@ -143,6 +158,11 @@ public static class DevCommands
                 id = c.Id,
                 template = c.Template,
                 built = c.Item != null,
+                // In the game's live item list and GUID map (what give, shops and saves use).
+                inItemList = c.Item != null && Items.All.Any(i => i.Pointer == c.Item.Pointer),
+                inGuidMap = c.Item != null && Items.ById(c.Guid)?.Pointer == c.Item.Pointer,
+                // The name the game shows (through its localization table); blank means the text isn't reaching it.
+                shownName = ShownName(c.Item),
                 guid = c.Guid,
                 basePrice = c.Item != null ? c.Item.basePrice : (float?)null,
                 vendors = c.Item != null && GameEvents.IsInGame ? Economy.VendorsFor(c.Item).Count : (int?)null,

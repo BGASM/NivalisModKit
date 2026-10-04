@@ -203,8 +203,9 @@ internal static class Bridge
             foreach (var pair in url.Substring(q + 1).Split('&', StringSplitOptions.RemoveEmptyEntries))
             {
                 int eq = pair.IndexOf('=');
-                string k = Uri.UnescapeDataString(eq < 0 ? pair : pair.Substring(0, eq));
-                query[k] = eq < 0 ? "" : Uri.UnescapeDataString(pair.Substring(eq + 1));
+                // Form encoding (curl --data-urlencode, browsers) writes spaces as '+'.
+                string k = Uri.UnescapeDataString((eq < 0 ? pair : pair.Substring(0, eq)).Replace('+', ' '));
+                query[k] = eq < 0 ? "" : Uri.UnescapeDataString(pair.Substring(eq + 1).Replace('+', ' '));
             }
         return (path.TrimEnd('/') is "" ? "/" : path.TrimEnd('/'), query);
     }

@@ -27,7 +27,7 @@ internal static class ContentDump
         var items = Items.All.Select(i => new
         {
             asset = Try(() => i.name),
-            name = Try(() => i.Name),
+            name = Try(() => string.IsNullOrEmpty(i.Name) ? null : i.Name),   // null: the game has no shown name (decorations, story items)
             guid = Try(() => i.guid?.guid),
             custom = Content.AllItems.Any(c => c.Item != null && c.Item.Pointer == i.Pointer),
             basePrice = Try(() => (float?)i.basePrice),
@@ -42,6 +42,7 @@ internal static class ContentDump
             fridge = Try(() => (bool?)i.requiresRefrigeration),
             tags = Try(() => { var l = new System.Collections.Generic.List<string>(); if (i.tags != null) foreach (var t in i.tags) if (t != null) l.Add(TagName(t)); return l.ToArray(); }),
             model = Try(() => i.entityPrefab?.name),
+            size = Try(() => Size(i.entityPrefab?.gameObject)),
             icon = Try(() => i.icon?.name),
         }).OrderBy(i => i.asset).ToArray();
 
@@ -79,7 +80,7 @@ internal static class ContentDump
         {
             name = Economy.NameOf(v),
             district = Try(() => World.NameOf(Economy.DistrictOf(v))),
-            type = Try(() => v.type.ToString()),
+            type = Try(() => ((UnityEngine.Object)v.type)?.name),
             tier = Try(() => v.tier.ToString()),
             offers = Try(() => v.offerredItems?.Select(o => new
             {
@@ -100,6 +101,36 @@ internal static class ContentDump
     }
 
     // ObjectTag has its own "name" field (a localized label) hiding the asset name.
+    // The model's visible size in metres (width x, height y, depth z), from its meshes as the prefab holds them.
+    // Same meshes the model swap looks at: enabled renderers, shadow meshes left out.
+    static object Size(UnityEngine.GameObject prefab)
+    {
+        if (prefab == null) return null;
+        // In the root's axes but at real scale: many furniture roots are scaled down (0.08 is common), and the size is
+        // what the player sees.
+        var root = UnityEngine.Matrix4x4.Scale(prefab.transform.lossyScale) * prefab.transform.worldToLocalMatrix;
+        bool any = false;
+        UnityEngine.Vector3 min = default, max = default;
+        foreach (var r in prefab.GetComponentsInChildren<UnityEngine.MeshRenderer>(true))
+        {
+            if (!r.enabled || r.name.IndexOf("shadow", StringComparison.OrdinalIgnoreCase) >= 0) continue;
+            var mesh = r.GetComponent<UnityEngine.MeshFilter>()?.sharedMesh;
+            if (mesh == null) continue;
+            var b = mesh.bounds;
+            var m = root * r.transform.localToWorldMatrix;
+            for (int c = 0; c < 8; c++)
+            {
+                var p = m.MultiplyPoint3x4(new UnityEngine.Vector3(
+                    (c & 1) == 0 ? b.min.x : b.max.x, (c & 2) == 0 ? b.min.y : b.max.y, (c & 4) == 0 ? b.min.z : b.max.z));
+                if (!any) { min = max = p; any = true; }
+                else { min = UnityEngine.Vector3.Min(min, p); max = UnityEngine.Vector3.Max(max, p); }
+            }
+        }
+        if (!any) return null;
+        var s = max - min;
+        return new { x = MathF.Round(s.x, 2), y = MathF.Round(s.y, 2), z = MathF.Round(s.z, 2) };
+    }
+
     static string TagName(ObjectTag t) => t == null ? null : ((UnityEngine.Object)t).name;
 
     static T Try<T>(Func<T> f)

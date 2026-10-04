@@ -36,9 +36,10 @@ namespace NivalisModKit;
 /// </code></example>
 /// <remarks>
 /// Experimental. Every item and recipe gets a fixed GUID from your mod's GUID and the id you give, so saves find it
-/// again on the next load. What happens to a save that holds custom content after its mod is removed isn't verified.
+/// again on the next load. If a content mod is removed, the game skips its items, placed objects and recipes when a save
+/// loads, and they return when the mod is reinstalled; saving without the mod drops them from that save for good.
 /// </remarks>
-[Experimental("Items and recipes cloned from existing ones. Save safety when a mod is removed is not yet verified.")]
+[Experimental("Items, recipes, models and placeable furniture, tested in game. The API may still grow.")]
 public static class Content
 {
     // ---------- items ----------
@@ -62,6 +63,13 @@ public static class Content
         public int? DecayDays { get; set; }
         /// <summary>A PNG file for the icon (square works best). Null keeps the template's icon.</summary>
         public string IconPath { get; set; }
+        /// <summary>
+        /// A Unity AssetBundle file (built with Unity 2020.3, built-in render pipeline) holding the 3D model to use
+        /// instead of the template's. Null keeps the template's model.
+        /// </summary>
+        public string ModelBundlePath { get; set; }
+        /// <summary>The model's name inside the bundle (the imported model's name, e.g. "Thomas").</summary>
+        public string ModelAsset { get; set; }
     }
 
     /// <summary>An item a mod added.</summary>
@@ -79,6 +87,8 @@ public static class Content
         public ItemSpec Spec { get; internal set; }
         /// <summary>The game's item once built (the game builds items at startup), else null.</summary>
         public ItemType Item { get; internal set; }
+        /// <summary>For furniture and other placeable items: the prefab GUID placed copies are saved with.</summary>
+        public string PrefabGuid { get; internal set; }
         internal string LocGuid;
         internal LocItemPlain Texts;
     }
@@ -173,14 +183,18 @@ public static class Content
 
     internal static void Install(Harmony harmony)
     {
+        // InitializeProviderData reloads _allItems from Resources and builds the GUID map from it, so the copies go in
+        // afterwards: appended to the list and added to the map.
         harmony.Patch(AccessTools.Method(typeof(ItemDatabase), nameof(ItemDatabase.InitializeProviderData)),
-            prefix: new HarmonyMethod(typeof(Content), nameof(BeforeItemDatabase)));
+            postfix: new HarmonyMethod(typeof(Content), nameof(AfterItemDatabase)));
         harmony.Patch(AccessTools.Method(typeof(MealDatabase), nameof(MealDatabase.LoadResources)),
             postfix: new HarmonyMethod(typeof(Content), nameof(AfterRecipesLoaded)));
         // The language's text table is rebuilt on a language change; put the custom texts back.
         harmony.Patch(AccessTools.Method(typeof(LocObjectsDB), nameof(LocObjectsDB.ForceUpdateCurrentLanguagePairs)),
             postfix: new HarmonyMethod(typeof(Content), nameof(RegisterTexts)));
         GameEvents.GameReady += LearnStartingRecipes;
+        ContentModels.Install(harmony);
+        ContentGuard.Install(harmony);
     }
 
     // An item by squashed name: the copies first, then every item asset in memory.
@@ -189,12 +203,18 @@ public static class Content
         string want = Items.Squash(name);
         var custom = items.FirstOrDefault(c => c.Item != null && Items.Squash(c.Spec.Name) == want);
         if (custom != null) return custom.Item;
+        // By asset name first; then by the name the game shows, then by model prefab name (e.g. "Furniture_Radio_Cyber"),
+        // so templates can be named however a modder found them (content dump, the game's menus, AssetStudio).
+        ItemType byShown = null, byPrefab = null;
         foreach (var o in Resources.FindObjectsOfTypeAll(Il2CppType.Of<ItemType>()))
         {
             var it = o.TryCast<ItemType>();
-            if (it != null && Items.Squash(it.name) == want) return it;
+            if (it == null) continue;
+            if (Items.Squash(it.name) == want) return it;
+            if (byShown == null) { try { if (Items.Squash(it.Name) == want) byShown = it; } catch { } }
+            if (byPrefab == null) { try { if (it.entityPrefab != null && Items.Squash(it.entityPrefab.name) == want) byPrefab = it; } catch { } }
         }
-        return null;
+        return byShown ?? byPrefab;
     }
 
     // Builds the copies on first need (the item and recipe databases may initialize in either order).
@@ -204,8 +224,7 @@ public static class Content
             if (c.Item == null) Build(c);
     }
 
-    // The item database builds its GUID map from _allItems here; the copies go in first.
-    static void BeforeItemDatabase(ItemDatabase __instance)
+    static void AfterItemDatabase(ItemDatabase __instance)
     {
         itemsBuilt = true;
         if (items.Count == 0) return;
@@ -222,6 +241,10 @@ public static class Content
                 __instance._allItems = arr;
                 KitPlugin.L.LogInfo($"Content: added {add.Count} item(s): {string.Join(", ", add.Select(c => c.Spec.Name))}");
             }
+            var map = __instance._guidItemTypeMap;
+            if (map != null)
+                foreach (var c in items.Where(c => c.Item != null))
+                    map[c.Guid] = c.Item;
             RegisterTexts();
         }
         catch (Exception e) { KitPlugin.L.LogError($"Content: building items failed: {e}"); }
@@ -247,7 +270,14 @@ public static class Content
         if (s.DecayDays.HasValue) item.decayTimeInDays = s.DecayDays.Value;
 
         // Its own text entry, so every screen that shows the name or description finds the mod's text.
-        c.Texts = new LocItemPlain { guid = c.LocGuid };
+        // The game reads these fields directly (ItemType.Name, tooltips); the struct is what language files load into.
+        c.Texts = new LocItemPlain
+        {
+            guid = c.LocGuid,
+            displayName = s.Name,
+            shortDisplayName = s.ShortName ?? s.Name,
+            description = s.Description ?? "",
+        };
         c.Texts.myStruct = new TextsStruct
         {
             name = s.Name, shortName = s.ShortName ?? s.Name, description = s.Description ?? "", GUID = c.LocGuid,
@@ -263,7 +293,16 @@ public static class Content
                 var go = UnityEngine.Object.Instantiate(template.entityPrefab.gameObject, PrefabHolder().transform);
                 go.name = s.Name;
                 var entity = go.GetComponent<ItemEntity>();
-                if (entity != null) { entity.data = item; item.entityPrefab = entity; }
+                if (entity != null)
+                {
+                    entity.data = item;
+                    item.entityPrefab = entity;
+                    if (!string.IsNullOrEmpty(s.ModelBundlePath) && !string.IsNullOrEmpty(s.ModelAsset))
+                        ContentModels.ApplyModel(go, s.ModelBundlePath, s.ModelAsset, $"item '{c.Id}'");
+                    // Placed copies are saved by prefab GUID: give this one its own, or it reloads as the template.
+                    c.PrefabGuid = StableGuid($"{c.Owner}/{c.Id}/prefab");
+                    ContentModels.Identify(go, c.PrefabGuid, $"item '{c.Id}'");
+                }
                 else UnityEngine.Object.Destroy(go);
             }
             catch (Exception e) { KitPlugin.L.LogWarning($"Content: item '{c.Id}': model copy failed, sharing {template.name}'s ({e.Message})"); }

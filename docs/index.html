@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/main/docfx/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/custom-content/docfx/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -790,8 +790,8 @@ Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&
 <li>If two mods replace it, the kit's <code>[ModMenu] Browser</code> setting picks one; otherwise the last one wins, and the log says so.</li>
 <li><code>ModMenu.Pages</code> gives your browser the pages other mods added.</li>
 </ul>
-<h3 id="custom-content-experimental-untested-in-game">Custom content (experimental, untested in game)</h3>
-<p>Add items and recipes by copying existing ones and changing what you list. A copy keeps everything you don't change: an item keeps its model, tags, decay and cooking use; a recipe keeps its ingredient slots, processing and place in the unlock panel.</p>
+<h3 id="custom-content-experimental">Custom content (experimental)</h3>
+<p>Add items and recipes by copying existing ones and changing what you list. Worked examples (an ingredient, a drink and its recipe, furniture with a custom model: Thomas the Tank Engine as a radio) are in the <a href="https://bgasm.github.io/NivalisModKit/content.html">Custom content guide</a>; <a href="https://bgasm.github.io/NivalisModKit/asset-bundles.html">Making an AssetBundle</a> covers models. A copy keeps everything you don't change: an item keeps its model, tags, decay and cooking use; a recipe keeps its ingredient slots, processing and place in the unlock panel.</p>
 <pre><code class="lang-csharp">public override void Load()   // register before the game builds its databases
 {
     Content.AddItem(MyGuid, &quot;espresso-tonic&quot;, &quot;Galaxy Lemonade&quot;, item =&gt;
@@ -819,12 +819,12 @@ Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&
 <tbody>
 <tr>
 <td>Template</td>
-<td>An item name</td>
+<td>An item name (also matched by the name the game shows, or its model prefab's name, e.g. <code>Furniture_Radio_Cyber</code>)</td>
 <td>A dish name (its recipe is copied) or a recipe asset name</td>
 </tr>
 <tr>
 <td>You can set</td>
-<td><code>Name</code> (required), <code>ShortName</code>, <code>Description</code>, <code>BasePrice</code>, <code>MinStock</code>, <code>MaxStock</code>, <code>DecayDays</code>, <code>IconPath</code> (PNG)</td>
+<td><code>Name</code> (required), <code>ShortName</code>, <code>Description</code>, <code>BasePrice</code>, <code>MinStock</code>, <code>MaxStock</code>, <code>DecayDays</code>, <code>IconPath</code> (PNG), <code>ModelBundlePath</code> + <code>ModelAsset</code> (a 3D model)</td>
 <td><code>Output</code> (any item, yours included), <code>OutputAmount</code>, <code>ReplaceIngredient</code> (swap a slot's default ingredient by name), <code>UnlockCost</code>, <code>KnownFromStart</code></td>
 </tr>
 </tbody>
@@ -839,9 +839,15 @@ Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&
 <p><strong>Rules that keep saves working:</strong></p>
 <ul>
 <li>Each item and recipe gets a fixed GUID from your owner name and <code>id</code>. Never change an <code>id</code> once players have it.</li>
-<li>Removing a mod whose items are in a save hasn't been tested yet; treat custom content as permanent in a save for now.</li>
+<li>Removing a content mod is safe <strong>as long as the player doesn't save without it</strong>: the game skips the missing items, placed objects and recipes cleanly, and they all come back when the mod is reinstalled. <strong>Saving without the mod removes them from that save permanently.</strong> The kit warns the player when a save they load uses content that is missing (<code>[Content] WarnMissingContent</code>, on by default), but say so on your mod's page too.</li>
 </ul>
-<p><strong>Not yet:</strong> new 3D models (copies use the template's model), custom furniture that survives being placed and reloaded, plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. These are researched and planned.</p>
+<p><strong>Models and furniture:</strong></p>
+<ul>
+<li>A copy gets its own model prefab, so picking it up gives the copy, not the template.</li>
+<li><code>ModelBundlePath</code> + <code>ModelAsset</code> (JSON: <code>&quot;model&quot;: { &quot;bundle&quot;: &quot;file&quot;, &quot;asset&quot;: &quot;Name&quot; }</code>) swap in your own 3D model from a Unity AssetBundle, built with <strong>Unity 2020.3, built-in render pipeline</strong>, holding only a model, its materials and textures (no scripts). The copy keeps the template's behaviour (placement, collider, sounds); its main mesh and materials become yours, the template's shadow mesh is hidden, your model keeps the size you built it at, and box colliders are fitted to it.</li>
+<li>Placeable copies (furniture, decorations) get their own prefab GUID, registered with the game's save system, so a placed copy reloads as itself.</li>
+</ul>
+<p><strong>Not yet:</strong> plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. Researched and planned.</p>
 <h3 id="helpers">Helpers</h3>
 <table>
 <thead>
@@ -973,7 +979,7 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <p><code>CommandArgs</code> has <code>Get</code>, <code>GetInt</code>, <code>GetFloat</code>, <code>GetBool</code> (on/off/true/false/1/0, or a bare <code>?flag</code>) and <code>Has</code>. A name another mod already registered is refused, and the log says which. Throwing returns the message as an error.</p>
 <p>Three ways to run them:</p>
 <ul>
-<li><strong>In game:</strong> turn on <code>[DevConsole] Enabled</code> and press <code>`</code> (<code>[DevConsole] Key</code>): a terminal drops from the top of the screen. Type <code>demo style=Panel</code>, Enter. Up/Down recall earlier commands, Tab completes names, the mouse wheel or Page Up/Down scroll back, <code>clear</code> empties it, Esc or <code>`</code> closes it. Quote values with spaces: <code>notify text=&quot;hello there&quot;</code>. It needs no bridge, and works on the title screen too (commands that need a save say so).</li>
+<li><strong>In game:</strong> turn on <code>[DevConsole] Enabled</code> and press <code>`</code> (<code>[DevConsole] Key</code>): a terminal drops from the top of the screen. Type <code>demo style=Panel</code>, Enter. Up/Down recall earlier commands, Tab completes names, the mouse wheel or Page Up/Down scroll back, <code>clear</code> empties it, Esc or <code>`</code> closes it. Values can contain spaces without quotes (<code>give item=Thomas the Tank Engine</code>); quotes work too. It needs no bridge, and works on the title screen too (commands that need a save say so).</li>
 <li><strong>Windows terminal:</strong> <code>tools\kit.cmd demo style=Panel</code> (<code>tools\kit.cmd</code> alone lists them). Needs <code>[DevBridge] Enabled</code> and <code>AllowCommands</code>.</li>
 <li><strong>Git Bash or scripts:</strong> <code>tools/bridge.sh cmd demo style=Panel</code>, same requirements.</li>
 </ul>

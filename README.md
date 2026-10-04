@@ -376,9 +376,9 @@ The browser also reads BepInEx ConfigurationManager's `ConfigurationManagerAttri
 - If two mods replace it, the kit's `[ModMenu] Browser` setting picks one; otherwise the last one wins, and the log says so.
 - `ModMenu.Pages` gives your browser the pages other mods added.
 
-### Custom content (experimental, untested in game)
+### Custom content (experimental)
 
-Add items and recipes by copying existing ones and changing what you list. A copy keeps everything you don't change: an item keeps its model, tags, decay and cooking use; a recipe keeps its ingredient slots, processing and place in the unlock panel.
+Add items and recipes by copying existing ones and changing what you list. Worked examples (an ingredient, a drink and its recipe, furniture with a custom model: Thomas the Tank Engine as a radio) are in the [Custom content guide](https://bgasm.github.io/NivalisModKit/content.html); [Making an AssetBundle](https://bgasm.github.io/NivalisModKit/asset-bundles.html) covers models. A copy keeps everything you don't change: an item keeps its model, tags, decay and cooking use; a recipe keeps its ingredient slots, processing and place in the unlock panel.
 
 ```csharp
 public override void Load()   // register before the game builds its databases
@@ -400,8 +400,8 @@ public override void Load()   // register before the game builds its databases
 
 | | Item (`ItemSpec`) | Recipe (`RecipeSpec`) |
 |---|---|---|
-| Template | An item name | A dish name (its recipe is copied) or a recipe asset name |
-| You can set | `Name` (required), `ShortName`, `Description`, `BasePrice`, `MinStock`, `MaxStock`, `DecayDays`, `IconPath` (PNG) | `Output` (any item, yours included), `OutputAmount`, `ReplaceIngredient` (swap a slot's default ingredient by name), `UnlockCost`, `KnownFromStart` |
+| Template | An item name (also matched by the name the game shows, or its model prefab's name, e.g. `Furniture_Radio_Cyber`) | A dish name (its recipe is copied) or a recipe asset name |
+| You can set | `Name` (required), `ShortName`, `Description`, `BasePrice`, `MinStock`, `MaxStock`, `DecayDays`, `IconPath` (PNG), `ModelBundlePath` + `ModelAsset` (a 3D model) | `Output` (any item, yours included), `OutputAmount`, `ReplaceIngredient` (swap a slot's default ingredient by name), `UnlockCost`, `KnownFromStart` |
 
 **No code needed:** a `*.content.json` file anywhere under `BepInEx\plugins` does the same. See [samples/ContentPack](samples/ContentPack) for a complete example with an icon.
 
@@ -413,9 +413,14 @@ public override void Load()   // register before the game builds its databases
 
 **Rules that keep saves working:**
 - Each item and recipe gets a fixed GUID from your owner name and `id`. Never change an `id` once players have it.
-- Removing a mod whose items are in a save hasn't been tested yet; treat custom content as permanent in a save for now.
+- Removing a content mod is safe **as long as the player doesn't save without it**: the game skips the missing items, placed objects and recipes cleanly, and they all come back when the mod is reinstalled. **Saving without the mod removes them from that save permanently.** The kit warns the player when a save they load uses content that is missing (`[Content] WarnMissingContent`, on by default), but say so on your mod's page too.
 
-**Not yet:** new 3D models (copies use the template's model), custom furniture that survives being placed and reloaded, plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. These are researched and planned.
+**Models and furniture:**
+- A copy gets its own model prefab, so picking it up gives the copy, not the template.
+- `ModelBundlePath` + `ModelAsset` (JSON: `"model": { "bundle": "file", "asset": "Name" }`) swap in your own 3D model from a Unity AssetBundle, built with **Unity 2020.3, built-in render pipeline**, holding only a model, its materials and textures (no scripts). The copy keeps the template's behaviour (placement, collider, sounds); its main mesh and materials become yours, the template's shadow mesh is hidden, your model keeps the size you built it at, and box colliders are fitted to it.
+- Placeable copies (furniture, decorations) get their own prefab GUID, registered with the game's save system, so a placed copy reloads as itself.
+
+**Not yet:** plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. Researched and planned.
 
 ### Helpers
 
@@ -494,7 +499,7 @@ DevCommands.Register(MyGuid, "give-money", "amount=N: add money (hundredths)", a
 
 Three ways to run them:
 
-- **In game:** turn on `[DevConsole] Enabled` and press `` ` `` (`[DevConsole] Key`): a terminal drops from the top of the screen. Type `demo style=Panel`, Enter. Up/Down recall earlier commands, Tab completes names, the mouse wheel or Page Up/Down scroll back, `clear` empties it, Esc or `` ` `` closes it. Quote values with spaces: `notify text="hello there"`. It needs no bridge, and works on the title screen too (commands that need a save say so).
+- **In game:** turn on `[DevConsole] Enabled` and press `` ` `` (`[DevConsole] Key`): a terminal drops from the top of the screen. Type `demo style=Panel`, Enter. Up/Down recall earlier commands, Tab completes names, the mouse wheel or Page Up/Down scroll back, `clear` empties it, Esc or `` ` `` closes it. Values can contain spaces without quotes (`give item=Thomas the Tank Engine`); quotes work too. It needs no bridge, and works on the title screen too (commands that need a save say so).
 - **Windows terminal:** `tools\kit.cmd demo style=Panel` (`tools\kit.cmd` alone lists them). Needs `[DevBridge] Enabled` and `AllowCommands`.
 - **Git Bash or scripts:** `tools/bridge.sh cmd demo style=Panel`, same requirements.
 

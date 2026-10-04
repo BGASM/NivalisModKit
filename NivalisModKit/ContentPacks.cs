@@ -16,7 +16,8 @@ namespace NivalisModKit;
 ///   "owner": "you.cherrypack",
 ///   "items": [
 ///     { "id": "cherry-cola", "template": "Cola", "name": "Cherry Cola",
-///       "description": "Cola with a cherry kick.", "basePrice": 4.5, "icon": "cherry-cola.png" }
+///       "description": "Cola with a cherry kick.", "basePrice": 4.5, "icon": "cherry-cola.png",
+///       "model": { "bundle": "cherry-cola", "asset": "CherryCola" } }
 ///   ],
 ///   "recipes": [
 ///     { "id": "cherry-cola", "template": "Cola", "output": "Cherry Cola",
@@ -68,6 +69,13 @@ public static class ContentPacks
         public int? MaxStock { get; set; }
         public int? DecayDays { get; set; }
         public string Icon { get; set; }
+        public ModelRef Model { get; set; }
+    }
+
+    sealed class ModelRef
+    {
+        public string Bundle { get; set; }
+        public string Asset { get; set; }
     }
 
     sealed class RecipeModel
@@ -126,6 +134,11 @@ public static class ContentPacks
                     s.Name = i.Name; s.ShortName = i.ShortName; s.Description = i.Description;
                     s.BasePrice = i.BasePrice; s.MinStock = i.MinStock; s.MaxStock = i.MaxStock; s.DecayDays = i.DecayDays;
                     if (!string.IsNullOrEmpty(i.Icon)) s.IconPath = System.IO.Path.Combine(dir, i.Icon);
+                    if (i.Model != null && !string.IsNullOrEmpty(i.Model.Bundle))
+                    {
+                        s.ModelBundlePath = System.IO.Path.Combine(dir, i.Model.Bundle);
+                        s.ModelAsset = i.Model.Asset;
+                    }
                 });
                 pack.Items++;
             }

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Making an AssetBundle | Nivalis ModKit </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Making an AssetBundle | Nivalis ModKit ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/custom-content/docfx/asset-bundles.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="Nivalis ModKit">
+            Nivalis ModKit
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="making-an-assetbundle">Making an AssetBundle</h1>
+
+<p>An AssetBundle is a file Unity builds that holds a model with its materials and textures. A content item can wear a model from one (<code>&quot;model&quot;: { &quot;bundle&quot;: &quot;file&quot;, &quot;asset&quot;: &quot;Name&quot; }</code> in a content pack, or <code>ModelBundlePath</code> + <code>ModelAsset</code> in code; see <a href="content.html">Custom content</a>).</p>
+<p>This walks from a model in Blender to a bundle the game loads. You need Blender (any recent version) and Unity <strong>2020.3</strong>.</p>
+<h2 id="rules-first">Rules first</h2>
+<ul>
+<li><strong>Unity 2020.3, built-in render pipeline.</strong> The game is built with Unity 2020.3.44f1. Bundles from other major versions may fail to load; 2020.3 patch versions work (2020.3.34f1 was used to test). URP and HDRP materials show up pink.</li>
+<li><strong>One mesh.</strong> The kit uses the first mesh in your model. Join the parts into one object before exporting; one mesh can still have several materials.</li>
+<li><strong>No scripts.</strong> Only the model, its materials and textures. Scripts in a bundle can't run in the game.</li>
+<li><strong>Only what you may share.</strong> Your own work, or models whose license allows it (keep their credit in your pack and on your mod page). Never models extracted from the game or other games.</li>
+</ul>
+<h2 id="1-prepare-the-model-in-blender">1. Prepare the model in Blender</h2>
+<ol>
+<li><p><strong>Size it in metres.</strong> Blender's units are metres, and so are the game's. Check the Dimensions in the N panel against your template's <code>size</code> in the <a href="content-dump.html">content dump</a>'s items.json, or a similar item's: that's how big the game's own model is. Typical sizes, width x height x depth, measured from the game:</p>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Drinks, dishes</td>
+<td>Glass drink 0.10 x 0.15 x 0.09 m; plated dish about 0.26 x 0.06 x 0.23 m; coffee mug 0.16 x 0.10 x 0.12 m</td>
+</tr>
+<tr>
+<td>Desk and shelf items</td>
+<td>Mouse 0.10 x 0.15 x 0.11 m; headphones 0.18 x 0.22 x 0.11 m; table lamp 0.19 x 0.48 x 0.19 m; radio 0.29 x 0.50 x 0.16 m; small potted plant 0.21 x 0.34 x 0.20 m</td>
+</tr>
+<tr>
+<td>Seating</td>
+<td>Stool 0.41 x 0.47 x 0.45 m; bar chair 0.39 x 0.80 x 0.39 m; dining chair 0.49 x 1.07 x 0.64 m; two-seat sofa 1.73 x 0.86 x 0.78 m</td>
+</tr>
+<tr>
+<td>Tables</td>
+<td>Table 0.92 x 0.79 x 0.94 m; long table 1.96 x 0.77 x 0.99 m; high table 1.64 x 1.08 x 0.75 m</td>
+</tr>
+<tr>
+<td>Kitchen</td>
+<td>Base cabinet 0.60 or 0.90 x 0.99 x 0.66 m; wall cabinet 0.90 x 0.44 x 0.33 m; range 0.90 x 0.99 x 0.66 m; washing machine 0.73 x 1.04 x 0.75 m</td>
+</tr>
+<tr>
+<td>Bigger furniture</td>
+<td>Book shelf 0.69 x 1.60 x 0.35 m; floor lamp 0.39 x 1.40 x 0.39 m; single bed 1.00 x 0.57 x 2.13 m; vending machine about 1.3 x 2.1 x 0.6 m</td>
+</tr>
+<tr>
+<td>On the wall</td>
+<td>Painting about 0.92 x 0.92 m, 0.01 to 0.04 m deep; wall TV 1.02 x 0.62 x 0.08 m; small photo frame 0.46 x 0.36 x 0.07 m</td>
+</tr>
+<tr>
+<td>Floor</td>
+<td>Carpet 1.84 x 1.38 m up to 4.8 x 2.7 m, 0.01 to 0.04 m thick</td>
+</tr>
+</tbody>
+</table>
+<p>Thomas, as a shelf ornament, is 0.12 x 0.17 x 0.35 m: radio-sized. Matching the template's size also means the placement box (fitted to your model) sits where players expect.</p>
+</li>
+<li><p><strong>Put the origin at the bottom centre.</strong> The game places an object by its origin, so an origin in the middle sinks half the model into the shelf. Snap the 3D cursor to the base (Shift+S), then Object &gt; Set Origin &gt; Origin to 3D Cursor.</p>
+</li>
+<li><p><strong>Join the parts</strong> into one object: select them all, Ctrl+J.</p>
+</li>
+<li><p><strong>Apply transforms</strong>: Ctrl+A &gt; All Transforms. Rotation 0, scale 1, size as shown.</p>
+</li>
+<li><p><strong>Facing:</strong> the kit keeps your model's rotation as built. If it faces backwards in the game, rotate it in Blender, apply, and export again.</p>
+</li>
+<li><p><strong>Export:</strong> File &gt; Export &gt; FBX. Limit to <em>Selected Objects</em>, Object Types <em>Mesh</em>, <em>Apply Transform</em> on. For textures, set Path Mode to <em>Copy</em> and turn on <em>Embed Textures</em> (the button beside it), or copy the image files into Unity yourself.</p>
+</li>
+</ol>
+<h2 id="2-set-up-a-unity-project">2. Set up a Unity project</h2>
+<ol>
+<li>Install <strong>Unity Hub</strong>, then Unity <strong>2020.3</strong> from the archive (Installs &gt; Install Editor &gt; Archive, or <a href="https://unity.com/releases/editor/archive">unity.com/releases/editor/archive</a>). No extra modules are needed; if the Visual Studio download fails, untick it.</li>
+<li>New project with the <strong>3D</strong> template (the built-in pipeline; not &quot;3D (URP)&quot;).</li>
+<li>Make a folder <code>Assets/Editor</code> and save this script in it as <code>BuildBundles.cs</code>:</li>
+</ol>
+<pre><code class="lang-csharp">using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+public static class BuildBundles
+{
+    // Builds every asset marked with an AssetBundle name into Bundles/, for the Windows game.
+    [MenuItem(&quot;Assets/Build AssetBundles&quot;)]
+    public static void Build()
+    {
+        const string output = &quot;Bundles&quot;;
+        Directory.CreateDirectory(output);
+        BuildPipeline.BuildAssetBundles(output, BuildAssetBundleOptions.ChunkBasedCompression,
+            BuildTarget.StandaloneWindows64);
+        EditorUtility.RevealInFinder(output);
+    }
+
+    // Marks the selected assets for a bundle named after the first one (lower case), for when the
+    // AssetBundle field at the bottom of the Inspector won't take typing.
+    [MenuItem(&quot;Assets/Put Selection In Bundle&quot;)]
+    public static void Mark()
+    {
+        if (Selection.objects.Length == 0) return;
+        string bundle = Selection.objects[0].name.ToLowerInvariant().Replace(' ', '-');
+        foreach (var o in Selection.objects)
+            AssetImporter.GetAtPath(AssetDatabase.GetAssetPath(o)).assetBundleName = bundle;
+        Debug.Log($&quot;Marked {Selection.objects.Length} asset(s) for bundle '{bundle}'&quot;);
+    }
+}
+</code></pre>
+<h2 id="3-import-and-check-the-model">3. Import and check the model</h2>
+<ol>
+<li>Drag the FBX (and any textures) into the Project window.</li>
+<li>Select the FBX. In the Inspector:
+<ul>
+<li><strong>Model</strong> tab: Scale Factor 1, <em>Convert Units</em> on. Apply.</li>
+<li><strong>Materials</strong> tab: <em>Extract Materials...</em> (and <em>Extract Textures...</em> if embedded) into a folder, so you can edit them. They should use the <strong>Standard</strong> shader.</li>
+</ul>
+</li>
+<li>Drag the model into the scene beside a default cube (GameObject &gt; 3D Object &gt; Cube, which is 1 m) and check the size. Fix it in Blender, not with Unity's scale.</li>
+<li>Drag the model from the scene back into the Project window to make a <strong>prefab</strong>, and name it. <strong>This name is the <code>asset</code> in your content pack</strong> (<code>&quot;asset&quot;: &quot;Thomas&quot;</code>), and it must match exactly.</li>
+</ol>
+<h2 id="4-build-the-bundle">4. Build the bundle</h2>
+<ol>
+<li>Select the prefab. At the bottom of the Inspector, set <strong>AssetBundle</strong> to a name (New..., e.g. <code>thomas</code>). If the field won't take text, right-click the prefab &gt; <em>Put Selection In Bundle</em>.</li>
+<li><strong>Assets &gt; Build AssetBundles.</strong> The <code>Bundles</code> folder opens.</li>
+<li>Copy the file named after your bundle (<code>thomas</code>, no extension) into your pack folder. The <code>.manifest</code> files and the file called <code>Bundles</code> aren't needed.</li>
+</ol>
+<h2 id="5-use-it">5. Use it</h2>
+<pre><code>BepInEx\plugins\ThomasPack\
+    thomas.content.json     &quot;model&quot;: { &quot;bundle&quot;: &quot;thomas&quot;, &quot;asset&quot;: &quot;Thomas&quot; }
+    thomas
+    thomas-icon.png
+</code></pre>
+<p>Start the game and look for the model line in <code>BepInEx\LogOutput.log</code>:</p>
+<pre><code>Content: item 'thomas-figure': model 'Thomas' (0.12 x 0.17 x 0.35 m)
+</code></pre>
+<p>Then <code>give item=Thomas the Tank Engine</code> in the dev console, and place it.</p>
+<h2 id="an-icon">An icon</h2>
+<p>Inventory icons are square PNGs; 256 px works well. One way in Blender: an orthographic camera looking down at a three-quarter angle, a Sun light, a transparent background (Render Properties &gt; Film &gt; Transparent), 256 x 256 output, then F12 and save as PNG. Point <code>icon</code> at it.</p>
+<h2 id="if-it-doesnt-look-right">If it doesn't look right</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Log: <code>no model 'X' in ...; keeping the template's look</code></td>
+<td>The bundle file isn't where <code>bundle</code> points, or <code>asset</code> doesn't match the prefab's name</td>
+</tr>
+<tr>
+<td>Log: <code>'X' has no mesh</code></td>
+<td>The prefab has no mesh renderer (an empty or a rig only)</td>
+</tr>
+<tr>
+<td>Pink model</td>
+<td>URP/HDRP project or shader; use the 3D (built-in) template and the Standard shader</td>
+</tr>
+<tr>
+<td>Way too big or small</td>
+<td>Size in Blender, apply scale, Scale Factor 1 in Unity</td>
+</tr>
+<tr>
+<td>Floats or sinks</td>
+<td>The origin isn't at the bottom centre</td>
+</tr>
+<tr>
+<td>Only part of the model shows</td>
+<td>It's several meshes; join them in Blender</td>
+</tr>
+<tr>
+<td>Faces the wrong way</td>
+<td>Rotate in Blender, apply, re-export</td>
+</tr>
+<tr>
+<td>Bundle won't load at all</td>
+<td>Built with a Unity version other than 2020.3, or not for Windows (StandaloneWindows64)</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Nivalis ModKit by BGASM · <a href="https://github.com/BGASM/NivalisModKit">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

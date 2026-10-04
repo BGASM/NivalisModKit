@@ -1408,6 +1408,36 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "asset-bundles.md",
+      "output": {
+        ".html": {
+          "relative_path": "asset-bundles.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "content-dump.md",
+      "output": {
+        ".html": {
+          "relative_path": "content-dump.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "content.md",
+      "output": {
+        ".html": {
+          "relative_path": "content.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "index.md",
       "output": {
         ".html": {

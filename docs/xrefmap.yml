@@ -503,6 +503,19 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Content.CustomItem.Owner
   nameWithType: Content.CustomItem.Owner
+- uid: NivalisModKit.Content.CustomItem.PrefabGuid
+  name: PrefabGuid
+  href: api/NivalisModKit.Content.CustomItem.html#NivalisModKit_Content_CustomItem_PrefabGuid
+  commentId: P:NivalisModKit.Content.CustomItem.PrefabGuid
+  fullName: NivalisModKit.Content.CustomItem.PrefabGuid
+  nameWithType: Content.CustomItem.PrefabGuid
+- uid: NivalisModKit.Content.CustomItem.PrefabGuid*
+  name: PrefabGuid
+  href: api/NivalisModKit.Content.CustomItem.html#NivalisModKit_Content_CustomItem_PrefabGuid_
+  commentId: Overload:NivalisModKit.Content.CustomItem.PrefabGuid
+  isSpec: "True"
+  fullName: NivalisModKit.Content.CustomItem.PrefabGuid
+  nameWithType: Content.CustomItem.PrefabGuid
 - uid: NivalisModKit.Content.CustomItem.Spec
   name: Spec
   href: api/NivalisModKit.Content.CustomItem.html#NivalisModKit_Content_CustomItem_Spec
@@ -697,6 +710,32 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Content.ItemSpec.MinStock
   nameWithType: Content.ItemSpec.MinStock
+- uid: NivalisModKit.Content.ItemSpec.ModelAsset
+  name: ModelAsset
+  href: api/NivalisModKit.Content.ItemSpec.html#NivalisModKit_Content_ItemSpec_ModelAsset
+  commentId: P:NivalisModKit.Content.ItemSpec.ModelAsset
+  fullName: NivalisModKit.Content.ItemSpec.ModelAsset
+  nameWithType: Content.ItemSpec.ModelAsset
+- uid: NivalisModKit.Content.ItemSpec.ModelAsset*
+  name: ModelAsset
+  href: api/NivalisModKit.Content.ItemSpec.html#NivalisModKit_Content_ItemSpec_ModelAsset_
+  commentId: Overload:NivalisModKit.Content.ItemSpec.ModelAsset
+  isSpec: "True"
+  fullName: NivalisModKit.Content.ItemSpec.ModelAsset
+  nameWithType: Content.ItemSpec.ModelAsset
+- uid: NivalisModKit.Content.ItemSpec.ModelBundlePath
+  name: ModelBundlePath
+  href: api/NivalisModKit.Content.ItemSpec.html#NivalisModKit_Content_ItemSpec_ModelBundlePath
+  commentId: P:NivalisModKit.Content.ItemSpec.ModelBundlePath
+  fullName: NivalisModKit.Content.ItemSpec.ModelBundlePath
+  nameWithType: Content.ItemSpec.ModelBundlePath
+- uid: NivalisModKit.Content.ItemSpec.ModelBundlePath*
+  name: ModelBundlePath
+  href: api/NivalisModKit.Content.ItemSpec.html#NivalisModKit_Content_ItemSpec_ModelBundlePath_
+  commentId: Overload:NivalisModKit.Content.ItemSpec.ModelBundlePath
+  isSpec: "True"
+  fullName: NivalisModKit.Content.ItemSpec.ModelBundlePath
+  nameWithType: Content.ItemSpec.ModelBundlePath
 - uid: NivalisModKit.Content.ItemSpec.Name
   name: Name
   href: api/NivalisModKit.Content.ItemSpec.html#NivalisModKit_Content_ItemSpec_Name

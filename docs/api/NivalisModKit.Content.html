@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/main/apiSpec/new?filename=NivalisModKit_Content.md&amp;value=---%0Auid%3A%20NivalisModKit.Content%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/custom-content/apiSpec/new?filename=NivalisModKit_Content.md&amp;value=---%0Auid%3A%20NivalisModKit.Content%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="NivalisModKit_Content" data-uid="NivalisModKit.Content" class="text-break">
-Class Content  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Content.cs/#L41"><i class="bi bi-code-slash"></i></a>
+Class Content  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -105,7 +105,7 @@ Register in your plugin's Load, or ship a <code>*.content.json</code> file (see 
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Experimental(&quot;Items and recipes cloned from existing ones. Save safety when a mod is removed is not yet verified.&quot;)]
+    <pre><code class="lang-csharp hljs">[Experimental(&quot;Items, recipes, models and placeable furniture, tested in game. The API may still grow.&quot;)]
 public static class Content</code></pre>
   </div>
 
@@ -167,7 +167,8 @@ Content.AddRecipe(MyGuid, "cherry-cola", "Cola", recipe =&gt;
 
   <h2 id="NivalisModKit_Content_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>Experimental. Every item and recipe gets a fixed GUID from your mod's GUID and the id you give, so saves find it
-again on the next load. What happens to a save that holds custom content after its mod is removed isn't verified.</p>
+again on the next load. If a content mod is removed, the game skips its items, placed objects and recipes when a save
+loads, and they return when the mod is reinstalled; saving without the mod drops them from that save for good.</p>
 </div>
 
 
@@ -179,7 +180,7 @@ again on the next load. What happens to a save that holds custom content after i
 
   <h3 id="NivalisModKit_Content_AllItems" data-uid="NivalisModKit.Content.AllItems">
   AllItems
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Content.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L99"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Items added by mods.</p>
@@ -211,7 +212,7 @@ again on the next load. What happens to a save that holds custom content after i
 
   <h3 id="NivalisModKit_Content_AllRecipes" data-uid="NivalisModKit.Content.AllRecipes">
   AllRecipes
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Content.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L162"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Recipes added by mods.</p>
@@ -247,7 +248,7 @@ again on the next load. What happens to a save that holds custom content after i
 
   <h3 id="NivalisModKit_Content_AddItem_System_String_System_String_System_String_System_Action_NivalisModKit_Content_ItemSpec__" data-uid="NivalisModKit.Content.AddItem(System.String,System.String,System.String,System.Action{NivalisModKit.Content.ItemSpec})">
   AddItem(string, string, string, Action&lt;ItemSpec&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Content.cs/#L95"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds an item copied from <code class="paramref">template</code> (an item name, as <a class="xref" href="NivalisModKit.Items.html#NivalisModKit_Items_ByName_System_String_">ByName(string)</a> takes it).
@@ -291,7 +292,7 @@ again on the next load. What happens to a save that holds custom content after i
 
   <h3 id="NivalisModKit_Content_AddRecipe_System_String_System_String_System_String_System_Action_NivalisModKit_Content_RecipeSpec__" data-uid="NivalisModKit.Content.AddRecipe(System.String,System.String,System.String,System.Action{NivalisModKit.Content.RecipeSpec})">
   AddRecipe(string, string, string, Action&lt;RecipeSpec&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Content.cs/#L158"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L168"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a recipe copied from the recipe of <code class="paramref">template</code> (a dish name like &quot;Cola&quot;, or a recipe asset
