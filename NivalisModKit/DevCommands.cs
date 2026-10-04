@@ -89,6 +89,9 @@ public static class DevCommands
 
     static IDisposable devPause;
 
+    static Nivalis.InventorySystem.PlayerInventory Inventory() =>
+        Nivalis.Singleton<Nivalis.PlayerManager>.InstanceExist(out var pm) ? pm.LocalPlayer?.Inventory : null;
+
     internal static void RegisterBuiltIns()
     {
         const string kit = ModKit.Guid;
@@ -106,6 +109,24 @@ public static class DevCommands
                 : Enum.TryParse<Nivalis.UI.InGameMenu.InGameMenuTab>(what, true, out var tab) && Ui.OpenMenu(tab);
             if (!ok) throw new ArgumentException($"couldn't open '{what}'. Tabs: {string.Join(", ", Enum.GetNames(typeof(Nivalis.UI.InGameMenu.InGameMenuTab)))}");
             return new { opened = what };
+        });
+
+        Register(kit, "money", "amount=N: add money in hundredths (negative takes it away; 10000 = 100.00)", a =>
+        {
+            if (!a.Has("amount")) throw new ArgumentException("amount=N needed (hundredths: 10000 = 100.00)");
+            var inv = Inventory() ?? throw new InvalidOperationException("no player (load a save first)");
+            int before = inv.Money;
+            inv.ChangeMoneyWithoutReceipt(a.GetInt("amount"));   // the game's own call; raises its money event
+            return new { before, now = inv.Money };
+        });
+
+        Register(kit, "give", "item=Name [amount=N]: put items in the player's inventory", a =>
+        {
+            var item = Items.ByName(a.Get("item", "")) ?? throw new ArgumentException($"no item '{a.Get("item", "")}' (bridge /items lists names)");
+            var inv = Inventory() ?? throw new InvalidOperationException("no player (load a save first)");
+            int amount = Math.Max(1, a.GetInt("amount", 1));
+            inv.AddItem(item, amount);
+            return new { gave = Items.NameOf(item), amount };
         });
 
         Register(kit, "mods", "Open the Mods browser", _ => { ModMenu.Open(); return new { opened = ModMenu.BrowserOwner }; });

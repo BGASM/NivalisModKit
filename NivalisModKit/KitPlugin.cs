@@ -15,7 +15,8 @@ public class KitPlugin : BasePlugin
     internal static ConfigEntry<string> SimulateMissing;
     internal static ConfigEntry<bool> BridgeEnabled;
     internal static ConfigEntry<int> BridgePort;
-    internal static ConfigEntry<bool> BridgeCommands;
+    internal static ConfigEntry<bool> BridgeCommands, ConsoleEnabled;
+    internal static ConfigEntry<string> ConsoleKey, ConsoleFont;
     internal static ConfigEntry<bool> ModMenuEnabled, ShowOtherMods;
     internal static ConfigEntry<UntestedBuildMode> UntestedBuild;
 
@@ -63,6 +64,14 @@ public class KitPlugin : BasePlugin
             "Let development tools run mods' dev commands through the bridge (POST /cmd/name), with this session's " +
             "token from BepInEx\\cache. Commands change the game (open screens, set the clock, whatever mods register). " +
             "Leave off unless you're developing.", advanced));
+        ConsoleEnabled = Config.Bind("DevConsole", "Enabled", false, Desc(
+            "In-game console for mods' dev commands: press Key (` by default) in gameplay, type a command (help lists them), Enter. " +
+            "Commands change the game; leave off unless you're developing or testing.", advanced));
+        ConsoleKey = Config.Bind("DevConsole", "Key", "Backquote", Desc(
+            "Key that opens and closes the console (a Unity Input System key name: Backquote is the ` key; F8, Insert...).", advanced));
+        ConsoleFont = Config.Bind("DevConsole", "Font", "", Desc(
+            "Font for the console, by (part of) its name; the log lists the game's fonts the first time the console " +
+            "opens. Empty = a plain one picked automatically. Applies after a restart.", advanced));
         var frameTiming = Config.Bind("Debug", "FrameTiming", false, Desc(
             "Log frames slower than FrameThresholdMs with how much of them was the kit's own work, and keep " +
             "per-event timings (dev bridge /perf). For diagnosing lag; leave off otherwise.", advanced));
@@ -84,6 +93,8 @@ public class KitPlugin : BasePlugin
         ModMenu.Install();
         ModMenu.ListSettings(ModKit.Guid);
         DevCommands.RegisterBuiltIns();
+        MenuMode.Install();
+        DevConsole.Install();
         ConfigBrowser.Install();
         TitleLine.Install();
         StartServices(liveReload.Value);

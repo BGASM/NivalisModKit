@@ -291,6 +291,7 @@ Game-time jobs compare against the clock each frame, so sleeping past the moment
 | `Ui.Tooltip(element, text)` | The game's hover tooltip on any element |
 | `Ui.OpenMenu(tab)`, `Ui.OpenJournal(quest)`, `Ui.OpenMap()`, `Ui.OpenVenue(area, tab)` | Open the game's screens |
 | `Ui.CreateWindow(title, WindowStyle.Popup / Panel)` | A window of your own from the game's parts: `AddHeader`, `AddText`, `AddButton`, `AddToggle`, `AddSlider`, `AddChoice`, `AddTextField`, `AddValue`, `AddFooterButton`, `Clear`, `Show`, `Hide`, `Closed`. Popup = the game's small confirm popup; Panel = the Settings frame with a scrolling list (experimental) |
+| `Ui.RequestMenuMode(owner)` | Menu mode (cursor on, movement and mouse-look off) until you dispose the handle, for UI you build yourself. Shared: the game leaves menu mode when the last mod releases. `Ui.IsMenuModeRequested`, `Ui.MenuModeOwners` |
 | `Ui.MakeLive(element)` | Make a copy usable: controls interactable, canvas groups clickable, its layout on (Clone and windows do this) |
 | `Ui.Relayout(element)` | Recompute a copy's layout after changing it (Clone/SetText do this) |
 | `Ui.RadialMenu((label, action)...)`, `Ui.AddRadialAction(label, action)`, `Ui.IsRadialOpen` | The game's radial wheel: open it with your actions, or add to it while open (experimental) |
@@ -435,13 +436,11 @@ DevCommands.Register(MyGuid, "give-money", "amount=N: add money (hundredths)", a
 
 `CommandArgs` has `Get`, `GetInt`, `GetFloat`, `GetBool` (on/off/true/false/1/0, or a bare `?flag`) and `Has`. A name another mod already registered is refused, and the log says which. Throwing returns the message as an error.
 
-Running commands needs `[DevBridge] AllowCommands = true` as well as the bridge. Then:
+Three ways to run them:
 
-```
-tools/bridge.sh cmd                       list commands (or GET /cmd)
-tools/bridge.sh cmd demo style=Panel      KitTester's demo window
-tools/bridge.sh cmd clock speed=2 pause=on
-```
+- **In game:** turn on `[DevConsole] Enabled` and press `` ` `` (`[DevConsole] Key`): a terminal drops from the top of the screen. Type `demo style=Panel`, Enter. Up/Down recall earlier commands, Tab completes names, the mouse wheel or Page Up/Down scroll back, `clear` empties it, Esc or `` ` `` closes it. Quote values with spaces: `notify text="hello there"`. It needs no bridge, and works on the title screen too (commands that need a save say so).
+- **Windows terminal:** `tools\kit.cmd demo style=Panel` (`tools\kit.cmd` alone lists them). Needs `[DevBridge] Enabled` and `AllowCommands`.
+- **Git Bash or scripts:** `tools/bridge.sh cmd demo style=Panel`, same requirements.
 
 Without the script: `POST http://127.0.0.1:5710/cmd/<name>?arg=value` with the header `X-Kit-Token`, whose value the kit writes to `BepInEx\cache\nivalismodkit-bridge.token` at every start. The token is what stops a web page from running commands: browsers can't send custom headers to localhost. Requests from a browser (with an `Origin` header) are refused too.
 
@@ -453,6 +452,8 @@ The kit's own commands:
 | `notify text=... [header=...]` | A notification in the game's feed |
 | `open what=Map / Venue / <menu tab>` | Opens a game screen |
 | `mods` | Opens the Mods browser |
+| `money amount=N` | Adds money in hundredths (10000 = 100.00; negative takes it away) |
+| `give item=Name [amount=N]` | Puts items in the player's inventory |
 | `clock [speed=X] [sim=X] [pause=on/off]` | Clock and simulation speed (1 clears), shared pause |
 
 **Without commands.** Live reload works as a command channel too: saving a `.cfg` applies within a second, so a test mod can treat settings as triggers. [KitTester](../../samples/KitTester) still accepts `[Ui] Demo = Panel` and `[Ui] Open = Map` in its `.cfg`.
@@ -472,6 +473,9 @@ The kit's own commands:
 | `[DevBridge] Enabled` | false | Read-only HTTP endpoint on 127.0.0.1 for development tools. Restart to apply. |
 | `[DevBridge] Port` | 5710 | Its port. Restart to apply. |
 | `[DevBridge] AllowCommands` | false | Let tools run mods' dev commands through the bridge (token required). Leave off unless developing. |
+| `[DevConsole] Enabled` | false | In-game console for dev commands. |
+| `[DevConsole] Key` | Backquote | Key that opens and closes it (Unity Input System name; Backquote is `` ` ``). |
+| `[DevConsole] Font` | empty | Console font by name (the log lists the game's fonts); empty picks a plain one. Restart to apply. |
 | `[Debug] FrameTiming` | false | Log slow frames with the kit's share of them; per-event timings at `/perf`. For diagnosing lag. |
 | `[Debug] FrameThresholdMs` | 50 | What counts as a slow frame. |
 | `[Debug] SimulateMissing` | empty | Comma-separated event names to treat as missing. For testing a mod's fallback. Not shown in game. |

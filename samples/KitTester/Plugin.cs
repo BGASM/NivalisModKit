@@ -156,11 +156,17 @@ public class Plugin : BasePlugin
             L.LogInfo($"Ui.Notify -> {Ui.Notify("Kit Tester", $"Test notification at {GameTime.Hour:00}:{GameTime.Minute:00}")}");
             uiNotify.Value = false;
         };
+        DevCommands.Register("bgasm.nivalis.kittester", "dialog", "The two-step Ui.Dialog test", _ => new { shown = ShowDialog() });
         uiDialog.SettingChanged += (_, _) =>
         {
             if (!uiDialog.Value) return;
+            L.LogInfo($"Ui.Dialog -> {ShowDialog()}");
+            uiDialog.Value = false;
+        };
+        bool ShowDialog()
+        {
             // Step 1 stays open; Next replaces it in place with step 2, whose Done closes it.
-            bool shown = Ui.Dialog("Kit Tester", "Step 1 of 2: multi-step dialog test. Stay stays open; Next shows step 2.", false,
+            return Ui.Dialog("Kit Tester", "Step 1 of 2: multi-step dialog test. Stay stays open; Next shows step 2.", false,
                 ("Stay", () => L.LogInfo("Ui.Dialog: Stay clicked (dialog should stay open)")),
                 ("Next", () =>
                 {
@@ -169,9 +175,7 @@ public class Plugin : BasePlugin
                         ("Done", () => L.LogInfo("Ui.Dialog: Done clicked (dialog should close)")));
                     L.LogInfo($"Ui.Dialog step 2 -> {replaced}");
                 }));
-            L.LogInfo($"Ui.Dialog -> {shown}");
-            uiDialog.Value = false;
-        };
+        }
         // [Ui] CloneInto = a panel type name (see the bridge's /ui): the next time it opens, its first
         // active button is copied as "Kit Test", which logs when clicked. Once per panel per session.
         var cloneInto = Config.Bind("Ui", "CloneInto", "", "Panel to add a test button to (Ui.CloneButton): Type or Type:GameObject. Empty = off.");
@@ -198,14 +202,25 @@ public class Plugin : BasePlugin
         // [Ui] RadialAdd = true: when the game opens the wheel (greenhouse module), adds a kit action.
         var uiRadial = Config.Bind("Ui", "Radial", false, "Set to true to open the radial wheel with test actions (Ui.RadialMenu).");
         var uiRadialAdd = Config.Bind("Ui", "RadialAdd", false, "Add a test action whenever the game opens the radial wheel (Ui.AddRadialAction).");
+        bool ShowRadial() => Ui.RadialMenu(("Kit A", () => L.LogInfo("Ui.RadialMenu: Kit A chosen")),
+                                           ("Kit B", () => L.LogInfo("Ui.RadialMenu: Kit B chosen")));
         uiRadial.SettingChanged += (_, _) =>
         {
             if (!uiRadial.Value) return;
-            bool ok = Ui.RadialMenu(("Kit A", () => L.LogInfo("Ui.RadialMenu: Kit A chosen")),
-                                    ("Kit B", () => L.LogInfo("Ui.RadialMenu: Kit B chosen")));
-            L.LogInfo($"Ui.RadialMenu -> {ok}");
+            L.LogInfo($"Ui.RadialMenu -> {ShowRadial()}");
             uiRadial.Value = false;
         };
+        DevCommands.Register("bgasm.nivalis.kittester", "radial", "Open the radial wheel with two kit actions", _ => new { shown = ShowRadial() });
+        DevCommands.Register("bgasm.nivalis.kittester", "clone", "panel=Type[:Object] [label=Text]: copy the first button of an open panel (Ui.CloneButton)", a =>
+        {
+            string spec = a.Get("panel", "");
+            var panel = Ui.Find(spec) ?? throw new ArgumentException($"no panel '{spec}' (bridge /ui lists open ones)");
+            var template = Ui.ButtonsIn(panel).FirstOrDefault(b => b.button.gameObject.activeInHierarchy);
+            if (template.button == null) throw new InvalidOperationException($"{spec} has no visible button (open it first)");
+            string label = a.Get("label", "Kit Test");
+            var go = Ui.CloneButton(template.button, label, () => L.LogInfo($"Ui.CloneButton: {label} clicked"));
+            return new { copied = template.path, from = template.label, made = go?.name };
+        });
         GameEvents.PanelShown += a =>
         {
             if (a.Name != "RadialMenuUI" || !uiRadialAdd.Value) return;
