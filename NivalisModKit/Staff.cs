@@ -71,6 +71,7 @@ public static class Staff
     /// Sets a list's order. <paramref name="order"/> must contain exactly the list's current actions,
     /// rearranged; anything else is refused (returns false) so a typo can't drop a task.
     /// </summary>
+    [Experimental("Changes the shared list directly; will become a Tuning.TaskPriority hook so several mods can combine")]
     public static bool SetOrder(ActionPriorityList list, IEnumerable<AgentActionType> order)
     {
         if (list == null || order == null) return false;
@@ -99,6 +100,7 @@ public static class Staff
     /// Reorders a list by action names (see <see cref="NameOf"/>), most important first. Names not
     /// listed keep their relative order after the named ones. Returns false if a name isn't in the list.
     /// </summary>
+    [Experimental("Changes the shared list directly; will become a Tuning.TaskPriority hook so several mods can combine")]
     public static bool SetOrder(ActionPriorityList list, params string[] names)
     {
         var current = Order(list);

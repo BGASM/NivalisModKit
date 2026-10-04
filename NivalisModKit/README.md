@@ -30,11 +30,28 @@ Reference `NivalisModKit.dll` (from `BepInEx\plugins`, not copied to your output
 
 ```csharp
 [BepInPlugin("you.nivalis.yourmod", "Your Mod", "1.0.0")]
-[BepInDependency(ModKit.Guid)]
+[BepInDependency(ModKit.Guid, ">=0.2.0")]   // the oldest kit you support; BepInEx won't load your mod with an older one
 public class Plugin : BasePlugin
 ```
 
 `NivalisModKit.xml` in the release zip has documentation for every public member. Put it next to the DLL you reference to get it in your editor.
+
+### Lifecycle
+
+Your plugin's `Load` runs at startup, before any game is in progress. From there:
+
+1. `NewGameStarted` or `GameLoaded`: the world is starting or a save finished loading.
+2. `GameReady`: gameplay is usable (the game's managers exist). The safest place to read the world, open windows or apply settings.
+3. `GameEnded`: the player is leaving for the title screen. Let go of game objects you hold. Loading another save from the pause menu skips this and goes straight to step 1.
+
+`GameEvents.IsInGame` is true from `GameReady` until the player leaves. `GameEvents.WhenInGame(action)` runs `action` now if in game, otherwise once at the next `GameReady`:
+
+```csharp
+public override void Load()
+{
+    GameEvents.WhenInGame(() => Ui.Notify("My Mod is active"));   // waits for gameplay
+}
+```
 
 ### Events
 
@@ -45,6 +62,8 @@ public class Plugin : BasePlugin
 | **Game** | |
 | `NewGameStarted` | A new game started. The starting district follows as `DistrictEntered`. |
 | `GameLoaded` | A save finished loading. Has the save name and starting district. |
+| `GameReady` | Gameplay is usable, after either of the above. See Lifecycle. |
+| `GameEnded` | The player is leaving for the title screen. |
 | `GameSaved` | A save was written, manual or autosave. |
 | **UI** | |
 | `PanelShown`, `PanelHidden` | Any UI screen (`UIPanel`) shown or hidden: shops, venue tabs, dialogs, the end-of-day summary. `Name` is the panel's type name. |
@@ -266,7 +285,16 @@ See [samples/KitTester](../../samples/KitTester) and [samples/QuantityTester](..
 
 ### Versioning
 
-Public members are added, never removed. Anything replaced is marked `[Obsolete]` first. A mod built against 0.1 keeps working with later 0.x releases.
+Public members are added, never removed. Anything replaced is marked `[Obsolete]` first and kept for at least one release. A mod built against 0.2 keeps working with later 0.x releases.
+
+The exception is members marked `[Experimental]`. They may change in any release; their note says what to expect. Currently experimental:
+
+| Member | Why |
+|---|---|
+| `Staff.SetOrder` | Changes the game's shared list directly. Will become a `Tuning` hook so several mods can combine. |
+| `Tuning.UseOrder` | The context may change (for example a perishable flag). |
+
+Declare the oldest kit you support with `[BepInDependency(ModKit.Guid, ">=0.2.0")]`. BepInEx then refuses to load your mod with an older kit and says why in the log.
 
 ## Live config reload
 

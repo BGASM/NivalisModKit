@@ -31,6 +31,8 @@ public class Plugin : BasePlugin
         nameof(GameEvents.HourStarted),
         nameof(GameEvents.NewGameStarted),
         nameof(GameEvents.GameLoaded),
+        nameof(GameEvents.GameReady),
+        nameof(GameEvents.GameEnded),
         nameof(GameEvents.GameSaved),
         nameof(GameEvents.DistrictEntered),
         nameof(GameEvents.DishCooked),
@@ -338,6 +340,10 @@ public class Plugin : BasePlugin
         };
 
         GameEvents.NewGameStarted += () => { L.LogInfo("NewGameStarted"); CheckPhase7(); };
+        GameEvents.GameReady += () => L.LogInfo($"GameReady (IsInGame={GameEvents.IsInGame}, day {GameTime.Day} {GameTime.Hour:00}:{GameTime.Minute:00})");
+        GameEvents.GameEnded += () => L.LogInfo($"GameEnded (IsInGame={GameEvents.IsInGame})");
+        // Queued at startup (the menu): runs once at the first GameReady.
+        GameEvents.WhenInGame(() => L.LogInfo($"WhenInGame ran: IsInGame={GameEvents.IsInGame}"));
         GameEvents.GameLoaded += a =>
         {
             L.LogInfo($"GameLoaded: {a.SaveName ?? "?"} in {World.NameOf(a.District)}");

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>NivalisModKit</AssemblyName>
     <RootNamespace>NivalisModKit</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Ships NivalisModKit.xml so dependents get IntelliSense. Missing docs warn (CS1591). -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

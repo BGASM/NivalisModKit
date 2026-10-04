@@ -75,6 +75,18 @@ static partial class EventPatches
             () => typeof(GameSceneManager), nameof(GameSceneManager.StartGame),
             postfix: nameof(StartGamePostfix), args: () => Type.EmptyTypes);
 
+        // The game's own exit-to-title event (MainMenuUI.TitleRequest raises it), so no patch.
+        Subscribe(nameof(GameEvents.GameEnded), () =>
+        {
+            Il2CppSystem.Action action = (Action)OnGameEnded;
+            keepAlive.Add(action);
+            MainMenuUI.add_OnGameEnded(action);   // static event: once is enough
+            return () => true;
+        });
+        // Raised by the kit itself once gameplay is usable (after the load / new game re-attach).
+        attempted++;
+        GameEvents.Live.Add(nameof(GameEvents.GameReady));
+
         // The one top-level save, manual and autosave alike.
         Install(nameof(GameEvents.GameSaved),
             () => typeof(SerializationManager), nameof(SerializationManager.Save),
@@ -394,7 +406,21 @@ static partial class EventPatches
 
     static string loadingSave;
 
-    static void LoadPrefix(string saveName) => loadingSave = saveName;
+    static void LoadPrefix(string saveName)
+    {
+        loadingSave = saveName;
+        GameEvents.MarkLeaving();
+    }
+
+    static void OnGameEnded()
+    {
+        try
+        {
+            Scheduler.Reset();
+            GameEvents.RaiseGameEnded();
+        }
+        catch (Exception e) { KitPlugin.L.LogError($"OnGameEnded: {e}"); }
+    }
 
     // The vendor whose shop window is open, or null.
     static Vendor openShop;
@@ -460,11 +486,13 @@ static partial class EventPatches
                 try { attach(); }
                 catch (Exception e) { KitPlugin.L.LogError($"Re-attach after load: {e.Message}"); }
             }
-            if (!TryWaiting()) ReattachSoon();
+            bool ready = TryWaiting();
+            if (!ready) ReattachSoon();
             GameClock.OnGameStarted();
             Scheduler.Reset();
             SaveData.OnLoaded(loadingSave);
             GameEvents.RaiseGameLoaded(new GameLoadedArgs(loadingSave, district));
+            if (ready) GameEvents.MarkReady();   // otherwise ReattachSoon does, once the game's managers exist
         }
         catch (Exception e) { KitPlugin.L.LogError($"OnPostLoad: {e}"); }
     }
@@ -475,6 +503,7 @@ static partial class EventPatches
     {
         try
         {
+            GameEvents.MarkLeaving();
             lastDistrict = IntPtr.Zero;   // the first arrival in the new game is reported
             Scheduler.Reset();
             SaveData.OnNewGame();
@@ -507,6 +536,7 @@ static partial class EventPatches
                 KitLoop.Tick -= retry;
                 foreach (var w in waitingEvents)
                     KitPlugin.L.LogWarning($"Event {w.ev}: still waiting 10 s after the game started; retries on the next load");
+                GameEvents.MarkReady();
             }
         };
         KitLoop.Tick += retry;

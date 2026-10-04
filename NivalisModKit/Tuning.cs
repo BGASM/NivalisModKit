@@ -165,6 +165,7 @@ public static class Tuning
     ///     return a.remainingDecayTime.CompareTo(b.remainingDecayTime);
     /// });
     /// </code></example>
+    [Experimental("May gain a perishable flag and a different context shape")]
     public static event Action<UseOrderContext> UseOrder { add => useOrder.Add(value); remove => useOrder.Remove(value); }
 
     static void PopIntoPrefix(ItemStack __instance, int count) => RunUseOrder(__instance, count);
