@@ -2,7 +2,7 @@
 
 A shared library for Nivalis Nights mods, by BGASM. It does nothing on its own. Install it when another mod lists it as a requirement.
 
-Mods that need it: [Manager Order Fix](../NivalisOrderFix) 2.0 and later (2.1 needs kit 0.2).
+Mods that need it: [Better Supplier Choice](../NivalisOrderFix), formerly Manager Order Fix (2.0 and later; 2.1 needs kit 0.2).
 
 What you'll see with it installed:
 - the kit and game version on the title screen, above the copyright line
@@ -372,7 +372,7 @@ The browser also reads BepInEx ConfigurationManager's `ConfigurationManagerAttri
 | `NativeHook.Install(...)` | Native detour. Keeps your delegates alive. For methods with by-reference struct parameters, which Harmony can't patch safely. |
 | `StructLayout.FieldOffset<T>(field)`, `Size<T>()` | IL2CPP field offsets and sizes from the running game. Value types have the object header subtracted. |
 
-**Reference example:** [Manager Order Fix](../NivalisOrderFix/Plugin.cs) is a complete kit mod in about 250 lines: a `Purchasing` handler, settings listed in the Mods browser with sliders and an advanced flag, a page of its own (`ModMenu.AddPage`), a dev command, daily stats from `GameEvents`, and a version dependency. [samples/KitTester](../../samples/KitTester) exercises every kit feature for testing, and [samples/QuantityTester](../../samples/QuantityTester) shows `OrderQuantity`.
+**Reference example:** [Better Supplier Choice](../NivalisOrderFix/Plugin.cs) is a complete kit mod in about 250 lines: a `Purchasing` handler, settings listed in the Mods browser with sliders and an advanced flag, a page of its own (`ModMenu.AddPage`), a dev command, daily stats from `GameEvents`, and a version dependency. [samples/KitTester](../../samples/KitTester) exercises every kit feature for testing, and [samples/QuantityTester](../../samples/QuantityTester) shows `OrderQuantity`.
 
 ### Versioning
 
@@ -516,7 +516,7 @@ For modders:
 - Dev tools: `DevCommands.Register` with built-in `help`, `notify`, `open`, `mods`, `clock`, `money`, `give`, `config` (read or change any mod's settings). Run them from the in-game console (`[DevConsole] Enabled`, the `` ` `` key) or through the dev bridge (`[DevBridge] AllowCommands`, token required; `tools\kit.cmd`). The bridge gained `/ui`, `/time`, `/perf`, `/priorities` and venue storage.
 - `[Experimental]` marks API that may still change. `ModKit.TestedGameVersion` is obsolete (use `GameBuild`).
 - Live config reload skips the kit's own saves, so editing in the Mods browser doesn't fight it.
-- [Manager Order Fix](../NivalisOrderFix/Plugin.cs) is the reference example of a kit mod.
+- [Better Supplier Choice](../NivalisOrderFix/Plugin.cs) (formerly Manager Order Fix) is the reference example of a kit mod.
 
 **0.1.0**
 - First release.
