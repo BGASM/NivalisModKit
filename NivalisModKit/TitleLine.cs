@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NivalisModKit;
 
-// A line above the title screen's copyright text: "Nivalis ModKit 0.2.0 · game 1.0 patch 2", in the same font.
+// A line above the title screen's copyright text: "Nivalis ModKit 0.3.0 · game 1.0 patch 2", in the same font.
 // On a build the kit wasn't tested on it says so in orange, and warns once in game.
 internal static class TitleLine
 {

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Content | Nivalis ModKit </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Content | Nivalis ModKit ">
+      
+      <meta name="description" content="Adds new things to the game: items and recipes, each made by copying an existing one and changing what you list. A copied item keeps its template&#39;s model, tags, decay and cooking use, so vendors that sell by tag stock it like its template. A copied recipe keeps its template&#39;s ingredient slots, processing and place in the unlock panel. Register in your plugin&#39;s Load, or ship a *.content.json file (see ).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/custom-content/apiSpec/new?filename=NivalisModKit_Content.md&amp;value=---%0Auid%3A%20NivalisModKit.Content%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Nivalis ModKit">
+            Nivalis ModKit
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="NivalisModKit.Content">
+
+
+
+  <h1 id="NivalisModKit_Content" data-uid="NivalisModKit.Content" class="text-break">
+Class Content  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="NivalisModKit.html">NivalisModKit</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Adds new things to the game: items and recipes, each made by copying an existing one and changing what you list.
+A copied item keeps its template's model, tags, decay and cooking use, so vendors that sell by tag stock it like
+its template. A copied recipe keeps its template's ingredient slots, processing and place in the unlock panel.
+Register in your plugin's Load, or ship a <code>*.content.json</code> file (see <a class="xref" href="NivalisModKit.ContentPacks.html">ContentPacks</a>).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Experimental(&quot;Items, recipes, models and placeable furniture, tested in game. The API may still grow.&quot;)]
+public static class Content</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">Content</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+  <h2 id="NivalisModKit_Content_examples">Examples</h2>
+  <pre><code class="lang-csharp">Content.AddItem(MyGuid, "cherry-cola", "Cola", item =&gt;
+{
+    item.Name = "Cherry Cola";
+    item.Description = "Cola with a cherry kick.";
+    item.BasePrice = 4.5f;
+});
+Content.AddRecipe(MyGuid, "cherry-cola", "Cola", recipe =&gt;
+{
+    recipe.Output = "Cherry Cola";
+    recipe.ReplaceIngredient["Sugar"] = "Cherries";
+    recipe.KnownFromStart = true;
+});</code></pre>
+
+
+  <h2 id="NivalisModKit_Content_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Experimental. Every item and recipe gets a fixed GUID from your mod's GUID and the id you give, so saves find it
+again on the next load. If a content mod is removed, the game skips its items, placed objects and recipes when a save
+loads, and they return when the mod is reinstalled; saving without the mod drops them from that save for good.</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="NivalisModKit_Content_AllItems_" data-uid="NivalisModKit.Content.AllItems*"></a>
+
+  <h3 id="NivalisModKit_Content_AllItems" data-uid="NivalisModKit.Content.AllItems">
+  AllItems
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Items added by mods.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyList&lt;Content.CustomItem&gt; AllItems { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="NivalisModKit.Content.html">Content</a>.<a class="xref" href="NivalisModKit.Content.CustomItem.html">CustomItem</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Content_AllRecipes_" data-uid="NivalisModKit.Content.AllRecipes*"></a>
+
+  <h3 id="NivalisModKit_Content_AllRecipes" data-uid="NivalisModKit.Content.AllRecipes">
+  AllRecipes
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Recipes added by mods.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyList&lt;Content.CustomRecipe&gt; AllRecipes { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="NivalisModKit.Content.html">Content</a>.<a class="xref" href="NivalisModKit.Content.CustomRecipe.html">CustomRecipe</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="NivalisModKit_Content_AddItem_" data-uid="NivalisModKit.Content.AddItem*"></a>
+
+  <h3 id="NivalisModKit_Content_AddItem_System_String_System_String_System_String_System_Action_NivalisModKit_Content_ItemSpec__" data-uid="NivalisModKit.Content.AddItem(System.String,System.String,System.String,System.Action{NivalisModKit.Content.ItemSpec})">
+  AddItem(string, string, string, Action&lt;ItemSpec&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds an item copied from <code class="paramref">template</code> (an item name, as <a class="xref" href="NivalisModKit.Items.html#NivalisModKit_Items_ByName_System_String_">ByName(string)</a> takes it).
+<code class="paramref">id</code> must be unique within your mod and must never change once players have it in saves.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Content.CustomItem AddItem(string owner, string id, string template, Action&lt;Content.ItemSpec&gt; configure)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>template</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>configure</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.Content.html">Content</a>.<a class="xref" href="NivalisModKit.Content.ItemSpec.html">ItemSpec</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="NivalisModKit.Content.html">Content</a>.<a class="xref" href="NivalisModKit.Content.CustomItem.html">CustomItem</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Content_AddRecipe_" data-uid="NivalisModKit.Content.AddRecipe*"></a>
+
+  <h3 id="NivalisModKit_Content_AddRecipe_System_String_System_String_System_String_System_Action_NivalisModKit_Content_RecipeSpec__" data-uid="NivalisModKit.Content.AddRecipe(System.String,System.String,System.String,System.Action{NivalisModKit.Content.RecipeSpec})">
+  AddRecipe(string, string, string, Action&lt;RecipeSpec&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/custom-content/NivalisModKit/Content.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a recipe copied from the recipe of <code class="paramref">template</code> (a dish name like &quot;Cola&quot;, or a recipe asset
+name). <code class="paramref">id</code> must be unique within your mod and must never change once players know it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Content.CustomRecipe AddRecipe(string owner, string id, string template, Action&lt;Content.RecipeSpec&gt; configure)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>id</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>template</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>configure</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.Content.html">Content</a>.<a class="xref" href="NivalisModKit.Content.RecipeSpec.html">RecipeSpec</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="NivalisModKit.Content.html">Content</a>.<a class="xref" href="NivalisModKit.Content.CustomRecipe.html">CustomRecipe</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Nivalis ModKit by BGASM · <a href="https://github.com/BGASM/NivalisModKit">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

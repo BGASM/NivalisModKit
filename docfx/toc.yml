@@ -1,4 +1,10 @@
 - name: Guide
   href: index.md
+- name: Custom content
+  href: content.md
+- name: Content dump reference
+  href: content-dump.md
+- name: Making an AssetBundle
+  href: asset-bundles.md
 - name: API reference
   href: api/

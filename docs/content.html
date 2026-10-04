@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Custom content | Nivalis ModKit </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Custom content | Nivalis ModKit ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/custom-content/docfx/content.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="Nivalis ModKit">
+            Nivalis ModKit
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="custom-content">Custom content</h1>
+
+<div class="NOTE">
+<h5>Note</h5>
+<p>Experimental: tested in game (items, recipes, icons, models, placed furniture, saving and reloading), but the API may still change.</p>
+</div>
+<p>You add items and recipes by <strong>copying something the game already has</strong> and changing what you list. A copy keeps everything you don't change: an item keeps its model, tags, decay and how it cooks; a recipe keeps its ingredient slots, processing steps and place in the unlock panel; a piece of furniture keeps its placement, collider and sounds. So the first decision is always: <em>which existing thing is closest to what I want?</em></p>
+<p>Three worked examples, from smallest to largest:</p>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Shows</th>
+<th>Made with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#example-1-kit-test-chicken-code">Kit Test Chicken</a></td>
+<td>A new ingredient: name, price, icon</td>
+<td>C# (<code>Content.AddItem</code>)</td>
+</tr>
+<tr>
+<td><a href="#example-2-espresso-tonic-json-pack">Espresso Tonic</a></td>
+<td>A new drink <strong>and</strong> its recipe</td>
+<td>A JSON content pack, no code</td>
+</tr>
+<tr>
+<td><a href="#example-3-thomas-the-tank-engine-furniture-with-your-own-model">Thomas the Tank Engine</a></td>
+<td>Furniture with your own 3D model</td>
+<td>A JSON content pack plus a Unity AssetBundle</td>
+</tr>
+</tbody>
+</table>
+<h2 id="finding-a-template">Finding a template</h2>
+<p>Use the dev command <code>content dump</code> (dev console or bridge). It writes three files to <code>BepInEx\cache\NivalisModKit\content\</code>:</p>
+<ul>
+<li><strong>items.json</strong>: every item, with its asset name, the name players see, price, stock range, tags, decay, whether it's furniture, its model prefab, the model's size in metres and its icon.</li>
+<li><strong>recipes.json</strong>: every recipe, with its output, ingredient slots (item, amount, slot, processing, substitutes), unlock cost, prerequisites and whether it's known from the start.</li>
+<li><strong>vendors.json</strong>: every vendor, with its district, type and what it stocks (by tag or by item).</li>
+</ul>
+<p>A template can be named by its asset name, the name players see, or its model prefab's name (<code>Furniture_Radio_Cyber</code>, as AssetStudio shows it). An excerpt of items.json:</p>
+<pre><code class="lang-json">{
+  &quot;asset&quot;: &quot;Absinthe&quot;,
+  &quot;name&quot;: &quot;Absinthe&quot;,
+  &quot;basePrice&quot;: 8,
+  &quot;stock&quot;: &quot;50-150&quot;,
+  &quot;ingredient&quot;: true,
+  &quot;furniture&quot;: false,
+  &quot;tags&quot;: [ &quot;Liquid&quot;, &quot;Alcohol&quot;, &quot;Consumable&quot; ],
+  &quot;model&quot;: null,
+  &quot;icon&quot;: &quot;Absinthe&quot;
+}
+</code></pre>
+<p>Every field is explained in the <a href="content-dump.html">content dump reference</a>. The <strong>tags</strong> decide who sells your copy: vendors stock by tag (see vendors.json), so a copy of Absinthe is sold wherever Absinthe is.</p>
+<h2 id="example-1-kit-test-chicken-code">Example 1: Kit Test Chicken (code)</h2>
+<p>The smallest useful item: a copy of Chicken with its own name, price and icon. It cooks exactly like chicken, and butchers stock it beside the original. It is in the <a href="https://github.com/BGASM/NivalisModKit/tree/main/samples/KitTester">KitTester sample</a> behind its <code>[Content] TestItem</code> setting.</p>
+<pre><code class="lang-csharp">public override void Load()   // register in Load: the game builds its item database after plugins load
+{
+    string dir = Path.GetDirectoryName(typeof(Plugin).Assembly.Location);
+    Content.AddItem(&quot;bgasm.nivalis.kittester&quot;, &quot;test-chicken&quot;, &quot;Chicken&quot;, item =&gt;
+    {
+        item.Name = &quot;Kit Test Chicken&quot;;
+        item.Description = &quot;A chicken added by the Nivalis ModKit (Content.AddItem). Cooks like chicken.&quot;;
+        item.BasePrice = 9.99f;
+        item.IconPath = Path.Combine(dir, &quot;KitTesterIcon.png&quot;);
+    });
+}
+</code></pre>
+<ul>
+<li>The first two arguments are the <strong>owner</strong> (your plugin GUID) and an <strong>id</strong>. Together they make the item's GUID, which the save file stores. Never change either once players have the item.</li>
+<li>The third is the <strong>template</strong>, <code>&quot;Chicken&quot;</code>.</li>
+<li><code>IconPath</code> is a PNG beside your DLL; square, 256 px works well. Without one the copy keeps the template's icon.</li>
+</ul>
+<p>Check it in game with the dev commands <code>content</code> (lists what mods added, and whether each was built and is sold) and <code>give item=Kit Test Chicken</code>.</p>
+<h2 id="example-2-espresso-tonic-json-pack">Example 2: Espresso Tonic (JSON pack)</h2>
+<p>A new drink and the recipe that makes it, with no code. This is the <a href="https://github.com/BGASM/NivalisModKit/tree/main/samples/ContentPack">ContentPack sample</a>: a folder with one JSON file and one PNG, dropped anywhere under <code>BepInEx\plugins</code>.</p>
+<pre><code>BepInEx\plugins\EspressoTonic\
+    espresso-tonic.content.json
+    espresso-tonic.png
+</code></pre>
+<pre><code class="lang-json">{
+  // Comments and trailing commas are allowed.
+  &quot;owner&quot;: &quot;bgasm.examples.espressotonic&quot;,
+  &quot;items&quot;: [
+    {
+      &quot;id&quot;: &quot;espresso-tonic&quot;,
+      &quot;template&quot;: &quot;Galaxy Lemonade&quot;,
+      &quot;name&quot;: &quot;Espresso Tonic&quot;,
+      &quot;description&quot;: &quot;Tonic water over a shot of espresso. Bitter, bright, and very awake.&quot;,
+      &quot;icon&quot;: &quot;espresso-tonic.png&quot;
+    }
+  ],
+  &quot;recipes&quot;: [
+    {
+      &quot;id&quot;: &quot;espresso-tonic&quot;,
+      &quot;template&quot;: &quot;Galaxy Lemonade&quot;,
+      &quot;output&quot;: &quot;Espresso Tonic&quot;,
+      &quot;replace&quot;: { &quot;Butterfly Pea Flower&quot;: &quot;Coffee Beans&quot; },
+      &quot;knownFromStart&quot;: true
+    }
+  ]
+}
+</code></pre>
+<ul>
+<li><strong>The item</strong> copies the Galaxy Lemonade drink: same glass, same model, same place in the drinks list.</li>
+<li><strong>The recipe</strong> copies Galaxy Lemonade's recipe, makes the new drink instead (<code>output</code> may name your own item), and swaps one ingredient: the slot that defaulted to Butterfly Pea Flower now defaults to Coffee Beans. recipes.json shows each recipe's slots and their default ingredients.</li>
+<li><code>knownFromStart</code> teaches it on the first load. Without it, the recipe sits in the unlock panel like its template and costs inspiration points (<code>unlockCost</code>).</li>
+<li>Paths (<code>icon</code>) are relative to the JSON file.</li>
+</ul>
+<p>The same in C#:</p>
+<pre><code class="lang-csharp">Content.AddItem(MyGuid, &quot;espresso-tonic&quot;, &quot;Galaxy Lemonade&quot;, item =&gt;
+{
+    item.Name = &quot;Espresso Tonic&quot;;
+    item.Description = &quot;Tonic water over a shot of espresso. Bitter, bright, and very awake.&quot;;
+    item.IconPath = Path.Combine(dir, &quot;espresso-tonic.png&quot;);
+});
+Content.AddRecipe(MyGuid, &quot;espresso-tonic&quot;, &quot;Galaxy Lemonade&quot;, recipe =&gt;
+{
+    recipe.Output = &quot;Espresso Tonic&quot;;
+    recipe.ReplaceIngredient[&quot;Butterfly Pea Flower&quot;] = &quot;Coffee Beans&quot;;
+    recipe.KnownFromStart = true;
+});
+</code></pre>
+<h2 id="example-3-thomas-the-tank-engine-furniture-with-your-own-model">Example 3: Thomas the Tank Engine (furniture with your own model)</h2>
+<p>A shelf ornament with a custom model: a free, low-poly Thomas the Tank Engine, scaled down in Blender and built into an AssetBundle. It copies the cyber radio, so it can be bought, placed, picked up, stored and saved like the radio. It also <strong>keeps the radio's behaviour</strong>: Thomas plays music when switched on. Pick a template that behaves the way you want.</p>
+<p>This one was a private test and isn't published; use your own model, or one whose license lets you share it.</p>
+<pre><code>BepInEx\plugins\ThomasPack\
+    thomas.content.json
+    thomas                (the AssetBundle file, no extension)
+    thomas-icon.png
+    CREDITS.txt           (the model's license requires credit)
+</code></pre>
+<pre><code class="lang-json">{
+  &quot;owner&quot;: &quot;bgasm.test.thomas&quot;,
+  &quot;items&quot;: [
+    {
+      &quot;id&quot;: &quot;thomas-figure&quot;,
+      &quot;template&quot;: &quot;Furniture_Radio_Cyber&quot;,
+      &quot;name&quot;: &quot;Thomas the Tank Engine&quot;,
+      &quot;description&quot;: &quot;A cheerful little tank engine for your shelf.&quot;,
+      &quot;basePrice&quot;: 25,
+      &quot;icon&quot;: &quot;thomas-icon.png&quot;,
+      &quot;model&quot;: { &quot;bundle&quot;: &quot;thomas&quot;, &quot;asset&quot;: &quot;Thomas&quot; }
+    }
+  ]
+}
+</code></pre>
+<ul>
+<li><code>model.bundle</code> is the AssetBundle file (relative to the JSON); <code>model.asset</code> is the name of the model inside it. <a href="asset-bundles.html">Making an AssetBundle</a> walks through building one from a Blender model.</li>
+<li>The radio's main mesh and materials become the model's; its shadow mesh and other parts are hidden; the model keeps the size it was built at; the radio's colliders are resized to fit it.</li>
+<li>Furniture vendors stock it like the radio (<code>basePrice</code> sets its price).</li>
+<li>A placed copy has its own identity in the save, so Thomas reloads as Thomas, not as a radio.</li>
+</ul>
+<p>The log confirms the swap with the model's size:</p>
+<pre><code>Content: item 'thomas-figure' is placeable; prefab 0475737b-74b6-e9c3-44cc-f51d0952eb67
+Content: item 'thomas-figure': model 'Thomas' (0.12 x 0.17 x 0.35 m)
+</code></pre>
+<h2 id="what-you-can-set">What you can set</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Item (<code>ItemSpec</code> / JSON)</th>
+<th>Recipe (<code>RecipeSpec</code> / JSON)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Template</td>
+<td>An item: asset name, shown name, or model prefab name</td>
+<td>A dish name (its recipe is copied) or a recipe asset name</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td><code>Name</code> / <code>name</code> (required), <code>ShortName</code>, <code>Description</code>, <code>BasePrice</code>, <code>MinStock</code>, <code>MaxStock</code>, <code>DecayDays</code>, <code>IconPath</code> / <code>icon</code>, <code>ModelBundlePath</code> + <code>ModelAsset</code> / <code>model</code></td>
+<td><code>Output</code>, <code>OutputAmount</code>, <code>ReplaceIngredient</code> / <code>replace</code>, <code>UnlockCost</code>, <code>KnownFromStart</code></td>
+</tr>
+</tbody>
+</table>
+<p>Set <code>MinStock = 0, MaxStock = 0</code> for an item vendors shouldn't sell (one you only give through a recipe or a command).</p>
+<h2 id="saves">Saves</h2>
+<ul>
+<li>An item's or recipe's GUID comes from its owner and id. <strong>Never change either once players have it</strong>: a new GUID is a different item, and the old one disappears from their saves.</li>
+<li><strong>Removing a content mod is safe as long as the player doesn't save without it.</strong> The game skips the missing items, recipes and placed objects, and they come back when the mod is reinstalled. Saving without the mod removes them from that save for good.</li>
+<li>The kit warns the player when a save they load uses content that isn't installed, before they can save (<code>[Content] WarnMissingContent</code>, on by default). Still, say it on your mod's page.</li>
+</ul>
+<h2 id="not-yet">Not yet</h2>
+<p>Plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. Researched and planned.</p>
+
+</article>
+
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Nivalis ModKit by BGASM · <a href="https://github.com/BGASM/NivalisModKit">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

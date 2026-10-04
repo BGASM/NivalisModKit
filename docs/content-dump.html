@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Content dump reference | Nivalis ModKit </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Content dump reference | Nivalis ModKit ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/custom-content/docfx/content-dump.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="Nivalis ModKit">
+            Nivalis ModKit
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="content-dump-reference">Content dump reference</h1>
+
+<p>The dev command <code>content dump</code> (dev console or bridge, in gameplay) writes what the game holds to <code>BepInEx\cache\NivalisModKit\content\</code>. Run it on your own game: the files match the build you have, including other mods' content, and they change when the game is patched. This page explains the fields; it doesn't list the data.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>One entry per</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>items.json</code></td>
+<td>Item: ingredients, dishes, drinks, furniture, decorations, tools</td>
+</tr>
+<tr>
+<td><code>recipes.json</code></td>
+<td>Recipe, with its ingredient slots</td>
+</tr>
+<tr>
+<td><code>vendors.json</code></td>
+<td>Vendor, with what it stocks</td>
+</tr>
+</tbody>
+</table>
+<p>A field the kit couldn't read is <code>null</code>.</p>
+<h2 id="itemsjson">items.json</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>asset</code></td>
+<td>The item's asset name. Use it as a content <code>template</code>.</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>The name players see (also accepted as a template). <code>null</code>: the game shows none (decorations, story items).</td>
+</tr>
+<tr>
+<td><code>guid</code></td>
+<td>The GUID saves store.</td>
+</tr>
+<tr>
+<td><code>custom</code></td>
+<td>Added by a mod through the kit.</td>
+</tr>
+<tr>
+<td><code>basePrice</code></td>
+<td>Base price; vendors' prices vary around it day to day.</td>
+</tr>
+<tr>
+<td><code>stock</code></td>
+<td>Units a vendor stocks, <code>min-max</code>. <code>0-0</code>: not sold.</td>
+</tr>
+<tr>
+<td><code>buy</code>, <code>sell</code></td>
+<td>The game's flags for buying it from and selling it to vendors.</td>
+</tr>
+<tr>
+<td><code>ingredient</code></td>
+<td>Usable in recipes.</td>
+</tr>
+<tr>
+<td><code>furniture</code></td>
+<td>Placeable furniture or appliance.</td>
+</tr>
+<tr>
+<td><code>plant</code>, <code>fish</code></td>
+<td>Grows in a planter; is a catch.</td>
+</tr>
+<tr>
+<td><code>decayDays</code></td>
+<td>Days until it spoils. <code>0</code>: doesn't spoil.</td>
+</tr>
+<tr>
+<td><code>fridge</code></td>
+<td>Needs refrigeration.</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>The item's tags. Vendors stock by tag, and recipe slots accept substitutes by tag, so a copy is sold and cooked wherever its template is.</td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td>The model prefab's name (as AssetStudio shows it; also accepted as a template). <code>null</code>: no model.</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>The model's visible size in metres: <code>x</code> width, <code>y</code> height, <code>z</code> depth. Compare it with your own model's size (Blender's Dimensions) before building a bundle.</td>
+</tr>
+<tr>
+<td><code>icon</code></td>
+<td>The inventory icon's sprite name.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recipesjson">recipes.json</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>asset</code></td>
+<td>The recipe's asset name (accepted as a recipe <code>template</code>, as is the dish name).</td>
+</tr>
+<tr>
+<td><code>guid</code></td>
+<td>The GUID saves store.</td>
+</tr>
+<tr>
+<td><code>custom</code></td>
+<td>Added by a mod through the kit.</td>
+</tr>
+<tr>
+<td><code>output</code>, <code>amount</code></td>
+<td>The item it makes, and how many.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Its menu category: Drink, Fish, Soup, Meat, Seafood, Sandwich, Salad, Dessert, Pizza, Snack...</td>
+</tr>
+<tr>
+<td><code>unlockCost</code></td>
+<td>Inspiration points to unlock it.</td>
+</tr>
+<tr>
+<td><code>known</code></td>
+<td>Known in the save the dump was taken in.</td>
+</tr>
+<tr>
+<td><code>disabled</code>, <code>playerOnly</code></td>
+<td>The game's flags of those names.</td>
+</tr>
+<tr>
+<td><code>prerequisites</code></td>
+<td>Recipes that must be unlocked first.</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>The ingredient slots (below).</td>
+</tr>
+</tbody>
+</table>
+<p>Each entry in <code>inputs</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>item</code></td>
+<td>The slot's default ingredient. A content recipe's <code>replace</code> names this item to swap it.</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>How many.</td>
+</tr>
+<tr>
+<td><code>slot</code></td>
+<td>The slot: Main, Topping, Seasoning, Sides, Sauce.</td>
+</tr>
+<tr>
+<td><code>processing</code></td>
+<td>How it's prepared: None, Raw, Cooker, Blender, Grill, Pan, Oven, DeepFryer, or several (<code>Oven, Blender</code>).</td>
+</tr>
+<tr>
+<td><code>substitutes</code></td>
+<td>Tags whose items may replace the default.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vendorsjson">vendors.json</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>The vendor.</td>
+</tr>
+<tr>
+<td><code>district</code></td>
+<td>Where it is.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>What kind: Greengrocer, Butcher, Fishmonger, Drinks vendor, Hardware vendor, Venue furniture vendor...</td>
+</tr>
+<tr>
+<td><code>tier</code></td>
+<td>The game's vendor tier (<code>None</code>, or a letter).</td>
+</tr>
+<tr>
+<td><code>offers</code></td>
+<td>What it stocks (below).</td>
+</tr>
+<tr>
+<td><code>excluded</code></td>
+<td>Items it never stocks, even when an offered tag matches.</td>
+</tr>
+</tbody>
+</table>
+<p>Each entry in <code>offers</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>by</code></td>
+<td><code>Tag</code>: every item with <code>tag</code>. <code>Item</code>: just <code>item</code>.</td>
+</tr>
+<tr>
+<td><code>tag</code>, <code>item</code></td>
+<td>What is offered.</td>
+</tr>
+<tr>
+<td><code>priceBonus</code></td>
+<td>Added to the price at this vendor.</td>
+</tr>
+<tr>
+<td><code>stockMultiplier</code></td>
+<td>Scales the item's <code>stock</code> range at this vendor.</td>
+</tr>
+</tbody>
+</table>
+<p>To see who will sell your copy, look up the template's <code>tags</code> in items.json, then the vendors whose <code>offers</code> have those tags.</p>
+
+</article>
+
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Nivalis ModKit by BGASM · <a href="https://github.com/BGASM/NivalisModKit">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

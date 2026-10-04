@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/main/docfx/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/custom-content/docfx/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -98,7 +98,7 @@
 <li>Extract the release zip into the game folder. The file lands at <code>BepInEx\plugins\NivalisModKit.dll</code>.</li>
 </ol>
 <p>To confirm it loaded, open <code>BepInEx\LogOutput.log</code> and look for these lines:</p>
-<pre><code>Nivalis ModKit 0.2.0 loaded
+<pre><code>Nivalis ModKit 0.3.0 loaded
 Game build: 1.0 patch 2, Steam build 25680465 (tested)
 Event BuyIngredientsStarting: live
 ...
@@ -790,6 +790,64 @@ Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&
 <li>If two mods replace it, the kit's <code>[ModMenu] Browser</code> setting picks one; otherwise the last one wins, and the log says so.</li>
 <li><code>ModMenu.Pages</code> gives your browser the pages other mods added.</li>
 </ul>
+<h3 id="custom-content-experimental-kit-030">Custom content (experimental, kit 0.3.0+)</h3>
+<p>Add items and recipes by copying existing ones and changing what you list. Worked examples (an ingredient, a drink and its recipe, furniture with a custom model: Thomas the Tank Engine as a radio) are in the <a href="https://bgasm.github.io/NivalisModKit/content.html">Custom content guide</a>; <a href="https://bgasm.github.io/NivalisModKit/asset-bundles.html">Making an AssetBundle</a> covers models. A copy keeps everything you don't change: an item keeps its model, tags, decay and cooking use; a recipe keeps its ingredient slots, processing and place in the unlock panel.</p>
+<pre><code class="lang-csharp">public override void Load()   // register before the game builds its databases
+{
+    Content.AddItem(MyGuid, &quot;espresso-tonic&quot;, &quot;Galaxy Lemonade&quot;, item =&gt;
+    {
+        item.Name = &quot;Espresso Tonic&quot;;
+        item.Description = &quot;Tonic water over a shot of espresso.&quot;;
+        item.IconPath = Path.Combine(Path.GetDirectoryName(typeof(Plugin).Assembly.Location), &quot;espresso-tonic.png&quot;);
+    });
+    Content.AddRecipe(MyGuid, &quot;espresso-tonic&quot;, &quot;Galaxy Lemonade&quot;, recipe =&gt;
+    {
+        recipe.Output = &quot;Espresso Tonic&quot;;
+        recipe.ReplaceIngredient[&quot;Butterfly Pea Flower&quot;] = &quot;Coffee Beans&quot;;
+        recipe.KnownFromStart = true;
+    });
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Item (<code>ItemSpec</code>)</th>
+<th>Recipe (<code>RecipeSpec</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Template</td>
+<td>An item name (also matched by the name the game shows, or its model prefab's name, e.g. <code>Furniture_Radio_Cyber</code>)</td>
+<td>A dish name (its recipe is copied) or a recipe asset name</td>
+</tr>
+<tr>
+<td>You can set</td>
+<td><code>Name</code> (required), <code>ShortName</code>, <code>Description</code>, <code>BasePrice</code>, <code>MinStock</code>, <code>MaxStock</code>, <code>DecayDays</code>, <code>IconPath</code> (PNG), <code>ModelBundlePath</code> + <code>ModelAsset</code> (a 3D model)</td>
+<td><code>Output</code> (any item, yours included), <code>OutputAmount</code>, <code>ReplaceIngredient</code> (swap a slot's default ingredient by name), <code>UnlockCost</code>, <code>KnownFromStart</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>No code needed:</strong> a <code>*.content.json</code> file anywhere under <code>BepInEx\plugins</code> does the same. See <a href="https://github.com/BGASM/NivalisModKit/tree/main/samples/ContentPack">samples/ContentPack</a> for a complete example with an icon.</p>
+<p><strong>How players get them:</strong></p>
+<ul>
+<li><strong>Items</strong> are stocked by every vendor that sells the template's tags, at their own daily price. Set <code>MinStock = 0, MaxStock = 0</code> for an item vendors shouldn't sell.</li>
+<li><strong>Recipes</strong> appear in the cooking screen's unlock panel like the template, unlocked with inspiration points (<code>UnlockCost</code>). <code>KnownFromStart</code> makes the player know one from the first load. The game saves which recipes are known.</li>
+</ul>
+<p><strong>Finding names:</strong> the dev command <code>content dump</code> writes every item, recipe (with ingredient slots) and vendor (with what it stocks) to <code>BepInEx\cache\NivalisModKit\content\</code>. <code>content</code> alone lists what mods added and whether it was built.</p>
+<p><strong>Rules that keep saves working:</strong></p>
+<ul>
+<li>Each item and recipe gets a fixed GUID from your owner name and <code>id</code>. Never change an <code>id</code> once players have it.</li>
+<li>Removing a content mod is safe <strong>as long as the player doesn't save without it</strong>: the game skips the missing items, placed objects and recipes cleanly, and they all come back when the mod is reinstalled. <strong>Saving without the mod removes them from that save permanently.</strong> The kit warns the player when a save they load uses content that is missing (<code>[Content] WarnMissingContent</code>, on by default), but say so on your mod's page too.</li>
+</ul>
+<p><strong>Models and furniture:</strong></p>
+<ul>
+<li>A copy gets its own model prefab, so picking it up gives the copy, not the template.</li>
+<li><code>ModelBundlePath</code> + <code>ModelAsset</code> (JSON: <code>&quot;model&quot;: { &quot;bundle&quot;: &quot;file&quot;, &quot;asset&quot;: &quot;Name&quot; }</code>) swap in your own 3D model from a Unity AssetBundle, built with <strong>Unity 2020.3, built-in render pipeline</strong>, holding only a model, its materials and textures (no scripts). The copy keeps the template's behaviour (placement, collider, sounds); its main mesh and materials become yours, the template's shadow mesh is hidden, your model keeps the size you built it at, and box colliders are fitted to it.</li>
+<li>Placeable copies (furniture, decorations) get their own prefab GUID, registered with the game's save system, so a placed copy reloads as itself.</li>
+</ul>
+<p><strong>Not yet:</strong> plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. Researched and planned.</p>
 <h3 id="helpers">Helpers</h3>
 <table>
 <thead>
@@ -840,6 +898,10 @@ Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&
 <tr>
 <td><code>Tuning.UseOrder</code></td>
 <td>The context may change (for example a perishable flag).</td>
+</tr>
+<tr>
+<td><code>Content</code>, <code>ContentPacks</code></td>
+<td>First version, not yet tested in game; the API may grow.</td>
 </tr>
 </tbody>
 </table>
@@ -917,7 +979,7 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <p><code>CommandArgs</code> has <code>Get</code>, <code>GetInt</code>, <code>GetFloat</code>, <code>GetBool</code> (on/off/true/false/1/0, or a bare <code>?flag</code>) and <code>Has</code>. A name another mod already registered is refused, and the log says which. Throwing returns the message as an error.</p>
 <p>Three ways to run them:</p>
 <ul>
-<li><strong>In game:</strong> turn on <code>[DevConsole] Enabled</code> and press <code>`</code> (<code>[DevConsole] Key</code>): a terminal drops from the top of the screen. Type <code>demo style=Panel</code>, Enter. Up/Down recall earlier commands, Tab completes names, the mouse wheel or Page Up/Down scroll back, <code>clear</code> empties it, Esc or <code>`</code> closes it. Quote values with spaces: <code>notify text=&quot;hello there&quot;</code>. It needs no bridge, and works on the title screen too (commands that need a save say so).</li>
+<li><strong>In game:</strong> turn on <code>[DevConsole] Enabled</code> and press <code>`</code> (<code>[DevConsole] Key</code>): a terminal drops from the top of the screen. Type <code>demo style=Panel</code>, Enter. Up/Down recall earlier commands, Tab completes names, the mouse wheel or Page Up/Down scroll back, <code>clear</code> empties it, Esc or <code>`</code> closes it. Values can contain spaces without quotes (<code>give item=Thomas the Tank Engine</code>); quotes work too. It needs no bridge, and works on the title screen too (commands that need a save say so).</li>
 <li><strong>Windows terminal:</strong> <code>tools\kit.cmd demo style=Panel</code> (<code>tools\kit.cmd</code> alone lists them). Needs <code>[DevBridge] Enabled</code> and <code>AllowCommands</code>.</li>
 <li><strong>Git Bash or scripts:</strong> <code>tools/bridge.sh cmd demo style=Panel</code>, same requirements.</li>
 </ul>
@@ -1064,6 +1126,19 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <p>Mods can check the build too: <code>GameBuild.IsTested</code>, <code>GameBuild.Describe()</code> and <code>GameBuild.SteamBuildId</code>.</p>
 <p>Other mods that detour <code>Vendor.BuyItem</code> directly will conflict with the purchasing pipeline. Build on <code>Purchasing</code> instead.</p>
 <h2 id="changes">Changes</h2>
+<p><strong>0.3.0</strong></p>
+<p>For players:</p>
+<ul>
+<li>Mods can add new items, recipes and furniture (see below). If you load a save that uses content from a mod that isn't installed any more, the kit tells you what's missing before you save: saving would remove it from that save for good (<code>[Content] WarnMissingContent</code>, on by default).</li>
+</ul>
+<p>For modders:</p>
+<ul>
+<li><strong>Custom content (experimental):</strong> <code>Content.AddItem</code> and <code>Content.AddRecipe</code> copy an existing item or recipe and change what you list: name, description, price, stock, decay, icon, recipe output, ingredient swaps, unlock cost, known from the start. Or skip code: <code>*.content.json</code> packs anywhere under <code>BepInEx\plugins</code>.</li>
+<li>Items can wear your own 3D model from a Unity AssetBundle. Furniture copies keep the template's behaviour, can be placed, stored and saved, and reload as themselves.</li>
+<li>Dev commands: <code>content</code> (what mods added, and whether it was built and is sold) and <code>content dump</code> (every item with model sizes, recipe with ingredient slots, and vendor with its stock, as JSON).</li>
+<li>New guides on the documentation site: <a href="https://bgasm.github.io/NivalisModKit/content.html">Custom content</a> (three worked examples), <a href="https://bgasm.github.io/NivalisModKit/content-dump.html">Content dump reference</a>, <a href="https://bgasm.github.io/NivalisModKit/asset-bundles.html">Making an AssetBundle</a>.</li>
+<li>Fixes: the console keeps unquoted names after <code>key=value</code> together; the bridge decodes <code>+</code> in queries as a space; failed dev commands are logged.</li>
+</ul>
 <p><strong>0.2.0</strong></p>
 <p>For players:</p>
 <ul>
@@ -1115,6 +1190,10 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <tr>
 <td><code>samples/QuantityTester</code></td>
 <td><code>Purchasing.OrderQuantity</code> example</td>
+</tr>
+<tr>
+<td><code>samples/ContentPack</code></td>
+<td>Example content pack: a new drink from a JSON file and an icon</td>
 </tr>
 <tr>
 <td><code>tools/</code></td>

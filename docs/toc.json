@@ -1,2 +1,2 @@
 
-{"items":[{"name":"Guide","href":"index.html","topicHref":"index.html"},{"name":"API reference","href":"api/NivalisModKit.html","tocHref":"api/toc.html","topicHref":"api/NivalisModKit.html","topicUid":"NivalisModKit"}]}
+{"items":[{"name":"Guide","href":"index.html","topicHref":"index.html"},{"name":"Custom content","href":"content.html","topicHref":"content.html"},{"name":"Content dump reference","href":"content-dump.html","topicHref":"content-dump.html"},{"name":"Making an AssetBundle","href":"asset-bundles.html","topicHref":"asset-bundles.html"},{"name":"API reference","href":"api/NivalisModKit.html","tocHref":"api/toc.html","topicHref":"api/NivalisModKit.html","topicUid":"NivalisModKit"}]}

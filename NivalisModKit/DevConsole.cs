@@ -232,12 +232,16 @@ internal static class DevConsole
         if (sb.Length > 0) tokens.Add(sb.ToString());
         if (tokens.Count == 0) throw new ArgumentException("empty command");
 
+        // A plain word after name=value continues that value, so "give item=Thomas the Tank Engine" needs no quotes.
+        // A plain word before any name=value is a flag (e.g. "content dump").
         var args = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        string last = null;
         foreach (var t in tokens.Skip(1))
         {
             int eq = t.IndexOf('=');
-            if (eq < 0) args[t] = "";
-            else args[t.Substring(0, eq)] = t.Substring(eq + 1);
+            if (eq > 0) { last = t.Substring(0, eq); args[last] = t.Substring(eq + 1); }
+            else if (last != null) args[last] = args[last] + " " + t;
+            else args[t] = "";
         }
         return (tokens[0], args);
     }
