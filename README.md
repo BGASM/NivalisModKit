@@ -31,7 +31,7 @@ See [Building from source](#building-from-source) to get set up.
 To confirm it loaded, open `BepInEx\LogOutput.log` and look for these lines:
 
 ```
-Nivalis ModKit 0.2.0 loaded
+Nivalis ModKit 0.3.0 loaded
 Game build: 1.0 patch 2, Steam build 25680465 (tested)
 Event BuyIngredientsStarting: live
 ...
@@ -376,7 +376,7 @@ The browser also reads BepInEx ConfigurationManager's `ConfigurationManagerAttri
 - If two mods replace it, the kit's `[ModMenu] Browser` setting picks one; otherwise the last one wins, and the log says so.
 - `ModMenu.Pages` gives your browser the pages other mods added.
 
-### Custom content (experimental)
+### Custom content (experimental, kit 0.3.0+)
 
 Add items and recipes by copying existing ones and changing what you list. Worked examples (an ingredient, a drink and its recipe, furniture with a custom model: Thomas the Tank Engine as a radio) are in the [Custom content guide](https://bgasm.github.io/NivalisModKit/content.html); [Making an AssetBundle](https://bgasm.github.io/NivalisModKit/asset-bundles.html) covers models. A copy keeps everything you don't change: an item keeps its model, tags, decay and cooking use; a recipe keeps its ingredient slots, processing and place in the unlock panel.
 
@@ -555,6 +555,18 @@ Mods can check the build too: `GameBuild.IsTested`, `GameBuild.Describe()` and `
 Other mods that detour `Vendor.BuyItem` directly will conflict with the purchasing pipeline. Build on `Purchasing` instead.
 
 ## Changes
+
+**0.3.0**
+
+For players:
+- Mods can add new items, recipes and furniture (see below). If you load a save that uses content from a mod that isn't installed any more, the kit tells you what's missing before you save: saving would remove it from that save for good (`[Content] WarnMissingContent`, on by default).
+
+For modders:
+- **Custom content (experimental):** `Content.AddItem` and `Content.AddRecipe` copy an existing item or recipe and change what you list: name, description, price, stock, decay, icon, recipe output, ingredient swaps, unlock cost, known from the start. Or skip code: `*.content.json` packs anywhere under `BepInEx\plugins`.
+- Items can wear your own 3D model from a Unity AssetBundle. Furniture copies keep the template's behaviour, can be placed, stored and saved, and reload as themselves.
+- Dev commands: `content` (what mods added, and whether it was built and is sold) and `content dump` (every item with model sizes, recipe with ingredient slots, and vendor with its stock, as JSON).
+- New guides on the documentation site: [Custom content](https://bgasm.github.io/NivalisModKit/content.html) (three worked examples), [Content dump reference](https://bgasm.github.io/NivalisModKit/content-dump.html), [Making an AssetBundle](https://bgasm.github.io/NivalisModKit/asset-bundles.html).
+- Fixes: the console keeps unquoted names after `key=value` together; the bridge decodes `+` in queries as a space; failed dev commands are logged.
 
 **0.2.0**
 

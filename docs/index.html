@@ -98,7 +98,7 @@
 <li>Extract the release zip into the game folder. The file lands at <code>BepInEx\plugins\NivalisModKit.dll</code>.</li>
 </ol>
 <p>To confirm it loaded, open <code>BepInEx\LogOutput.log</code> and look for these lines:</p>
-<pre><code>Nivalis ModKit 0.2.0 loaded
+<pre><code>Nivalis ModKit 0.3.0 loaded
 Game build: 1.0 patch 2, Steam build 25680465 (tested)
 Event BuyIngredientsStarting: live
 ...
@@ -790,7 +790,7 @@ Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&
 <li>If two mods replace it, the kit's <code>[ModMenu] Browser</code> setting picks one; otherwise the last one wins, and the log says so.</li>
 <li><code>ModMenu.Pages</code> gives your browser the pages other mods added.</li>
 </ul>
-<h3 id="custom-content-experimental">Custom content (experimental)</h3>
+<h3 id="custom-content-experimental-kit-030">Custom content (experimental, kit 0.3.0+)</h3>
 <p>Add items and recipes by copying existing ones and changing what you list. Worked examples (an ingredient, a drink and its recipe, furniture with a custom model: Thomas the Tank Engine as a radio) are in the <a href="https://bgasm.github.io/NivalisModKit/content.html">Custom content guide</a>; <a href="https://bgasm.github.io/NivalisModKit/asset-bundles.html">Making an AssetBundle</a> covers models. A copy keeps everything you don't change: an item keeps its model, tags, decay and cooking use; a recipe keeps its ingredient slots, processing and place in the unlock panel.</p>
 <pre><code class="lang-csharp">public override void Load()   // register before the game builds its databases
 {
@@ -1126,6 +1126,19 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <p>Mods can check the build too: <code>GameBuild.IsTested</code>, <code>GameBuild.Describe()</code> and <code>GameBuild.SteamBuildId</code>.</p>
 <p>Other mods that detour <code>Vendor.BuyItem</code> directly will conflict with the purchasing pipeline. Build on <code>Purchasing</code> instead.</p>
 <h2 id="changes">Changes</h2>
+<p><strong>0.3.0</strong></p>
+<p>For players:</p>
+<ul>
+<li>Mods can add new items, recipes and furniture (see below). If you load a save that uses content from a mod that isn't installed any more, the kit tells you what's missing before you save: saving would remove it from that save for good (<code>[Content] WarnMissingContent</code>, on by default).</li>
+</ul>
+<p>For modders:</p>
+<ul>
+<li><strong>Custom content (experimental):</strong> <code>Content.AddItem</code> and <code>Content.AddRecipe</code> copy an existing item or recipe and change what you list: name, description, price, stock, decay, icon, recipe output, ingredient swaps, unlock cost, known from the start. Or skip code: <code>*.content.json</code> packs anywhere under <code>BepInEx\plugins</code>.</li>
+<li>Items can wear your own 3D model from a Unity AssetBundle. Furniture copies keep the template's behaviour, can be placed, stored and saved, and reload as themselves.</li>
+<li>Dev commands: <code>content</code> (what mods added, and whether it was built and is sold) and <code>content dump</code> (every item with model sizes, recipe with ingredient slots, and vendor with its stock, as JSON).</li>
+<li>New guides on the documentation site: <a href="https://bgasm.github.io/NivalisModKit/content.html">Custom content</a> (three worked examples), <a href="https://bgasm.github.io/NivalisModKit/content-dump.html">Content dump reference</a>, <a href="https://bgasm.github.io/NivalisModKit/asset-bundles.html">Making an AssetBundle</a>.</li>
+<li>Fixes: the console keeps unquoted names after <code>key=value</code> together; the bridge decodes <code>+</code> in queries as a space; failed dev commands are logged.</li>
+</ul>
 <p><strong>0.2.0</strong></p>
 <p>For players:</p>
 <ul>
