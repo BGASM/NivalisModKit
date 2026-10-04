@@ -222,10 +222,18 @@ public class Plugin : BasePlugin
             string what = uiDemo.Value.Trim();
             if (what == "") return;
             uiDemo.Value = "";
-            if (!Enum.TryParse<WindowStyle>(what, true, out var style)) { L.LogInfo($"Ui demo: unknown style '{what}' (Popup or Panel)"); return; }
-            if (demos.TryGetValue(style, out var old) && old.Root != null) { old.Show(); L.LogInfo($"Ui.CreateWindow {style} demo: shown again"); return; }
+            L.LogInfo(OpenDemo(what));
+        };
+        // The same as a dev command: tools/bridge.sh cmd demo style=Panel (needs [DevBridge] AllowCommands).
+        DevCommands.Register("bgasm.nivalis.kittester", "demo", "style=Popup|Panel: open a Ui.CreateWindow demo", a =>
+            new { result = OpenDemo(a.Get("style", "Popup")) });
+
+        string OpenDemo(string what)
+        {
+            if (!Enum.TryParse<WindowStyle>(what, true, out var style)) return $"Ui demo: unknown style '{what}' (Popup or Panel)";
+            if (demos.TryGetValue(style, out var old) && old.Root != null) { old.Show(); return $"Ui.CreateWindow {style} demo: shown again"; }
             var w = Ui.CreateWindow($"ModKit {style} demo", style);
-            if (w == null) { L.LogInfo($"Ui.CreateWindow({style}) -> null (load a save first)"); return; }
+            if (w == null) return $"Ui.CreateWindow({style}) -> null (load a save first)";
             demos[style] = w;
             w.AddText($"A {style.ToString().ToLower()} window built at runtime from the game's own parts, " +
                       "with rows added by the Nivalis ModKit.");
@@ -246,8 +254,8 @@ public class Plugin : BasePlugin
             w.AddFooterButton("Close", w.Hide);
             w.Closed += () => L.LogInfo($"Ui.CreateWindow {style} demo: closed");
             w.Show();
-            L.LogInfo($"Ui.CreateWindow {style} demo: shown (toggle {(toggle != null ? "ok" : "missing")}, slider {(slider != null ? "ok" : "missing")})");
-        };
+            return $"Ui.CreateWindow {style} demo: shown (toggle {(toggle != null ? "ok" : "missing")}, slider {(slider != null ? "ok" : "missing")})";
+        }
 
         // [Time] ClockSpeed / SimulationSpeed: GameClock factors under KitTester's name (1 = off). Live.
         var clockSpeed = Config.Bind("Time", "ClockSpeed", 1f, "GameClock.SetClockSpeed factor (2 = days pass twice as fast). 1 = off.");

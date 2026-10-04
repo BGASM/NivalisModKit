@@ -2,7 +2,11 @@
 
 A shared library for Nivalis Nights mods, by BGASM. It does nothing on its own. Install it when another mod lists it as a requirement.
 
-Mods that need it: [Manager Order Fix](../NivalisOrderFix) 2.0 and later.
+Mods that need it: [Manager Order Fix](../NivalisOrderFix) 2.0 and later (2.1 needs kit 0.2).
+
+What you'll see with it installed:
+- the kit and game version on the title screen, above the copyright line
+- a **Mods** button in the pause menu, where mods that support it let you change their settings in game
 
 ## Install
 
@@ -10,17 +14,19 @@ Mods that need it: [Manager Order Fix](../NivalisOrderFix) 2.0 and later.
 2. Launch the game once. Wait for the main menu, then close the game.
 3. Extract the release zip into the game folder. The file lands at `BepInEx\plugins\NivalisModKit.dll`.
 
-To confirm it loaded, open `BepInEx\LogOutput.log` and look for `Nivalis ModKit 0.1.0 loaded`, followed by one line per game event:
+To confirm it loaded, open `BepInEx\LogOutput.log` and look for these lines:
 
 ```
+Nivalis ModKit 0.2.0 loaded
+Game build: 1.0 patch 2, Steam build 25680465 (tested)
 Event BuyIngredientsStarting: live
-Event BuyIngredientsFinished: live
 ...
-Event PlayerSold: live
-Events: 68 of 68 live
+Events: 56 of 70 live, 14 waiting for the game
 ```
 
-After a game update, an event whose hook no longer matches shows as `missing` and never fires. The rest keep working. Mods that use a missing event can check for it and switch the feature off. The log line names the method that couldn't be found, which is the thing to report.
+"Waiting for the game" events attach once a save loads.
+
+After a game update, the build line says `untested` (see [Compatibility](#compatibility)), and an event whose hook no longer matches shows as `missing` and never fires. The rest keep working. Mods that use a missing event can check for it and switch the feature off. The log line names the method that couldn't be found, which is the thing to report.
 
 To uninstall, delete `NivalisModKit.dll`, and any mods that require it. Saves are unaffected.
 
@@ -67,11 +73,13 @@ public override void Load()
 | `GameSaved` | A save was written, manual or autosave. |
 | **UI** | |
 | `PanelShown`, `PanelHidden` | Any UI screen (`UIPanel`) shown or hidden: shops, venue tabs, dialogs, the end-of-day summary. `Name` is the panel's type name. |
+| `EndOfDayShown` | The end-of-day summary screen opened. |
+| **Time and travel** | |
 | `DayStarted` | A new game day. The game's day turns over at 08:00, not midnight. |
 | `DayEnded` | The day closed: curfew began (02:00) or the player slept. Rent is collected around now. |
-| `EndOfDayShown` | The end-of-day summary screen opened. |
 | `HourStarted` | The world clock reached a new hour. Once per change: sleeping from 21:00 fires once at the new hour. |
 | `DistrictEntered` | The player arrived in a different district. Building doors don't count. |
+| `GameClock.TimeSpeedChanged` | The clock or simulation speed changed (see [Game clock](#game-clock)). |
 | **Player shopping** | |
 | `ShopOpened`, `ShopClosed` | The player opened or closed a vendor's shop window. |
 | `PlayerBought`, `PlayerSold` | The player bought or sold something, with vendor, item, count and price. |
@@ -183,6 +191,33 @@ Tuning.AwarenessGain += c => c.Amount *= 0.5f;         // cameras notice you hal
 ```
 
 Each context also has the game's original value (`GameYield`, `GameSpeed`, `GamePrice`, `GameAmount`).
+
+### Game clock
+
+`GameClock`. How fast time passes, shared between mods. Each mod sets its own factor under its GUID; the kit applies the product, so two mods asking for 2x give 4x, and clearing one leaves the other's. Factors survive save loads.
+
+| Member | What |
+|---|---|
+| `SetClockSpeed(owner, factor)`, `ClearClockSpeed(owner)` | How fast game time passes (days, opening hours, curfew). People, animations and cooking run at normal speed, so a venue serves fewer customers per game hour at 2x. Combined value kept within 0.1 to 20 |
+| `SetSimulationSpeed(owner, factor)`, `ClearSimulationSpeed(owner)` | Fast-forward or slow motion of everything (Unity's time scale). Costs performance above 1. Combined value kept within 0.25 to 4 |
+| `ClockSpeed`, `SimulationSpeed`, `ClockFactors`, `SimulationFactors` | What's in effect, and who set what |
+| `Pause(owner)` | Pauses the clock until you dispose the returned handle. Uses the game's own pause, so time only runs again when nobody holds one |
+| `IsPaused`, `TimeSpeedChanged` | Paused by anyone; raised when a speed changes |
+
+```csharp
+GameClock.SetClockSpeed(MyGuid, 2f);        // days pass twice as fast
+using (GameClock.Pause(MyGuid)) { ... }     // clock stopped inside the block
+```
+
+### Staff
+
+`Staff`. The task priority lists the game gives staff (which job a worker picks first).
+
+| Member | What |
+|---|---|
+| `PriorityLists`, `PriorityListOf(person)` | The lists, and the one a worker uses |
+| `Order(list)`, `NameOf(action)` | A list's actions, most important first, and their names |
+| `SetOrder(list, names...)` | Reorder a list (experimental: it changes the game's shared list directly; see [Versioning](#versioning)) |
 
 ### Queries
 
@@ -359,36 +394,87 @@ With the kit installed, any mod's settings reload when you save its `.cfg` file 
 Config reloaded: bgasm.nivalis.orderfix.cfg: VendorSort: Balanced -> Cheapest
 ```
 
-A mod picks up the change the next time it reads the setting. For modders: read `entry.Value` when you use it rather than copying it once in `Load`, or subscribe to `entry.SettingChanged`. Reloads run on the main thread, so handlers can touch game objects.
+Changes made in the in-game Mods browser are written to the same files, so the two always agree. A mod picks up the change the next time it reads the setting. For modders: read `entry.Value` when you use it rather than copying it once in `Load`, or subscribe to `entry.SettingChanged`. Reloads run on the main thread, so handlers can touch game objects.
 
 Some settings only matter at startup, such as ones that decide whether a mod hooks anything at all. Those still need a restart.
 
 ## Dev bridge (for mod developers)
 
-A read-only HTTP endpoint for inspecting the running game from scripts or a terminal. Off by default; turn on `[DevBridge] Enabled` and restart. It only listens on `127.0.0.1`, so nothing outside your computer can reach it, and it can't change anything in the game.
+An HTTP endpoint for inspecting the running game from scripts or a terminal, and optionally for running dev commands. Off by default; turn on `[DevBridge] Enabled` and restart. It only listens on `127.0.0.1`, so nothing outside your computer can reach it. Its read paths can't change anything in the game; commands are a separate opt-in (below).
+
+| Path | Returns |
+|---|---|
+| `/status` | Kit version, game build, game time, live events |
+| `/events` | How often each kit event fired |
+| `/time` | Clock, speed factors, pause state |
+| `/money`, `/quests`, `/security`, `/districts` | Player money, quests, curfew and security, districts |
+| `/venues`, `/venues?owned=1` | Venues: open, in staff hours, storage |
+| `/vendors`, `/items`, `/recipes`, `/restock` | Economy lookups |
+| `/priorities` | Staff task priority lists |
+| `/ui`, `/ui?panel=Name`, `&texts`, `&rects` | Open panels; a panel's buttons, texts and element positions |
+| `/perf` | Per-event timings (with `[Debug] FrameTiming`) |
+| `/object?type=Nivalis.NotificationHudUi` | Fields and properties of the first live instance of any Unity type, like a text-only UnityExplorer |
 
 ```
-curl http://127.0.0.1:5710/status      kit and game version, game time, live events
-curl http://127.0.0.1:5710/events      how often each kit event fired
-curl http://127.0.0.1:5710/money
-curl http://127.0.0.1:5710/quests
-curl http://127.0.0.1:5710/venues?owned=1
-curl http://127.0.0.1:5710/districts
-curl "http://127.0.0.1:5710/object?type=Nivalis.NotificationHudUi"
+curl http://127.0.0.1:5710/status
+curl "http://127.0.0.1:5710/ui?panel=SettingsPanel&rects"
 ```
 
-`/object` lists the fields and properties of the first live instance of any Unity component or asset type, like a text-only UnityExplorer inspector.
+### Dev commands
+
+Mods can register named commands that tools run in the game: open a window, set up a situation, return a result. They run on the main thread, so they can use the game and the kit freely.
+
+```csharp
+DevCommands.Register(MyGuid, "give-money", "amount=N: add money (hundredths)", args =>
+{
+    int amount = args.GetInt("amount", 10000);
+    AddMoney(amount);
+    return new { added = amount, now = Economy.PlayerMoney };   // the reply, as JSON
+});
+```
+
+`CommandArgs` has `Get`, `GetInt`, `GetFloat`, `GetBool` (on/off/true/false/1/0, or a bare `?flag`) and `Has`. A name another mod already registered is refused, and the log says which. Throwing returns the message as an error.
+
+Running commands needs `[DevBridge] AllowCommands = true` as well as the bridge. Then:
+
+```
+tools/bridge.sh cmd                       list commands (or GET /cmd)
+tools/bridge.sh cmd demo style=Panel      KitTester's demo window
+tools/bridge.sh cmd clock speed=2 pause=on
+```
+
+Without the script: `POST http://127.0.0.1:5710/cmd/<name>?arg=value` with the header `X-Kit-Token`, whose value the kit writes to `BepInEx\cache\nivalismodkit-bridge.token` at every start. The token is what stops a web page from running commands: browsers can't send custom headers to localhost. Requests from a browser (with an `Origin` header) are refused too.
+
+The kit's own commands:
+
+| Command | Does |
+|---|---|
+| `help` | Lists the commands |
+| `notify text=... [header=...]` | A notification in the game's feed |
+| `open what=Map / Venue / <menu tab>` | Opens a game screen |
+| `mods` | Opens the Mods browser |
+| `clock [speed=X] [sim=X] [pause=on/off]` | Clock and simulation speed (1 clears), shared pause |
+
+**Without commands.** Live reload works as a command channel too: saving a `.cfg` applies within a second, so a test mod can treat settings as triggers. [KitTester](../../samples/KitTester) still accepts `[Ui] Demo = Panel` and `[Ui] Open = Map` in its `.cfg`.
 
 ## Settings
 
-`BepInEx\config\bgasm.nivalis.modkit.cfg`
+`BepInEx\config\bgasm.nivalis.modkit.cfg`, or in game: pause menu > Mods > Nivalis ModKit (Debug and Dev bridge under "Show advanced").
 
 | Setting | Default | Effect |
 |---|---|---|
+| `[General] LiveConfigReload` | true | Reload mods' settings when their `.cfg` file is saved. Restart to apply. |
+| `[General] UntestedBuild` | Warn | On a game build the kit wasn't tested on: `Warn` or `Disable` (see [Compatibility](#compatibility)). Restart to apply. |
+| `[ModMenu] Enabled` | true | The Mods button in the pause menu. |
+| `[ModMenu] ShowOtherMods` | false | Also list mods that didn't opt in, read-only. |
+| `[ModMenu] ButtonLabel` | Mods | Text on the pause menu button. Restart to apply. |
+| `[ModMenu] Browser` | empty | Which mod's browser the button opens when more than one mod provides one (a GUID). |
 | `[DevBridge] Enabled` | false | Read-only HTTP endpoint on 127.0.0.1 for development tools. Restart to apply. |
-| `[DevBridge] Port` | 5710 | Its port. |
-| `[General] LiveConfigReload` | true | Reload mods' settings when their `.cfg` file is saved. Takes effect after a restart. |
-| `[Debug] SimulateMissing` | empty | Comma-separated event names to treat as missing. For testing a mod's fallback. |
+| `[DevBridge] Port` | 5710 | Its port. Restart to apply. |
+| `[DevBridge] AllowCommands` | false | Let tools run mods' dev commands through the bridge (token required). Leave off unless developing. |
+| `[Debug] FrameTiming` | false | Log slow frames with the kit's share of them; per-event timings at `/perf`. For diagnosing lag. |
+| `[Debug] FrameThresholdMs` | 50 | What counts as a slow frame. |
+| `[Debug] SimulateMissing` | empty | Comma-separated event names to treat as missing. For testing a mod's fallback. Not shown in game. |
 
 ## Compatibility
 

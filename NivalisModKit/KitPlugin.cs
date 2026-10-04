@@ -15,6 +15,7 @@ public class KitPlugin : BasePlugin
     internal static ConfigEntry<string> SimulateMissing;
     internal static ConfigEntry<bool> BridgeEnabled;
     internal static ConfigEntry<int> BridgePort;
+    internal static ConfigEntry<bool> BridgeCommands;
     internal static ConfigEntry<bool> ModMenuEnabled, ShowOtherMods;
     internal static ConfigEntry<UntestedBuildMode> UntestedBuild;
 
@@ -58,6 +59,10 @@ public class KitPlugin : BasePlugin
             "Read-only HTTP endpoint on 127.0.0.1 for development tools to query the running game. " +
             "Only this computer can reach it. Takes effect after a restart.", advancedRestart));
         BridgePort = Config.Bind("DevBridge", "Port", 5710, Desc("Port for the dev bridge.", advancedRestart));
+        BridgeCommands = Config.Bind("DevBridge", "AllowCommands", false, Desc(
+            "Let development tools run mods' dev commands through the bridge (POST /cmd/name), with this session's " +
+            "token from BepInEx\\cache. Commands change the game (open screens, set the clock, whatever mods register). " +
+            "Leave off unless you're developing.", advanced));
         var frameTiming = Config.Bind("Debug", "FrameTiming", false, Desc(
             "Log frames slower than FrameThresholdMs with how much of them was the kit's own work, and keep " +
             "per-event timings (dev bridge /perf). For diagnosing lag; leave off otherwise.", advanced));
@@ -78,6 +83,7 @@ public class KitPlugin : BasePlugin
         EventPatches.InstallAll();
         ModMenu.Install();
         ModMenu.ListSettings(ModKit.Guid);
+        DevCommands.RegisterBuiltIns();
         ConfigBrowser.Install();
         TitleLine.Install();
         StartServices(liveReload.Value);

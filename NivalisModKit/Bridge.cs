@@ -17,9 +17,11 @@ using UnityEngine;
 
 namespace NivalisModKit;
 
-// Dev bridge: a read-only HTTP endpoint on 127.0.0.1 so tools (and Claude Code) can query the
-// running game. Off by default. Requests are parsed on a worker thread; anything that touches
-// the game runs on the main thread through KitLoop, and the worker waits for the answer.
+// Dev bridge: an HTTP endpoint on 127.0.0.1 so tools (and Claude Code) can query the running game, and, with
+// [DevBridge] AllowCommands, run DevCommands. Off by default. Requests are parsed on a worker thread; anything that
+// touches the game runs on the main thread through KitLoop, and the worker waits for the answer.
+// GET paths only read. POST /cmd/<name> runs a command and needs the X-Kit-Token header (a random token written to
+// BepInEx\cache at each start): web pages can't send custom headers to localhost, so a website can't run commands.
 internal static class Bridge
 {
     const int MaxRequestBytes = 8192;
@@ -27,6 +29,12 @@ internal static class Bridge
 
     static TcpListener listener;
     static int port;
+    static string token;
+
+    internal static bool Running => listener != null;
+
+    /// <summary>The file holding this session's command token.</summary>
+    internal static string TokenPath => System.IO.Path.Combine(BepInEx.Paths.CachePath, "nivalismodkit-bridge.token");
     static readonly ConcurrentQueue<(Func<object> work, TaskCompletionSource<object> done)> pending = new();
     // Relaxed escaping keeps apostrophes and generic backticks readable; output is never put in HTML.
     static readonly JsonSerializerOptions json = new()
@@ -77,16 +85,31 @@ internal static class Bridge
         }),
         ["/districts"] = ("Districts, with hops from the current one", _ => Districts()),
         ["/object"] = ("?type=Full.Type.Name: fields and properties of the first live instance", q => Inspect(q)),
+        ["/cmd"] = ("Dev commands (POST /cmd/name?arg=value with the X-Kit-Token header; needs [DevBridge] AllowCommands)", _ => new
+        {
+            enabled = DevCommands.Enabled,
+            tokenFile = TokenPath,
+            commands = DevCommands.All.Select(c => new { name = c.Name, help = c.Help, owner = c.Owner }).ToArray(),
+        }),
     };
 
     internal static void Start(int listenPort)
     {
         port = listenPort;
-        listener = new TcpListener(IPAddress.Loopback, port);
-        listener.Start();
+        var l = new TcpListener(IPAddress.Loopback, port);
+        l.Start();
+        listener = l;
+        token = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(16)).ToLowerInvariant();
+        try
+        {
+            System.IO.Directory.CreateDirectory(BepInEx.Paths.CachePath);
+            System.IO.File.WriteAllText(TokenPath, token);
+        }
+        catch (Exception e) { KitPlugin.L.LogWarning($"Dev bridge: could not write the command token ({e.Message}); commands unavailable"); token = null; }
         KitLoop.Tick += RunPending;
         new Thread(AcceptLoop) { IsBackground = true, Name = "NivalisModKit bridge" }.Start();
-        KitPlugin.L.LogInfo($"Dev bridge: listening on http://127.0.0.1:{port}/ (read-only)");
+        KitPlugin.L.LogInfo($"Dev bridge: listening on http://127.0.0.1:{port}/ " +
+                            (KitPlugin.BridgeCommands.Value ? "(commands on: POST /cmd/name)" : "(read-only)"));
     }
 
     // ---------- worker thread ----------
@@ -115,7 +138,9 @@ internal static class Bridge
 
                 var lines = request.Split("\r\n");
                 var parts = lines[0].Split(' ');
-                if (parts.Length < 2 || parts[0] != "GET") { Send(stream, 405, new { error = "GET only" }); return; }
+                if (parts.Length < 2 || (parts[0] != "GET" && parts[0] != "POST")) { Send(stream, 405, new { error = "GET, or POST for /cmd" }); return; }
+                string Header(string name) => lines.Skip(1)
+                    .FirstOrDefault(l => l.StartsWith(name + ":", StringComparison.OrdinalIgnoreCase))?.Substring(name.Length + 1).Trim();
 
                 // Only answer requests addressed to this machine by name; blocks DNS rebinding from web pages.
                 string host = lines.Skip(1).FirstOrDefault(l => l.StartsWith("Host:", StringComparison.OrdinalIgnoreCase))
@@ -124,10 +149,25 @@ internal static class Bridge
                 if (hostName != "127.0.0.1" && hostName != "localhost") { Send(stream, 403, new { error = "bad host" }); return; }
 
                 var (path, query) = SplitUrl(parts[1]);
-                if (!routes.TryGetValue(path, out var route)) { Send(stream, 404, new { error = "no such endpoint", see = "/" }); return; }
+                Func<object> work;
+                if (parts[0] == "POST")
+                {
+                    // Commands: POST /cmd/<name>, opted in, with this session's token, and not from a web page.
+                    if (!path.StartsWith("/cmd/", StringComparison.Ordinal)) { Send(stream, 405, new { error = "POST is only for /cmd/name" }); return; }
+                    if (!KitPlugin.BridgeCommands.Value) { Send(stream, 403, new { error = "commands are off: set [DevBridge] AllowCommands = true" }); return; }
+                    if (Header("Origin") != null) { Send(stream, 403, new { error = "not from a browser" }); return; }
+                    if (token == null || Header("X-Kit-Token") != token) { Send(stream, 403, new { error = "missing or wrong X-Kit-Token", tokenFile = TokenPath }); return; }
+                    string name = path.Substring("/cmd/".Length);
+                    work = () => DevCommands.Run(name, query);
+                }
+                else
+                {
+                    if (!routes.TryGetValue(path, out var route)) { Send(stream, 404, new { error = "no such endpoint", see = "/" }); return; }
+                    work = () => route.handler(query);
+                }
 
                 var done = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
-                pending.Enqueue((() => route.handler(query), done));
+                pending.Enqueue((work, done));
                 if (!done.Task.Wait(MainThreadTimeoutMs)) { Send(stream, 503, new { error = "game didn't answer in time" }); return; }
                 Send(stream, 200, done.Task.Result);
             }
