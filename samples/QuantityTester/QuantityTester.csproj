@@ -4,6 +4,7 @@
     <Version>0.1.0</Version>
     <!-- Test harness and example code, never released. -->
     <NoRelease>true</NoRelease>
+    <DeployIfInstalled>true</DeployIfInstalled>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\mods\NivalisModKit\NivalisModKit.csproj" Private="false" />

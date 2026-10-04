@@ -17,8 +17,11 @@
     <Reference Include="UnityEngine.CoreModule"><HintPath>$(GameDir)\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
 
-  <!-- NoDeploy=true keeps a project out of the game folder (e.g. the Order Fix editions share a GUID). -->
-  <Target Name="CopyToPlugins" AfterTargets="Build" Condition="'$(NoDeploy)' != 'true'">
+  <!-- NoDeploy=true keeps a project out of the game folder (e.g. the Order Fix editions share a GUID).
+       DeployIfInstalled=true (test mods) only updates a copy already in plugins, so a build doesn't put test mods
+       back into a play setup; to start testing, copy the DLL in once (or move it back from plugins_hold). -->
+  <Target Name="CopyToPlugins" AfterTargets="Build"
+          Condition="'$(NoDeploy)' != 'true' And ('$(DeployIfInstalled)' != 'true' Or Exists('$(GameDir)\BepInEx\plugins\$(TargetFileName)'))">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GameDir)\BepInEx\plugins" />
   </Target>
 

@@ -176,8 +176,15 @@ internal static class DevConsole
     static string Format(object reply)
     {
         if (reply is string s) return s;
-        return JsonSerializer.Serialize(reply, new JsonSerializerOptions { WriteIndented = true });
+        return JsonSerializer.Serialize(reply, Json);
     }
+
+    // Readable: apostrophes and accents as themselves, not ' escapes (the text is shown, never put in HTML).
+    static readonly JsonSerializerOptions Json = new()
+    {
+        WriteIndented = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
 
     static void Recall(int direction)
     {

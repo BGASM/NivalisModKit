@@ -454,6 +454,7 @@ The kit's own commands:
 | `mods` | Opens the Mods browser |
 | `money amount=N` | Adds money in hundredths (10000 = 100.00; negative takes it away) |
 | `give item=Name [amount=N]` | Puts items in the player's inventory |
+| `config [mod=name] [key=Section.Key] [value=...]` | Lists mods with settings, a mod's settings, one setting in detail, or changes it (saved to the `.cfg`, `SettingChanged` raised). Works on any mod; ignores the browser's opt-in and read-only rules |
 | `clock [speed=X] [sim=X] [pause=on/off]` | Clock and simulation speed (1 clears), shared pause |
 
 **Without commands.** Live reload works as a command channel too: saving a `.cfg` applies within a second, so a test mod can treat settings as triggers. [KitTester](../../samples/KitTester) still accepts `[Ui] Demo = Panel` and `[Ui] Open = Map` in its `.cfg`.
@@ -491,6 +492,34 @@ The game's version string stays "1.0" across patches, so the kit identifies the 
 Mods can check the build too: `GameBuild.IsTested`, `GameBuild.Describe()` and `GameBuild.SteamBuildId`.
 
 Other mods that detour `Vendor.BuyItem` directly will conflict with the purchasing pipeline. Build on `Purchasing` instead.
+
+## Changes
+
+**0.2.0**
+
+For players:
+- A **Mods** button in the pause menu. Mods that support it show their settings there, changed live and saved to their `.cfg`. Turn on `[ModMenu] ShowOtherMods` to see every other mod's settings read-only.
+- The title screen shows the kit version and game build. The kit recognises game builds by fingerprint and warns when it runs on one it wasn't tested on (`[General] UntestedBuild`: `Warn` or `Disable`).
+- Fixed start-menu stutter: the kit no longer retries hooks every frame before a save loads.
+- Tested on game patch 2 (Steam build 25680465).
+
+For modders:
+- Lifecycle: `GameEvents.GameReady`, `GameEnded`, `IsInGame`, `WhenInGame`.
+- New events: `PanelShown`, `PanelHidden`, `VenueStorageChanged`, `GameClock.TimeSpeedChanged`.
+- `ModMenu`: `ListSettings`, `AddPage`, `SetBrowser`, `OpenAsChild`. `ModSetting` tags (hidden, read-only, advanced, needs restart, order, display name); ConfigurationManager tags are read too.
+- `Ui.CreateWindow` (Popup and Panel) with rows: `AddHeader`, `AddText`, `AddButton`, `AddToggle`, `AddSlider`, `AddChoice`, `AddTextField`, `AddValue`, `AddFooterButton`, `Clear`.
+- `Ui.RequestMenuMode`: shared menu mode (cursor on, movement off) for UI you build yourself.
+- More `Ui`: `Find("Type:Object")`, `Clone`, `CloneText`, `CloneButton`, `Tooltip`, `MakeLive`, `Relayout`, `OpenMenu`, `OpenJournal`, `OpenMap`, `OpenVenue`, `RadialMenu`, `AddRadialAction`.
+- `GameClock`: shared clock and simulation speed factors, and a shared pause.
+- `Tuning.UseOrder` (experimental), `Staff` priority lists (`SetOrder` experimental), `Venues.StorageOf`, `Economy.NameOf(vendor)`.
+- `GameBuild`: `IsTested`, `Describe()`, `Fingerprint`, `SteamBuildId`.
+- Dev tools: `DevCommands.Register` with built-in `help`, `notify`, `open`, `mods`, `clock`, `money`, `give`, `config` (read or change any mod's settings). Run them from the in-game console (`[DevConsole] Enabled`, the `` ` `` key) or through the dev bridge (`[DevBridge] AllowCommands`, token required; `tools\kit.cmd`). The bridge gained `/ui`, `/time`, `/perf`, `/priorities` and venue storage.
+- `[Experimental]` marks API that may still change. `ModKit.TestedGameVersion` is obsolete (use `GameBuild`).
+- Live config reload skips the kit's own saves, so editing in the Mods browser doesn't fight it.
+- [Manager Order Fix](../NivalisOrderFix/Plugin.cs) is the reference example of a kit mod.
+
+**0.1.0**
+- First release.
 
 ## License
 

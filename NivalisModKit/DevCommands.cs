@@ -129,6 +129,8 @@ public static class DevCommands
             return new { gave = Items.NameOf(item), amount };
         });
 
+        ConfigCommand.Register();
+
         Register(kit, "mods", "Open the Mods browser", _ => { ModMenu.Open(); return new { opened = ModMenu.BrowserOwner }; });
 
         Register(kit, "clock", "[speed=X] [sim=X] [pause=on|off]: clock and simulation speed (1 clears), shared pause", a =>
