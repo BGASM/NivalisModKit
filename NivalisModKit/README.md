@@ -255,7 +255,7 @@ Game-time jobs compare against the clock each frame, so sleeping past the moment
 | `Ui.Clone(template)`, `Ui.CloneText(template, text)`, `Ui.TextsIn(panel)`, `Ui.FindChild(panel, path)`, `Ui.SetText(element, text)` | Copy any element or label, find templates, set text (experimental) |
 | `Ui.Tooltip(element, text)` | The game's hover tooltip on any element |
 | `Ui.OpenMenu(tab)`, `Ui.OpenJournal(quest)`, `Ui.OpenMap()`, `Ui.OpenVenue(area, tab)` | Open the game's screens |
-| `Ui.CreateWindow(title, WindowStyle.Popup / Panel)` | A window of your own from the game's parts: `AddText`, `AddButton`, `AddToggle`, `AddSlider`, `AddFooterButton`, `Show`, `Hide`, `Closed`. Popup = the game's small confirm popup; Panel = the Settings frame with a scrolling list (experimental) |
+| `Ui.CreateWindow(title, WindowStyle.Popup / Panel)` | A window of your own from the game's parts: `AddHeader`, `AddText`, `AddButton`, `AddToggle`, `AddSlider`, `AddChoice`, `AddTextField`, `AddValue`, `AddFooterButton`, `Clear`, `Show`, `Hide`, `Closed`. Popup = the game's small confirm popup; Panel = the Settings frame with a scrolling list (experimental) |
 | `Ui.MakeLive(element)` | Make a copy usable: controls interactable, canvas groups clickable, its layout on (Clone and windows do this) |
 | `Ui.Relayout(element)` | Recompute a copy's layout after changing it (Clone/SetText do this) |
 | `Ui.RadialMenu((label, action)...)`, `Ui.AddRadialAction(label, action)`, `Ui.IsRadialOpen` | The game's radial wheel: open it with your actions, or add to it while open (experimental) |
@@ -317,9 +317,9 @@ The browser also reads BepInEx ConfigurationManager's `ConfigurationManagerAttri
 |---|---|
 | `bool` | Toggle |
 | Number with an `AcceptableValueRange` | Slider |
-| `enum` | Button that steps through the values |
-| Value with an `AcceptableValueList` | Button that steps through the values |
-| Anything else (free text, unranged numbers, key bindings) | Shown, with a note to edit the `.cfg` |
+| `enum` with up to 12 values | Button that steps through the values |
+| Value with an `AcceptableValueList` of up to 12 | Button that steps through the values |
+| Anything else (text, numbers without a range, key bindings, colours, long lists) | Text box. The text is read the same way as in the `.cfg`; text that can't be read is ignored and the box shows the stored value again |
 
 **Replacing the browser.** A mod can provide a better browser:
 - Call `ModMenu.SetBrowser(myGuid, open)` and show your window with `ModMenu.OpenAsChild(window)`.

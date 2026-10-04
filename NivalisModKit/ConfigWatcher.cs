@@ -37,6 +37,20 @@ internal static class ConfigWatcher
         KitPlugin.L.LogInfo("Live config reload: watching BepInEx\\config");
     }
 
+    // Files the kit just saved, with what it wrote (main thread only).
+    static readonly Dictionary<string, string> ownWrites = new(StringComparer.OrdinalIgnoreCase);
+
+    // Call right after the kit saves a config file, so the watcher doesn't reload the kit's own write.
+    internal static void MarkOwnWrite(string path)
+    {
+        try
+        {
+            string full = Path.GetFullPath(path);
+            ownWrites[full] = File.ReadAllText(full);
+        }
+        catch { }
+    }
+
     static void Queue(string path, int attempts)
     {
         lock (gate) pending[Path.GetFullPath(path)] = (DateTime.UtcNow, attempts);
@@ -73,6 +87,17 @@ internal static class ConfigWatcher
     {
         ConfigFile cfg = Find(path);
         if (cfg == null) return true;   // not a loaded plugin's config (e.g. BepInEx.cfg)
+
+        // The kit's own save (the in-game browser): memory is already ahead of the file, so reloading would
+        // put back an older value while the player is still dragging a slider.
+        if (ownWrites.TryGetValue(path, out var written))
+        {
+            string now;
+            try { now = File.ReadAllText(path); }
+            catch (IOException) { return false; }
+            if (now == written) return true;
+            ownWrites.Remove(path);   // changed by someone else since: reload it
+        }
 
         var before = Snapshot(cfg);
         try { cfg.Reload(); }

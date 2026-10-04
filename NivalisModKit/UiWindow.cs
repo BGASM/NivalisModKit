@@ -527,31 +527,123 @@ public sealed class KitWindow
     /// </summary>
     public TMP_Text AddValue(string label, string value)
     {
+        var go = EmptyRow(label, out var labelText, out float width);
+        if (go == null) return null;
+        // The value sits in the control column, centred, like the toggles above and below it.
+        var valueGo = UnityEngine.Object.Instantiate(labelText.gameObject, go.transform);
+        valueGo.name = "Value";
+        var v = valueGo.GetComponent<TMP_Text>();
+        v.text = value ?? "";
+        v.alignment = TextAlignmentOptions.Midline;
+        v.color = Color.white;
+        var vle = valueGo.GetComponent<LayoutElement>() ?? valueGo.AddComponent<LayoutElement>();
+        vle.flexibleWidth = 0f;
+        vle.minWidth = 0f;
+        vle.preferredWidth = width;
+        go.SetActive(true);
+        Ui.Relayout(go);
+        return v;
+    }
+
+    /// <summary>
+    /// Adds a labelled text box (a copy of the game's search box, which also stops the player's controls while
+    /// typing). <paramref name="onSubmit"/> runs with the text when the player presses Enter or leaves the box.
+    /// <paramref name="contentType"/> limits what can be typed (e.g. <c>IntegerNumber</c>). Returns the field, or null.
+    /// </summary>
+    public TMP_InputField AddTextField(string label, string value, Action<string> onSubmit,
+        TMP_InputField.ContentType contentType = TMP_InputField.ContentType.Standard)
+    {
+        var fieldTemplate = FindTextField();
+        if (fieldTemplate == null) { LogOnce("no text box template loaded (the game's filter search boxes)"); return null; }
+        var go = EmptyRow(label, out _, out float width);
+        if (go == null) return null;
+        var fgo = UnityEngine.Object.Instantiate(fieldTemplate.gameObject, go.transform);
+        fgo.name = "Field";
+        Upright(fgo);
+        foreach (var loc in fgo.GetComponentsInChildren<LocalizedStaticUILabel>(true)) UnityEngine.Object.DestroyImmediate(loc);
+        var field = fgo.GetComponent<TMP_InputField>();
+        if (field == null) { UnityEngine.Object.Destroy(go); return null; }
+        field.onValueChanged = new TMP_InputField.OnChangeEvent();
+        field.onEndEdit = new TMP_InputField.SubmitEvent();
+        field.onSubmit = new TMP_InputField.SubmitEvent();
+        field.contentType = contentType;
+        field.characterLimit = 0;
+        field.SetTextWithoutNotify(value ?? "");
+        var placeholder = field.placeholder?.TryCast<TMP_Text>();
+        if (placeholder != null) placeholder.text = "";
+        // The search box's magnifier: a plain image beside the text area. Keep the text area and the clear (X) button.
+        for (int i = 0; i < fgo.transform.childCount; i++)
+        {
+            var child = fgo.transform.GetChild(i);
+            if (field.textViewport != null && child == field.textViewport.transform) continue;
+            if (child.GetComponentInChildren<Selectable>(true) != null || child.GetComponentInChildren<TMP_Text>(true) != null) continue;
+            if (child.GetComponent<Image>() != null) child.gameObject.SetActive(false);
+        }
+        var fle = fgo.GetComponent<LayoutElement>() ?? fgo.AddComponent<LayoutElement>();
+        fle.flexibleWidth = 0f;
+        fle.minWidth = 0f;
+        fle.preferredWidth = width;
+        fle.preferredHeight = RowHeight * 0.75f;
+        UnityAction<string> a = (Action<string>)(text =>
+        {
+            if (onSubmit == null) return;
+            try { onSubmit(text); }
+            catch (Exception e) { KitPlugin.L.LogError($"KitWindow text box '{label}': {e}"); }
+        });
+        keep.Add(a);
+        field.onEndEdit.AddListener(a);
+        go.SetActive(true);
+        Ui.MakeLive(fgo);
+        field.interactable = true;
+        Ui.Relayout(go);
+        return field;
+    }
+
+    // A copy of the settings toggle row with its control removed: label only. width = its control column.
+    GameObject EmptyRow(string label, out TMP_Text labelText, out float width)
+    {
+        labelText = null;
+        width = 300f;
         var template = FindSettingRow<ToggleSettingUI>();
         if (template == null) return null;
         var go = CopyRow(template.gameObject, label, out var row);
         if (row != null) UnityEngine.Object.DestroyImmediate(row);
         var texts = go.GetComponentsInChildren<TMP_Text>(true);
-        var labelText = texts.FirstOrDefault(t => t.transform.parent == go.transform) ?? texts.FirstOrDefault();
-        if (labelText == null) return null;
-        // Replace the row's control with a copy of its label, right-aligned.
+        labelText = texts.FirstOrDefault(t => t.transform.parent == go.transform) ?? texts.FirstOrDefault();
+        if (labelText == null) { UnityEngine.Object.Destroy(go); return null; }
         for (int i = go.transform.childCount - 1; i >= 0; i--)
         {
             var child = go.transform.GetChild(i);
-            if (child != labelText.transform) UnityEngine.Object.DestroyImmediate(child.gameObject);
+            if (child == labelText.transform) continue;
+            var cle = child.GetComponent<LayoutElement>();
+            if (cle != null && cle.preferredWidth > 1f) width = cle.preferredWidth;   // CopyRow sized it from the template
+            UnityEngine.Object.DestroyImmediate(child.gameObject);
         }
-        var valueGo = UnityEngine.Object.Instantiate(labelText.gameObject, go.transform);
-        valueGo.name = "Value";
-        var v = valueGo.GetComponent<TMP_Text>();
-        v.text = value ?? "";
-        v.alignment = TextAlignmentOptions.MidlineRight;
-        v.color = Color.white;
-        var vle = valueGo.GetComponent<LayoutElement>() ?? valueGo.AddComponent<LayoutElement>();
-        vle.flexibleWidth = 1f;
-        vle.minWidth = 120f;
-        go.SetActive(true);
-        Ui.Relayout(go);
-        return v;
+        return go;
+    }
+
+    // The game's TextMeshPro search boxes (inventory, vendor and people filters), loaded with their screens.
+    static TMP_InputField textFieldTemplate;
+    static TMP_InputField FindTextField()
+    {
+        if (textFieldTemplate != null) return textFieldTemplate;
+        try
+        {
+            foreach (var o in Resources.FindObjectsOfTypeAll(Il2CppType.Of<Nivalis.Locale.UI.InventoryItemFilteringUi>()))
+                if ((textFieldTemplate = o.TryCast<Nivalis.Locale.UI.InventoryItemFilteringUi>()?.searchField) != null) return textFieldTemplate;
+            foreach (var o in Resources.FindObjectsOfTypeAll(Il2CppType.Of<Nivalis.Locale.UI.VendorFilteringUI>()))
+                if ((textFieldTemplate = o.TryCast<Nivalis.Locale.UI.VendorFilteringUI>()?.searchField) != null) return textFieldTemplate;
+            foreach (var o in Resources.FindObjectsOfTypeAll(Il2CppType.Of<InputFieldPreventExternalInput>()))
+                if ((textFieldTemplate = o.TryCast<InputFieldPreventExternalInput>()?._field) != null) return textFieldTemplate;
+        }
+        catch (Exception e) { KitPlugin.L.LogWarning($"KitWindow text box template: {e.Message}"); }
+        return null;
+    }
+
+    static readonly HashSet<string> logged = new();
+    static void LogOnce(string message)
+    {
+        if (logged.Add(message)) KitPlugin.L.LogWarning($"KitWindow: {message}");
     }
 
     /// <summary>Height of toggle, slider and value rows. Set before adding rows.</summary>

@@ -5,6 +5,7 @@ using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
+using TMPro;
 
 namespace NivalisModKit;
 
@@ -101,8 +102,13 @@ internal static class ConfigBrowser
 
     static void AddRow(ConfigFile cfg, ConfigEntryBase entry, ModSetting flags)
     {
-        string label = flags.DisplayName ?? Words(entry.Definition.Key);
-        if (flags.RequiresRestart == true) label += " <size=70%>(restart)</size>";
+        string name = flags.DisplayName ?? Words(entry.Definition.Key);
+        string Label(params string[] notes)
+        {
+            var all = notes.Prepend(flags.RequiresRestart == true ? "restart" : null).Where(n => n != null).ToList();
+            return all.Count == 0 ? name : $"{name} <size=70%>({string.Join(", ", all)})</size>";
+        }
+        string label = Label();
         var type = entry.SettingType;
         UnityEngine.GameObject row = null;
 
@@ -117,23 +123,34 @@ internal static class ConfigBrowser
                     v => Set(cfg, entry, Convert.ChangeType(whole ? Math.Round(v) : v, type, CultureInfo.InvariantCulture)),
                     whole ? "0" : "0.##", whole)?.gameObject;
             }
-            else if (type.IsEnum && !type.IsDefined(typeof(FlagsAttribute), false))
+            else if (type.IsEnum && !type.IsDefined(typeof(FlagsAttribute), false) && Enum.GetNames(type).Length <= MaxChoices)
             {
                 var names = Enum.GetNames(type);
                 row = window.AddChoice(label, names, Array.IndexOf(names, entry.BoxedValue.ToString()),
                     i => Set(cfg, entry, Enum.Parse(type, names[i])));
             }
-            else if (Choices(entry, out var options))
+            else if (Choices(entry, out var options) && options.Count <= MaxChoices)
             {
                 var shown = options.Select(o => Convert.ToString(o, CultureInfo.InvariantCulture)).ToList();
                 row = window.AddChoice(label, shown, options.IndexOf(entry.BoxedValue), i => Set(cfg, entry, options[i]));
+            }
+            else
+            {
+                // Anything else as text, converted the way the .cfg file is (numbers, text, key bindings, long lists).
+                TMP_InputField field = null;
+                field = window.AddTextField(label, entry.GetSerializedValue(), text =>
+                {
+                    SetText(cfg, entry, text);
+                    field?.SetTextWithoutNotify(entry.GetSerializedValue());   // shows the value as stored (invalid input reverts)
+                }, ContentType(type));
+                row = field?.transform.parent?.gameObject;
             }
         }
         // No editor for this type yet (free text, numbers without a range, key bindings), or read-only.
         if (row == null)
         {
-            // Listed but no editor for this type yet: say where to change it.
-            if (flags.ReadOnly != true) label += " <size=70%>(edit the .cfg)</size>";
+            // Listed but no editor could be made: say where to change it.
+            if (flags.ReadOnly != true) label = Label("edit the .cfg");
             row = window.AddValue(label, Shorten(entry.GetSerializedValue()))?.transform.parent?.gameObject;
         }
         string desc = entry.Description?.Description;
@@ -169,12 +186,30 @@ internal static class ConfigBrowser
 
     static string Shorten(string s) => s == null ? "" : s.Length > 80 ? s.Substring(0, 77) + "..." : s;
 
+    const int MaxChoices = 12;   // longer lists (e.g. every key on the keyboard) are typed instead
+
+    static TMP_InputField.ContentType ContentType(Type t) =>
+        t == typeof(int) || t == typeof(long) || t == typeof(short) || t == typeof(byte) ? TMP_InputField.ContentType.IntegerNumber
+        : t == typeof(float) || t == typeof(double) || t == typeof(decimal) ? TMP_InputField.ContentType.DecimalNumber
+        : TMP_InputField.ContentType.Standard;
+
     static void Set(ConfigFile cfg, ConfigEntryBase entry, object value)
     {
         if (Equals(entry.BoxedValue, value)) return;
+        Apply(cfg, entry, () => entry.BoxedValue = value);   // raises the mod's SettingChanged
+    }
+
+    static void SetText(ConfigFile cfg, ConfigEntryBase entry, string text)
+    {
+        if (text == entry.GetSerializedValue()) return;
+        Apply(cfg, entry, () => entry.SetSerializedValue(text));   // BepInEx converts, and ignores text it can't read
+    }
+
+    static void Apply(ConfigFile cfg, ConfigEntryBase entry, Action change)
+    {
         bool save = cfg.SaveOnConfigSet;
         cfg.SaveOnConfigSet = false;   // written once the player stops changing it, not on every slider step
-        try { entry.BoxedValue = value; }   // raises the mod's SettingChanged
+        try { change(); }
         catch (Exception e) { KitPlugin.L.LogError($"ModMenu: {entry.Definition}: {e}"); }
         finally { cfg.SaveOnConfigSet = save; }
         dirty.Add(cfg);
@@ -188,7 +223,7 @@ internal static class ConfigBrowser
         saveTimer = null;
         foreach (var cfg in dirty)
         {
-            try { cfg.Save(); KitPlugin.L.LogInfo($"ModMenu: saved {System.IO.Path.GetFileName(cfg.ConfigFilePath)}"); }
+            try { cfg.Save(); ConfigWatcher.MarkOwnWrite(cfg.ConfigFilePath); KitPlugin.L.LogInfo($"ModMenu: saved {System.IO.Path.GetFileName(cfg.ConfigFilePath)}"); }
             catch (Exception e) { KitPlugin.L.LogWarning($"ModMenu: could not save {cfg.ConfigFilePath}: {e.Message}"); }
         }
         dirty.Clear();
