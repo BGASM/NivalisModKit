@@ -344,6 +344,17 @@ public class Plugin : BasePlugin
         GameEvents.GameEnded += () => L.LogInfo($"GameEnded (IsInGame={GameEvents.IsInGame})");
         // Queued at startup (the menu): runs once at the first GameReady.
         GameEvents.WhenInGame(() => L.LogInfo($"WhenInGame ran: IsInGame={GameEvents.IsInGame}"));
+
+        // All of the tester's settings in the kit's browser, and a page of its own (pause menu > Mods).
+        ModMenu.ListSettings("bgasm.nivalis.kittester");
+        int clicks = 0;
+        ModMenu.AddPage("bgasm.nivalis.kittester", "Kit Tester page", w =>
+        {
+            L.LogInfo("ModMenu: Kit Tester page opened");
+            w.AddText("A page added with ModMenu.AddPage.");
+            w.AddButton($"Clicked {clicks} times", () => { clicks++; L.LogInfo($"ModMenu page button: {clicks}"); });
+            w.AddChoice("Pick one", new[] { "Apples", "Pears", "Plums" }, 0, i => L.LogInfo($"ModMenu page choice: {i}"));
+        });
         GameEvents.GameLoaded += a =>
         {
             L.LogInfo($"GameLoaded: {a.SaveName ?? "?"} in {World.NameOf(a.District)}");

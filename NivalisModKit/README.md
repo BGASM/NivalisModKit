@@ -271,6 +271,61 @@ The button helpers use `UnityEngine.UI.Button` and the text helpers `TMPro.TMP_T
 
 The dev bridge's `/ui` path lists the open panels, the quickest way to learn a screen's name; `/ui?panel=Name` lists that panel's buttons.
 
+### Mod menu
+
+The kit adds one **Mods** button to the pause menu, shared by every mod. It opens the mod browser, a sub-screen like the game's Settings: the menu behind it stops taking input, and Escape or Close goes back.
+
+The kit's browser lists:
+- pages mods add with `ModMenu.AddPage`
+- the settings of mods that opted in, edited live. Changes are saved to the mod's `.cfg` and raise `SettingChanged`, the same as editing the file
+
+```csharp
+ModMenu.AddPage(MyGuid, "My Mod", w =>
+{
+    w.AddText("Anything a KitWindow can show.");
+    w.AddButton("Do the thing", DoTheThing);
+});
+```
+
+**Which settings show.** Listing is opt-in, so nothing appears unless the mod asks:
+- `ModMenu.ListSettings(myGuid)` in `Load` lists all your settings.
+- A `ModSetting` tag lists one setting.
+
+Players can also turn on the kit's `[ModMenu] ShowOtherMods` (in the browser, under Nivalis ModKit). The browser then lists all other mods' settings too, **read-only**, with a note to edit the `.cfg` and restart. The kit can't tell whether a mod that never heard of it reads a changed value live, so it doesn't offer to change them.
+
+Either way, the flags below adjust how settings appear:
+
+```csharp
+ModMenu.ListSettings(MyGuid);
+Config.Bind("Debug", "Trace", false, new ConfigDescription("Log everything.", null,
+    new ModSetting { IsAdvanced = true }));
+```
+
+| Flag | Effect |
+|---|---|
+| `Browsable = false` | Hidden. |
+| `ReadOnly = true` | Shown, not editable. |
+| `IsAdvanced = true` | Shown only with "Show advanced" ticked. |
+| `RequiresRestart = true` | Marked "(restart)": the mod reads it once at startup. |
+| `Order`, `DisplayName` | Order within the section (higher first), and the name shown. |
+
+The browser also reads BepInEx ConfigurationManager's `ConfigurationManagerAttributes` tag (`Browsable`, `ReadOnly`, `IsAdvanced`, `Order`, `DispName`) for listed settings. That tag alone doesn't list a setting.
+
+**How each setting is edited:**
+
+| Setting | Editor |
+|---|---|
+| `bool` | Toggle |
+| Number with an `AcceptableValueRange` | Slider |
+| `enum` | Button that steps through the values |
+| Value with an `AcceptableValueList` | Button that steps through the values |
+| Anything else (free text, unranged numbers, key bindings) | Shown, with a note to edit the `.cfg` |
+
+**Replacing the browser.** A mod can provide a better browser:
+- Call `ModMenu.SetBrowser(myGuid, open)` and show your window with `ModMenu.OpenAsChild(window)`.
+- If two mods replace it, the kit's `[ModMenu] Browser` setting picks one; otherwise the last one wins, and the log says so.
+- `ModMenu.Pages` gives your browser the pages other mods added.
+
 ### Helpers
 
 | Helper | Does |

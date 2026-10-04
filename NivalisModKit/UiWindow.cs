@@ -260,7 +260,7 @@ public sealed class KitWindow
         }
         for (int i = content.childCount - 1; i >= 0; i--) UnityEngine.Object.DestroyImmediate(content.GetChild(i).gameObject);
         var clayout = content.GetComponent<VerticalLayoutGroup>();
-        if (clayout != null) { clayout.spacing = Math.Max(clayout.spacing, 8f); clayout.childControlWidth = true; clayout.childForceExpandWidth = true; clayout.childControlHeight = true; clayout.childForceExpandHeight = false; }
+        if (clayout != null) { clayout.spacing = 4f; clayout.childControlWidth = true; clayout.childForceExpandWidth = true; clayout.childControlHeight = true; clayout.childForceExpandHeight = false; }
         Content = content;
 
         var buttons = page.Find("ButtonsWrapper");
@@ -495,20 +495,67 @@ public sealed class KitWindow
     // ---------- rows ----------
 
     /// <summary>Adds a paragraph of text. Returns the label (change its text later as you like).</summary>
-    public TMP_Text AddText(string text)
+    public TMP_Text AddText(string text) => AddTextRow(text, "Kit_Text", 0.75f, null);
+
+    /// <summary>Adds a section heading: larger text in the window title's colour. Returns the label.</summary>
+    public TMP_Text AddHeader(string text) => AddTextRow(text, "Kit_Header", 1f, titleText != null ? titleText.color : (Color?)null);
+
+    TMP_Text AddTextRow(string text, string name, float scale, Color? color)
     {
         if (textTemplate == null) return null;
         var go = UnityEngine.Object.Instantiate(textTemplate.gameObject, Content);
-        go.name = "Kit_Text";
+        go.name = name;
         Upright(go);
         var le = go.GetComponent<LayoutElement>() ?? go.AddComponent<LayoutElement>();
         le.flexibleWidth = 1f;
+        le.flexibleHeight = 0f;
+        le.preferredHeight = -1f;   // as tall as its text, not the template's fixed height
+        le.minHeight = -1f;
         go.SetActive(true);
         var t = go.GetComponent<TMP_Text>();
+        t.enableAutoSizing = false;
+        t.fontSize = textTemplate.fontSize * scale;
+        if (color.HasValue) t.color = color.Value;
         t.text = text ?? "";
         Ui.Relayout(go);
         return t;
     }
+
+    /// <summary>
+    /// Adds a settings-style row showing a value that can't be changed here: <paramref name="label"/> on the left,
+    /// <paramref name="value"/> on the right. Returns the value's text (change it later as you like), or null.
+    /// </summary>
+    public TMP_Text AddValue(string label, string value)
+    {
+        var template = FindSettingRow<ToggleSettingUI>();
+        if (template == null) return null;
+        var go = CopyRow(template.gameObject, label, out var row);
+        if (row != null) UnityEngine.Object.DestroyImmediate(row);
+        var texts = go.GetComponentsInChildren<TMP_Text>(true);
+        var labelText = texts.FirstOrDefault(t => t.transform.parent == go.transform) ?? texts.FirstOrDefault();
+        if (labelText == null) return null;
+        // Replace the row's control with a copy of its label, right-aligned.
+        for (int i = go.transform.childCount - 1; i >= 0; i--)
+        {
+            var child = go.transform.GetChild(i);
+            if (child != labelText.transform) UnityEngine.Object.DestroyImmediate(child.gameObject);
+        }
+        var valueGo = UnityEngine.Object.Instantiate(labelText.gameObject, go.transform);
+        valueGo.name = "Value";
+        var v = valueGo.GetComponent<TMP_Text>();
+        v.text = value ?? "";
+        v.alignment = TextAlignmentOptions.MidlineRight;
+        v.color = Color.white;
+        var vle = valueGo.GetComponent<LayoutElement>() ?? valueGo.AddComponent<LayoutElement>();
+        vle.flexibleWidth = 1f;
+        vle.minWidth = 120f;
+        go.SetActive(true);
+        Ui.Relayout(go);
+        return v;
+    }
+
+    /// <summary>Height of toggle, slider and value rows. Set before adding rows.</summary>
+    public float RowHeight { get; set; } = 56f;
 
     /// <summary>Adds a button in the list. Returns its GameObject.</summary>
     public GameObject AddButton(string label, Action onClick) => AddButtonTo(Content, label, onClick, ListButtonTemplate() ?? buttonTemplate);
@@ -634,6 +681,40 @@ public sealed class KitWindow
         return slider;
     }
 
+    /// <summary>
+    /// Adds a button that steps through <paramref name="options"/>, showing "label: option". Each click moves to
+    /// the next option (wrapping) and runs <paramref name="onChange"/> with its index. Returns the button's
+    /// GameObject, or null.
+    /// </summary>
+    public GameObject AddChoice(string label, IReadOnlyList<string> options, int index, Action<int> onChange)
+    {
+        if (options == null || options.Count == 0) return null;
+        int current = Math.Clamp(index, 0, options.Count - 1);
+        GameObject go = null;
+        go = AddButton($"{label}: {options[current]}", () =>
+        {
+            current = (current + 1) % options.Count;
+            Ui.SetText(go, $"{label}: {options[current]}");
+            onChange?.Invoke(current);
+        });
+        return go;
+    }
+
+    /// <summary>Removes every row (not the title or footer), for showing a different page in the same window.</summary>
+    public void Clear()
+    {
+        if (Content == null) return;
+        for (int i = Content.childCount - 1; i >= 0; i--)
+        {
+            var child = Content.GetChild(i).gameObject;
+            if (textTemplate != null && child == textTemplate.gameObject) continue;   // the popup keeps its template here
+            UnityEngine.Object.Destroy(child);
+            child.SetActive(false);   // gone from layout this frame
+        }
+        Ui.Relayout(Content.gameObject);
+        if (IsOpen) { RebuildFromRoot(); Scheduler.NextFrame(RebuildFromRoot); }
+    }
+
     // ---------- helpers ----------
 
     static void Upright(GameObject go)
@@ -683,7 +764,7 @@ public sealed class KitWindow
         var le = go.GetComponent<LayoutElement>() ?? go.AddComponent<LayoutElement>();
         le.flexibleWidth = 1f;
         le.flexibleHeight = 0f;
-        le.preferredHeight = Height(template, 45f);
+        le.preferredHeight = RowHeight;
         // The row's label: its first text that isn't inside the control.
         var texts = go.GetComponentsInChildren<TMP_Text>(true);
         var labelText = texts.FirstOrDefault(t => t.GetComponentInParent<Selectable>() == null || t.transform.parent == go.transform)

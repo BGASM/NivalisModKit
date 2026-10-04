@@ -15,24 +15,39 @@ public class KitPlugin : BasePlugin
     internal static ConfigEntry<string> SimulateMissing;
     internal static ConfigEntry<bool> BridgeEnabled;
     internal static ConfigEntry<int> BridgePort;
+    internal static ConfigEntry<bool> ModMenuEnabled, ShowOtherMods;
+    internal static ConfigEntry<string> ModMenuLabel, PreferredBrowser;
+
+    static ConfigDescription Desc(string text, ModSetting flags) => new(text, null, flags);
 
     /// <summary>Called by BepInEx.</summary>
     public override void Load()
     {
         L = Log;
-        SimulateMissing = Config.Bind("Debug", "SimulateMissing", "",
+        var advanced = new ModSetting { IsAdvanced = true };
+        var restart = new ModSetting { RequiresRestart = true };
+        var advancedRestart = new ModSetting { IsAdvanced = true, RequiresRestart = true };
+        SimulateMissing = Config.Bind("Debug", "SimulateMissing", "", Desc(
             "Comma-separated event names to install against a method that doesn't exist, " +
-            "to test the missing-event fallback. Leave empty.");
-        var liveReload = Config.Bind("General", "LiveConfigReload", true,
-            "Reload a mod's settings when its .cfg file in BepInEx\\config is saved, while the game runs.");
-        BridgeEnabled = Config.Bind("DevBridge", "Enabled", false,
+            "to test the missing-event fallback. Leave empty.", new ModSetting { Browsable = false }));
+        var liveReload = Config.Bind("General", "LiveConfigReload", true, Desc(
+            "Reload a mod's settings when its .cfg file in BepInEx\\config is saved, while the game runs.", restart));
+        ModMenuEnabled = Config.Bind("ModMenu", "Enabled", true,
+            "Add a Mods button to the pause menu, for mods' settings and pages.");
+        ShowOtherMods = Config.Bind("ModMenu", "ShowOtherMods", false,
+            "Also list mods that don't offer their settings for in-game changes, read-only. Change those in their .cfg file and restart.");
+        ModMenuLabel = Config.Bind("ModMenu", "ButtonLabel", "Mods", Desc("Text on the pause menu button.", restart));
+        PreferredBrowser = Config.Bind("ModMenu", "Browser", "", Desc(
+            "GUID of the mod whose browser the Mods button opens, when more than one mod provides one. " +
+            "Empty = the last one loaded; " + ModKit.Guid + " = the kit's own.", advanced));
+        BridgeEnabled = Config.Bind("DevBridge", "Enabled", false, Desc(
             "Read-only HTTP endpoint on 127.0.0.1 for development tools to query the running game. " +
-            "Only this computer can reach it. Takes effect after a restart.");
-        BridgePort = Config.Bind("DevBridge", "Port", 5710, "Port for the dev bridge.");
-        var frameTiming = Config.Bind("Debug", "FrameTiming", false,
+            "Only this computer can reach it. Takes effect after a restart.", advancedRestart));
+        BridgePort = Config.Bind("DevBridge", "Port", 5710, Desc("Port for the dev bridge.", advancedRestart));
+        var frameTiming = Config.Bind("Debug", "FrameTiming", false, Desc(
             "Log frames slower than FrameThresholdMs with how much of them was the kit's own work, and keep " +
-            "per-event timings (dev bridge /perf). For diagnosing lag; leave off otherwise.");
-        var frameThreshold = Config.Bind("Debug", "FrameThresholdMs", 50f, "Frame time (ms) that counts as slow for FrameTiming.");
+            "per-event timings (dev bridge /perf). For diagnosing lag; leave off otherwise.", advanced));
+        var frameThreshold = Config.Bind("Debug", "FrameThresholdMs", 50f, Desc("Frame time (ms) that counts as slow for FrameTiming.", advanced));
         Perf.On = frameTiming.Value;
         Perf.ThresholdMs = frameThreshold.Value;
         frameTiming.SettingChanged += (_, _) => { Perf.On = frameTiming.Value; if (Perf.On) Perf.Reset(); };
@@ -41,6 +56,9 @@ public class KitPlugin : BasePlugin
         L.LogInfo($"{ModKit.Name} {ModKit.Version} loaded");
         CheckGameVersion();
         EventPatches.InstallAll();
+        ModMenu.Install();
+        ModMenu.ListSettings(ModKit.Guid);
+        ConfigBrowser.Install();
         StartServices(liveReload.Value);
     }
 
