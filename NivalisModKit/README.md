@@ -227,7 +227,7 @@ Read-only lookups. Each returns a fresh list you can keep, or empty/null outside
 |---|---|
 | `GameTime` | `Day`, `Hour`, `Minute`, `TotalHours`, `DayOfWeek`. The day turns over at 08:00. |
 | `Venues` | `All`, `PlayerOwned`, `InDistrict(district)`, `DistrictOf(area)`, `NameOf(area)`, `Stock(area, item)` |
-| `Economy` | (amounts in hundredths: 37526 = 375.26 in game) `PlayerMoney`, `Vendors`, `VendorsFor(item)`, `Offers`, `Price`, `SellPrice`, `Stock(vendor, item)`, `DistrictOf(vendor)`, `IsUnlocked(vendor)` |
+| `Economy` | (amounts in hundredths: 37526 = 375.26 in game) `NameOf(vendor)`, `PlayerMoney`, `Vendors`, `VendorsFor(item)`, `Offers`, `Price`, `SellPrice`, `Stock(vendor, item)`, `DistrictOf(vendor)`, `IsUnlocked(vendor)` |
 | `Items` | `All`, `ByName("chicken")` (ignores case, spaces, underscores), `ById(guid)`, `NameOf(item)` |
 | `Recipes` | `All`, `Known`, `ForDish(item)`, `InputsOf(recipe)` (item and amount per serving), `OutputOf(recipe)` |
 | `Quests` | `Active`, `Completed`, `Pinned` |
@@ -372,7 +372,7 @@ The browser also reads BepInEx ConfigurationManager's `ConfigurationManagerAttri
 | `NativeHook.Install(...)` | Native detour. Keeps your delegates alive. For methods with by-reference struct parameters, which Harmony can't patch safely. |
 | `StructLayout.FieldOffset<T>(field)`, `Size<T>()` | IL2CPP field offsets and sizes from the running game. Value types have the object header subtracted. |
 
-See [samples/KitTester](../../samples/KitTester) and [samples/QuantityTester](../../samples/QuantityTester) for working examples.
+**Reference example:** [Manager Order Fix](../NivalisOrderFix/Plugin.cs) is a complete kit mod in about 250 lines: a `Purchasing` handler, settings listed in the Mods browser with sliders and an advanced flag, a page of its own (`ModMenu.AddPage`), a dev command, daily stats from `GameEvents`, and a version dependency. [samples/KitTester](../../samples/KitTester) exercises every kit feature for testing, and [samples/QuantityTester](../../samples/QuantityTester) shows `OrderQuantity`.
 
 ### Versioning
 

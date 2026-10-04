@@ -129,6 +129,19 @@ public static class Venues
 /// <summary>Vendors, prices, stock, and the player's money.</summary>
 public static class Economy
 {
+    /// <summary>A vendor's name as the game shows it, e.g. "Greengrocer Calypso Island", or null.</summary>
+    public static string NameOf(Vendor vendor)
+    {
+        try
+        {
+            if (vendor == null) return null;
+            string s = vendor.ToString();
+            int i = s.IndexOf(" (", StringComparison.Ordinal);   // Unity appends " (Nivalis.Economy.Vendor)"
+            return i > 0 ? s.Substring(0, i) : s;
+        }
+        catch { return null; }
+    }
+
     /// <summary>The player's money, or null outside gameplay.</summary>
     public static int? PlayerMoney
     {
