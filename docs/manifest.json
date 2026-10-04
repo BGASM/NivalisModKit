@@ -643,6 +643,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Layers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Layers.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Layers",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Layers.yml\" sourcestartlinenumber=\"1\">The game's rendering layers, by name. For cameras (cullingMask), raycasts and finding objects. Layers named CULL_n\nare props the game's own camera hides beyond n metres.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.ModKit.yml",
       "output": {
         ".html": {
@@ -741,6 +755,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Navigation.Mesh.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Navigation.Mesh.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Navigation.Mesh",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Navigation.Mesh.yml\" sourcestartlinenumber=\"1\">A navigation mesh: triangles over the walkable ground.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Navigation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Navigation.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Navigation",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Navigation.yml\" sourcestartlinenumber=\"1\">The walkable surfaces NPCs path over (Unity's navigation mesh), and walking routes across them.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.OrderQuantityContext.yml",
       "output": {
         ".html": {
@@ -766,6 +808,90 @@
       "IsMRef": true,
       "Title": "NivalisModKit.PanelArgs",
       "Summary": "<p sourcefile=\"api/NivalisModKit.PanelArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.PanelShown\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.PanelHidden\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Photo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Photo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Photo",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Photo.yml\" sourcestartlinenumber=\"1\">Pictures of the world taken from code.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PhotoOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PhotoOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PhotoOptions",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PhotoOptions.yml\" sourcestartlinenumber=\"1\">How <xref href=\"NivalisModKit.Photo.TopDown(UnityEngine.Bounds%2cNivalisModKit.PhotoOptions)\" data-throw-if-not-resolved=\"false\"></xref> takes its picture.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PhotoResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PhotoResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PhotoResult",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PhotoResult.yml\" sourcestartlinenumber=\"1\">A picture from <xref href=\"NivalisModKit.Photo.TopDown(UnityEngine.Bounds%2cNivalisModKit.PhotoOptions)\" data-throw-if-not-resolved=\"false\"></xref>, and how it maps onto the world.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Place.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Place.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Place",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Place.yml\" sourcestartlinenumber=\"1\">A place in the loaded scene: see <xref href=\"NivalisModKit.World.Places(System.Boolean)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PlaceKind.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PlaceKind.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PlaceKind",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PlaceKind.yml\" sourcestartlinenumber=\"1\">Kinds of place the game's compass can point at.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Player.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Player.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Player",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Player.yml\" sourcestartlinenumber=\"1\">The player in the world: where they are and where they're looking.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -909,6 +1035,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.QuestMarker.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.QuestMarker.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.QuestMarker",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.QuestMarker.yml\" sourcestartlinenumber=\"1\">Where a quest points: see <xref href=\"NivalisModKit.Quests.Markers(System.Boolean)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.QuestMarkerArgs.yml",
       "output": {
         ".html": {
@@ -1004,6 +1144,20 @@
       "IsMRef": true,
       "Title": "NivalisModKit.SaveData",
       "Summary": "<p sourcefile=\"api/NivalisModKit.SaveData.yml\" sourcestartlinenumber=\"1\">Data that belongs to one save, stored next to it as <code>&lt;save&gt;.modkit.json</code>. Values are\nkept per mod and per key, as JSON. Read and set them any time during gameplay; the kit writes\nthe file when the game saves and reads it back when that save loads. A new game starts empty.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Scenes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Scenes.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Scenes",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Scenes.yml\" sourcestartlinenumber=\"1\">The loaded scenes and what's in them.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1147,6 +1301,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Stall.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Stall.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Stall",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Stall.yml\" sourcestartlinenumber=\"1\">A vendor's stall in the loaded scene: see <xref href=\"NivalisModKit.Economy.Stalls\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.StructLayout.yml",
       "output": {
         ".html": {
@@ -1256,6 +1424,20 @@
       "IsMRef": true,
       "Title": "NivalisModKit.VenueArgs",
       "Summary": "<p sourcefile=\"api/NivalisModKit.VenueArgs.yml\" sourcestartlinenumber=\"1\">Arguments for events about one venue.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.VenueEntrance.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.VenueEntrance.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.VenueEntrance",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VenueEntrance.yml\" sourcestartlinenumber=\"1\">A venue's entrance in the loaded scene: see <xref href=\"NivalisModKit.Venues.Entrances\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",

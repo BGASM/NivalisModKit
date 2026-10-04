@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/custom-content/docfx/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/world-and-navigation/docfx/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -98,7 +98,7 @@
 <li>Extract the release zip into the game folder. The file lands at <code>BepInEx\plugins\NivalisModKit.dll</code>.</li>
 </ol>
 <p>To confirm it loaded, open <code>BepInEx\LogOutput.log</code> and look for these lines:</p>
-<pre><code>Nivalis ModKit 0.3.0 loaded
+<pre><code>Nivalis ModKit 0.4.0 loaded
 Game build: 1.0 patch 2, Steam build 25680465 (tested)
 Event BuyIngredientsStarting: live
 ...
@@ -848,6 +848,74 @@ Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&
 <li>Placeable copies (furniture, decorations) get their own prefab GUID, registered with the game's save system, so a placed copy reloads as itself.</li>
 </ul>
 <p><strong>Not yet:</strong> plants and seeds, selling recipes for money, and choosing exactly which vendors stock an item. Researched and planned.</p>
+<h3 id="world-and-navigation-experimental-kit-040">World and navigation (experimental, kit 0.4.0+)</h3>
+<p>Where things are, and how to see them: the walkable ground, the player and their view, places, vendors, venues and quest targets, and pictures of the world from above. Built for (and tested by) the <a href="https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisMinimap">Nivalis Minimap</a>.</p>
+<pre><code class="lang-csharp">var mesh = Navigation.Triangulate();                  // the walkable ground: triangles, areas, bounds
+var shot = Photo.TopDown(mesh.Bounds);                 // the district from straight above
+Vector2 me = shot.ToPixel(Player.Position);            // where the player is on it
+float heading = Player.Heading;                        // where they're looking (0 = north)
+
+foreach (var place in World.Places())                  // &quot;Train &gt; Docks&quot;, &quot;Shelter&quot;, &quot;Your apartment&quot;...
+    Log.LogInfo($&quot;{place} at {place.Position}&quot;);
+foreach (var q in Quests.Markers())                    // pinned quests: where the compass points
+    Log.LogInfo($&quot;#{q.Number} {q.Title} at {q.Position}&quot;);
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Gives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Navigation.Triangulate()</code></td>
+<td>The navigation mesh of everything loaded: vertices, triangles, area types, bounds. The game's build stripped Unity's method for this; the kit calls the engine function behind it by name.</td>
+</tr>
+<tr>
+<td><code>Navigation.Path(from, to)</code>, <code>Navigation.Nearest(position)</code></td>
+<td>A walking route's corners; the nearest walkable point.</td>
+</tr>
+<tr>
+<td><code>Player.Transform</code>, <code>Position</code>, <code>Heading</code>, <code>Camera</code></td>
+<td>The player, and the camera they see through. Unity's <code>Camera.main</code> doesn't find it, and the character's body doesn't turn when the player looks around, so the heading comes from the camera.</td>
+</tr>
+<tr>
+<td><code>Ui.GameHudAlpha</code>, <code>Ui.IsGameHudVisible</code>, <code>Ui.IsMenuOpen</code></td>
+<td>Whether a HUD overlay should show: the game HUD's fade (dialogue, cutscenes hide it), and hidden while a menu, the travel map or the loading screen is open (the game's HUD stays up underneath those) or menu mode is requested. Multiply your overlay's alpha by <code>GameHudAlpha</code>.</td>
+</tr>
+<tr>
+<td><code>World.Places()</code>, <code>World.CompassIcon(kind, out colour)</code>, <code>World.IsPlayers(property)</code></td>
+<td>Every place the compass can point at, near or far: travel points, trains, boats and lifts with their destinations, greenhouses, shelters (free apartments) and the player's apartments; the compass's own icon and colour for each kind.</td>
+</tr>
+<tr>
+<td><code>Economy.Stalls()</code>, <code>Economy.StallOf(vendor)</code></td>
+<td>Where vendors physically stand.</td>
+</tr>
+<tr>
+<td><code>Venues.Entrances()</code>, <code>EntranceOf(venue)</code>, <code>DisplayNameOf(venue)</code></td>
+<td>Each venue's entrance (its sign), whether it's the player's or for sale, its prices; venue names as the game shows them (<code>NameOf</code> is the asset name).</td>
+</tr>
+<tr>
+<td><code>Quests.Markers(pinnedOnly)</code></td>
+<td>Where the compass points for quests: the objective, or the portal towards it when it's in another district (the game routes markers onto portals).</td>
+</tr>
+<tr>
+<td><code>Photo.TopDown(area, options)</code></td>
+<td>An orthographic picture straight down over an area, north up, with the numbers that map world positions onto it. People, traffic and floating UI left out, the vegetation that draws black for other cameras hidden, strong lights turned down, highlights tone mapped; everything put back after. <code>PhotoOptions</code> sets resolution, a height to cut roofs at, and the rest.</td>
+</tr>
+<tr>
+<td><code>Scenes.Objects&lt;T&gt;(includeInactive)</code>, <code>Scenes.Active</code></td>
+<td>Components in the loaded scenes, including ones switched off because they're far from the player (scene objects only, no prefabs).</td>
+</tr>
+<tr>
+<td><code>Layers</code></td>
+<td>The game's layer names (<code>Character</code>, <code>Player</code>, <code>Vehicle</code>, <code>WorldUI</code>...), <code>Mask(...)</code>, <code>AllExcept(...)</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Searches, not events.</strong> <code>World.Places</code>, <code>Economy.Stalls</code> and <code>Venues.Entrances</code> search the whole scene: call them when a scene loads and again a few seconds later (a district fills in over a few seconds), not every frame. <code>Quests.Markers</code> is cheap enough for once a second.</p>
+<p><strong>Pictures stay on the player's machine.</strong> A <code>Photo</code> is the player's own game rendering itself; save it to <code>BepInEx\cache</code> and draw it once. A mod that ships pictures of the game would be shipping game assets.</p>
 <h3 id="helpers">Helpers</h3>
 <table>
 <thead>
@@ -1025,6 +1093,18 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <td><code>clock [speed=X] [sim=X] [pause=on/off]</code></td>
 <td>Clock and simulation speed (1 clears), shared pause</td>
 </tr>
+<tr>
+<td><code>content [dump]</code></td>
+<td>Custom items and recipes mods added; <code>content dump</code> writes every item, recipe and vendor to JSON</td>
+</tr>
+<tr>
+<td><code>world</code></td>
+<td>What the world queries see here: player, camera, navigation mesh, places, stalls, venues, quest markers</td>
+</tr>
+<tr>
+<td><code>travel [to=District]</code></td>
+<td>Fast travels there as the game's map does (no taxi or train scene; doesn't check the district is unlocked); alone, lists the districts</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Without commands.</strong> Live reload works as a command channel too: saving a <code>.cfg</code> applies within a second, so a test mod can treat settings as triggers. <a href="https://github.com/BGASM/NivalisModKit/tree/main/samples/KitTester">KitTester</a> still accepts <code>[Ui] Demo = Panel</code> and <code>[Ui] Open = Map</code> in its <code>.cfg</code>.</p>
@@ -1126,6 +1206,19 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <p>Mods can check the build too: <code>GameBuild.IsTested</code>, <code>GameBuild.Describe()</code> and <code>GameBuild.SteamBuildId</code>.</p>
 <p>Other mods that detour <code>Vendor.BuyItem</code> directly will conflict with the purchasing pipeline. Build on <code>Purchasing</code> instead.</p>
 <h2 id="changes">Changes</h2>
+<p><strong>0.4.0</strong></p>
+<p>For players:</p>
+<ul>
+<li>Mods can now build maps, compasses and guides: the kit knows where things are (see the <a href="https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisMinimap">Nivalis Minimap</a>).</li>
+</ul>
+<p>For modders (all experimental):</p>
+<ul>
+<li><strong>World and navigation:</strong> <code>Navigation</code> (the walkable mesh, walking routes), <code>Player</code> (position, heading, the game camera), <code>World.Places</code> (travel points with destinations, shelters, the player's apartments, greenhouses, lifts, boats), <code>Economy.Stalls</code>, <code>Venues.Entrances</code> (the player's venues, venues for sale, prices) and <code>Venues.DisplayNameOf</code>, <code>Quests.Markers</code> (pinned quest targets, routed through portals).</li>
+<li><strong><code>Photo.TopDown</code>:</strong> pictures of the world from above, for maps.</li>
+<li><strong><code>Ui.GameHudAlpha</code></strong> / <code>IsGameHudVisible</code> / <code>IsMenuOpen</code>: when HUD overlays should show.</li>
+<li><code>Scenes.Objects&lt;T&gt;</code> (including switched-off objects), <code>Layers</code>.</li>
+<li>Dev command <code>world</code>.</li>
+</ul>
 <p><strong>0.3.0</strong></p>
 <p>For players:</p>
 <ul>

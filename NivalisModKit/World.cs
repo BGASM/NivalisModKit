@@ -7,7 +7,7 @@ using UnityEngine;
 namespace NivalisModKit;
 
 /// <summary>Districts (WorldLocation) and travel distance between them.</summary>
-public static class World
+public static partial class World
 {
     /// <summary>Returned by <see cref="Hops"/> when there is no route.</summary>
     public const int Unreachable = -1;

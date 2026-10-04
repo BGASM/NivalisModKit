@@ -328,6 +328,12 @@ failed to install never fires; check <a class="xref" href="NivalisModKit.GameEve
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Layers.html">Layers</a></dt>
+      <dd><p>The game's rendering layers, by name. For cameras (cullingMask), raycasts and finding objects. Layers named CULL_n
+are props the game's own camera hides beyond n metres.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.ModKit.html">ModKit</a></dt>
       <dd><p>Identity of the kit, for <code>[BepInDependency]</code> and version checks.</p>
 </dd>
@@ -372,6 +378,16 @@ ShopTradeRequest or BasicTemp, where the IL2CPP trampoline passes garbage).</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Navigation.html">Navigation</a></dt>
+      <dd><p>The walkable surfaces NPCs path over (Unity's navigation mesh), and walking routes across them.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Navigation.Mesh.html">Navigation.Mesh</a></dt>
+      <dd><p>A navigation mesh: triangles over the walkable ground.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.OrderQuantityContext.html">OrderQuantityContext</a></dt>
       <dd><p>Arguments for <a class="xref" href="NivalisModKit.Purchasing.html#NivalisModKit_Purchasing_OrderQuantity">OrderQuantity</a>.</p>
 </dd>
@@ -379,6 +395,31 @@ ShopTradeRequest or BasicTemp, where the IL2CPP trampoline passes garbage).</p>
     <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.PanelArgs.html">PanelArgs</a></dt>
       <dd><p>Arguments for <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_PanelShown">PanelShown</a> and <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_PanelHidden">PanelHidden</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Photo.html">Photo</a></dt>
+      <dd><p>Pictures of the world taken from code.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.PhotoOptions.html">PhotoOptions</a></dt>
+      <dd><p>How <a class="xref" href="NivalisModKit.Photo.html#NivalisModKit_Photo_TopDown_UnityEngine_Bounds_NivalisModKit_PhotoOptions_">TopDown(Bounds, PhotoOptions)</a> takes its picture.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.PhotoResult.html">PhotoResult</a></dt>
+      <dd><p>A picture from <a class="xref" href="NivalisModKit.Photo.html#NivalisModKit_Photo_TopDown_UnityEngine_Bounds_NivalisModKit_PhotoOptions_">TopDown(Bounds, PhotoOptions)</a>, and how it maps onto the world.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Place.html">Place</a></dt>
+      <dd><p>A place in the loaded scene: see <a class="xref" href="NivalisModKit.World.html#NivalisModKit_World_Places_System_Boolean_">Places(bool)</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Player.html">Player</a></dt>
+      <dd><p>The player in the world: where they are and where they're looking.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -434,6 +475,11 @@ With no subscribers the kit leaves purchasing to the game.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.QuestMarker.html">QuestMarker</a></dt>
+      <dd><p>Where a quest points: see <a class="xref" href="NivalisModKit.Quests.html#NivalisModKit_Quests_Markers_System_Boolean_">Markers(bool)</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.QuestMarkerArgs.html">QuestMarkerArgs</a></dt>
       <dd><p>Arguments for <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_QuestMarkerAdded">QuestMarkerAdded</a> and <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_QuestMarkerRemoved">QuestMarkerRemoved</a>.</p>
 </dd>
@@ -468,6 +514,11 @@ With no subscribers the kit leaves purchasing to the game.</p>
       <dd><p>Data that belongs to one save, stored next to it as <code>&lt;save&gt;.modkit.json</code>. Values are
 kept per mod and per key, as JSON. Read and set them any time during gameplay; the kit writes
 the file when the game saves and reads it back when that save loads. A new game starts empty.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Scenes.html">Scenes</a></dt>
+      <dd><p>The loaded scenes and what's in them.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -527,6 +578,11 @@ take order, deliver, buy, manage complaint, cleanup meal, cleanup trash, cleanup
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Stall.html">Stall</a></dt>
+      <dd><p>A vendor's stall in the loaded scene: see <a class="xref" href="NivalisModKit.Economy.html#NivalisModKit_Economy_Stalls">Stalls()</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.StructLayout.html">StructLayout</a></dt>
       <dd><p>Field offsets and sizes of IL2CPP types, read from the running game, for code that works
 with raw pointers (see <a class="xref" href="NivalisModKit.NativeHook.html">NativeHook</a>). Results are cached.</p>
@@ -574,6 +630,11 @@ Call these from the main thread (event handlers, Update, the Scheduler).</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.VenueEntrance.html">VenueEntrance</a></dt>
+      <dd><p>A venue's entrance in the loaded scene: see <a class="xref" href="NivalisModKit.Venues.html#NivalisModKit_Venues_Entrances">Entrances()</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.VenueHourArgs.html">VenueHourArgs</a></dt>
       <dd><p>Arguments for <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_VenueHour">VenueHour</a>.</p>
 </dd>
@@ -614,6 +675,11 @@ Enums
     <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.KitPlugin.UntestedBuildMode.html">KitPlugin.UntestedBuildMode</a></dt>
       <dd><p>What the kit does on a game build it wasn't tested on.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.PlaceKind.html">PlaceKind</a></dt>
+      <dd><p>Kinds of place the game's compass can point at.</p>
 </dd>
     </dl>
     <dl class="jumplist">

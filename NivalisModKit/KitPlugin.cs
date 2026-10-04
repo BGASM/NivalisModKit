@@ -103,6 +103,7 @@ public class KitPlugin : BasePlugin
         }
         catch (Exception e) { L.LogError($"Content: missing, mods can't add items or recipes ({e.Message})"); }
         MenuMode.Install();
+        GameHud.Install();
         DevConsole.Install();
         ConfigBrowser.Install();
         TitleLine.Install();
