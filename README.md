@@ -2,6 +2,8 @@
 
 A shared library for Nivalis Nights mods, by BGASM. It does nothing on its own. Install it when another mod lists it as a requirement.
 
+**Documentation site** (this guide plus the full API reference): https://bgasm.github.io/NivalisModKit
+
 Mods that need it: [Better Supplier Choice](https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisOrderFix), formerly Manager Order Fix (2.0 and later; 2.1 needs kit 0.2).
 
 What you'll see with it installed:
@@ -534,7 +536,8 @@ The project references BepInEx and the game's interop assemblies from your game 
 | `NivalisModKit/` | The kit |
 | `samples/KitTester` | Logs every kit event and exercises every feature; the kit's regression test |
 | `samples/QuantityTester` | `Purchasing.OrderQuantity` example |
-| `tools/` | `kit.cmd` / `kit.ps1` / `bridge.sh` (dev commands and bridge queries), `lastlog.sh` (log summary) |
+| `tools/` | `kit.cmd` / `kit.ps1` / `bridge.sh` (dev commands and bridge queries), `lastlog.sh` (log summary), `docs.ps1` (builds the documentation site) |
+| `docfx/`, `docs/` | Documentation site source, and the built site GitHub Pages serves |
 
 Mods built on the kit live in [BGASM/NivalisMods](https://github.com/BGASM/NivalisMods); Better Supplier Choice there is the reference example.
 

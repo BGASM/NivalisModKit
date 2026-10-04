@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class GameClock | Nivalis ModKit </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class GameClock | Nivalis ModKit ">
+      
+      <meta name="description" content="The game clock&#39;s speed and pausing, shareable between mods. Each mod sets its own factor under its own owner name; the kit applies the product of all factors, so two mods that each want 2x get 4x, and removing one restores the other&#39;s. Factors survive save loads. Main thread only.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/main/apiSpec/new?filename=NivalisModKit_GameClock.md&amp;value=---%0Auid%3A%20NivalisModKit.GameClock%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Nivalis ModKit">
+            Nivalis ModKit
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="NivalisModKit.GameClock">
+
+
+
+  <h1 id="NivalisModKit_GameClock" data-uid="NivalisModKit.GameClock" class="text-break">
+Class GameClock  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="NivalisModKit.html">NivalisModKit</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>The game clock's speed and pausing, shareable between mods. Each mod sets its own factor under its own
+owner name; the kit applies the product of all factors, so two mods that each want 2x get 4x, and
+removing one restores the other's. Factors survive save loads. Main thread only.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class GameClock</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">GameClock</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="NivalisModKit_GameClock_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Clock speed changes how fast game time passes (days, opening hours, curfew); people, animations and
+cooking run at normal speed, so a venue serves fewer customers per game hour when the clock is faster.
+Simulation speed is a true fast-forward or slow motion of everything (Unity's time scale); it costs
+more performance when above 1. The game itself never changes Unity's time scale outside its dev menu.</p>
+</div>
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="NivalisModKit_GameClock_MaxClockSpeed" data-uid="NivalisModKit.GameClock.MaxClockSpeed">
+  MaxClockSpeed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lowest and highest combined clock speed the kit applies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const float MaxClockSpeed = 20</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameClock_MaxSimulationSpeed" data-uid="NivalisModKit.GameClock.MaxSimulationSpeed">
+  MaxSimulationSpeed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lowest and highest combined simulation speed the kit applies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const float MaxSimulationSpeed = 4</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameClock_MinClockSpeed" data-uid="NivalisModKit.GameClock.MinClockSpeed">
+  MinClockSpeed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lowest and highest combined clock speed the kit applies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const float MinClockSpeed = 0.1</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameClock_MinSimulationSpeed" data-uid="NivalisModKit.GameClock.MinSimulationSpeed">
+  MinSimulationSpeed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Lowest and highest combined simulation speed the kit applies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const float MinSimulationSpeed = 0.25</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="NivalisModKit_GameClock_BaseGameSecondsPerSecond_" data-uid="NivalisModKit.GameClock.BaseGameSecondsPerSecond*"></a>
+
+  <h3 id="NivalisModKit_GameClock_BaseGameSecondsPerSecond" data-uid="NivalisModKit.GameClock.BaseGameSecondsPerSecond">
+  BaseGameSecondsPerSecond
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Game seconds per real second at normal speed (the game's own setting), or -1 before gameplay.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static float BaseGameSecondsPerSecond { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameClock_ClockFactors_" data-uid="NivalisModKit.GameClock.ClockFactors*"></a>
+
+  <h3 id="NivalisModKit_GameClock_ClockFactors" data-uid="NivalisModKit.GameClock.ClockFactors">
+  ClockFactors
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The factors currently set, by owner (for settings screens and diagnostics).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyDictionary&lt;string, float&gt; ClockFactors { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2">IReadOnlyDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameClock_ClockSpeed_" data-uid="NivalisModKit.GameClock.ClockSpeed*"></a>
+
+  <h3 id="NivalisModKit_GameClock_ClockSpeed" data-uid="NivalisModKit.GameClock.ClockSpeed">
+  ClockSpeed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The combined clock speed factor in effect (1 = the game's normal speed).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static float ClockSpeed { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameClock_IsPaused_" data-uid="NivalisModKit.GameClock.IsPaused*"></a>
+
+  <h3 id="NivalisModKit_GameClock_IsPaused" data-uid="NivalisModKit.GameClock.IsPaused">
+  IsPaused
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>True while the game clock is paused (by the game or any mod).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsPaused { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameClock_SimulationFactors_" data-uid="NivalisModKit.GameClock.SimulationFactors*"></a>
+
+  <h3 id="NivalisModKit_GameClock_SimulationFactors" data-uid="NivalisModKit.GameClock.SimulationFactors">
+  SimulationFactors
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The factors currently set, by owner (for settings screens and diagnostics).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyDictionary&lt;string, float&gt; SimulationFactors { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2">IReadOnlyDictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameClock_SimulationSpeed_" data-uid="NivalisModKit.GameClock.SimulationSpeed*"></a>
+
+  <h3 id="NivalisModKit_GameClock_SimulationSpeed" data-uid="NivalisModKit.GameClock.SimulationSpeed">
+  SimulationSpeed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The combined simulation speed in effect (1 = normal).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static float SimulationSpeed { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="NivalisModKit_GameClock_ClearClockSpeed_" data-uid="NivalisModKit.GameClock.ClearClockSpeed*"></a>
+
+  <h3 id="NivalisModKit_GameClock_ClearClockSpeed_System_String_" data-uid="NivalisModKit.GameClock.ClearClockSpeed(System.String)">
+  ClearClockSpeed(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes your clock speed factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ClearClockSpeed(string owner)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameClock_ClearSimulationSpeed_" data-uid="NivalisModKit.GameClock.ClearSimulationSpeed*"></a>
+
+  <h3 id="NivalisModKit_GameClock_ClearSimulationSpeed_System_String_" data-uid="NivalisModKit.GameClock.ClearSimulationSpeed(System.String)">
+  ClearSimulationSpeed(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes your simulation speed factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ClearSimulationSpeed(string owner)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameClock_Pause_" data-uid="NivalisModKit.GameClock.Pause*"></a>
+
+  <h3 id="NivalisModKit_GameClock_Pause_System_String_" data-uid="NivalisModKit.GameClock.Pause(System.String)">
+  Pause(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Pauses the game clock until the returned handle is disposed. Uses the game's own pause, which any
+number of owners can hold: time runs again only when nobody holds one. Returns null outside gameplay.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IDisposable Pause(string owner)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameClock_SetClockSpeed_" data-uid="NivalisModKit.GameClock.SetClockSpeed*"></a>
+
+  <h3 id="NivalisModKit_GameClock_SetClockSpeed_System_String_System_Single_" data-uid="NivalisModKit.GameClock.SetClockSpeed(System.String,System.Single)">
+  SetClockSpeed(string, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sets your clock speed factor (2 = time passes twice as fast). Use your mod's GUID as
+<code class="paramref">owner</code>. Applies immediately in gameplay, otherwise when a save loads.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void SetClockSpeed(string owner, float factor)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>factor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameClock_SetSimulationSpeed_" data-uid="NivalisModKit.GameClock.SetSimulationSpeed*"></a>
+
+  <h3 id="NivalisModKit_GameClock_SetSimulationSpeed_System_String_System_Single_" data-uid="NivalisModKit.GameClock.SetSimulationSpeed(System.String,System.Single)">
+  SetSimulationSpeed(string, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sets your simulation speed factor (2 = everything runs twice as fast, 0.5 = slow motion). Use your
+mod's GUID as <code class="paramref">owner</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void SetSimulationSpeed(string owner, float factor)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>factor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="events">Events
+</h2>
+
+
+
+  <h3 id="NivalisModKit_GameClock_TimeSpeedChanged" data-uid="NivalisModKit.GameClock.TimeSpeedChanged">
+  TimeSpeedChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameClock.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Raised after the effective clock or simulation speed changes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action TimeSpeedChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Nivalis ModKit by BGASM · <a href="https://github.com/BGASM/NivalisModKit">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

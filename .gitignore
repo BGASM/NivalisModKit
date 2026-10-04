@@ -9,3 +9,9 @@ research/
 
 # Local notes
 TODO.md
+
+# DocFX: generated inputs (the built site in docs/ is committed)
+docfx/index.md
+docfx/api/*.yml
+docfx/api/.manifest
+docfx/obj/

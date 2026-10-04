@@ -1,0 +1,2482 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class GameEvents | Nivalis ModKit </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class GameEvents | Nivalis ModKit ">
+      
+      <meta name="description" content="Game events raised by the kit. Subscribe in your plugin&#39;s Load. An event whose patch failed to install never fires; check  to degrade gracefully.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/main/apiSpec/new?filename=NivalisModKit_GameEvents.md&amp;value=---%0Auid%3A%20NivalisModKit.GameEvents%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Nivalis ModKit">
+            Nivalis ModKit
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="NivalisModKit.GameEvents">
+
+
+
+  <h1 id="NivalisModKit_GameEvents" data-uid="NivalisModKit.GameEvents" class="text-break">
+Class GameEvents  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Lifecycle.cs/#L8"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="NivalisModKit.html">NivalisModKit</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Game events raised by the kit. Subscribe in your plugin's Load. An event whose patch
+failed to install never fires; check <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_IsAvailable_System_String_">IsAvailable(string)</a> to degrade gracefully.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class GameEvents</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">GameEvents</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="NivalisModKit_GameEvents_IsInGame_" data-uid="NivalisModKit.GameEvents.IsInGame*"></a>
+
+  <h3 id="NivalisModKit_GameEvents_IsInGame" data-uid="NivalisModKit.GameEvents.IsInGame">
+  IsInGame
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Lifecycle.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>True from <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_GameReady">GameReady</a> until <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_GameEnded">GameEnded</a> or the next load: the world, its managers
+and the HUD exist, so queries, tuning and UI calls work.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsInGame { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="NivalisModKit_GameEvents_IsAvailable_" data-uid="NivalisModKit.GameEvents.IsAvailable*"></a>
+
+  <h3 id="NivalisModKit_GameEvents_IsAvailable_System_String_" data-uid="NivalisModKit.GameEvents.IsAvailable(System.String)">
+  IsAvailable(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>True if the named event's patch installed and the event will fire.
+Pass <code>nameof(GameEvents.SomeEvent)</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsAvailable(string name)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_GameEvents_WhenInGame_" data-uid="NivalisModKit.GameEvents.WhenInGame*"></a>
+
+  <h3 id="NivalisModKit_GameEvents_WhenInGame_System_Action_" data-uid="NivalisModKit.GameEvents.WhenInGame(System.Action)">
+  WhenInGame(Action)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Lifecycle.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Runs <code class="paramref">action</code> now if <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_IsInGame">IsInGame</a>, otherwise once at the next
+<a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_GameReady">GameReady</a>. For work that needs the world, called from code that may run at the menu.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void WhenInGame(Action action)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="events">Events
+</h2>
+
+
+
+  <h3 id="NivalisModKit_GameEvents_ApartmentEntered" data-uid="NivalisModKit.GameEvents.ApartmentEntered">
+  ApartmentEntered
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L190"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player entered an apartment.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;ApartmentArgs&gt; ApartmentEntered</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.ApartmentArgs.html">ApartmentArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_ApartmentLeft" data-uid="NivalisModKit.GameEvents.ApartmentLeft">
+  ApartmentLeft
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player left an apartment.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;ApartmentArgs&gt; ApartmentLeft</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.ApartmentArgs.html">ApartmentArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_AwarenessIncreased" data-uid="NivalisModKit.GameEvents.AwarenessIncreased">
+  AwarenessIncreased
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Security awareness of the player rose (being seen during curfew, theft).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;AwarenessArgs&gt; AwarenessIncreased</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.AwarenessArgs.html">AwarenessArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_BoatBoarded" data-uid="NivalisModKit.GameEvents.BoatBoarded">
+  BoatBoarded
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L231"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player took the boat's helm.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action BoatBoarded</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_BoatDocked" data-uid="NivalisModKit.GameEvents.BoatDocked">
+  BoatDocked
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L235"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The boat docked.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;BoatDockArgs&gt; BoatDocked</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.BoatDockArgs.html">BoatDockArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_BoatLeft" data-uid="NivalisModKit.GameEvents.BoatLeft">
+  BoatLeft
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L233"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player left the boat's helm.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action BoatLeft</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_BoatRefueled" data-uid="NivalisModKit.GameEvents.BoatRefueled">
+  BoatRefueled
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L241"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The boat finished refuelling at a pump.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;BoatRefueledArgs&gt; BoatRefueled</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.BoatRefueledArgs.html">BoatRefueledArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_BoatTravel" data-uid="NivalisModKit.GameEvents.BoatTravel">
+  BoatTravel
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L239"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player fast-travelled by boat.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;BoatTravelArgs&gt; BoatTravel</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.BoatTravelArgs.html">BoatTravelArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_BoatUndocked" data-uid="NivalisModKit.GameEvents.BoatUndocked">
+  BoatUndocked
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L237"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The boat left a dock.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;BoatDockArgs&gt; BoatUndocked</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.BoatDockArgs.html">BoatDockArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_BuyIngredientsFinished" data-uid="NivalisModKit.GameEvents.BuyIngredientsFinished">
+  BuyIngredientsFinished
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue area finished buying ingredients for one recipe. Raised after every other
+mod's patches on the purchase, so the purchases are final.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;BuyIngredientsArgs&gt; BuyIngredientsFinished</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.BuyIngredientsArgs.html">BuyIngredientsArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_BuyIngredientsStarting" data-uid="NivalisModKit.GameEvents.BuyIngredientsStarting">
+  BuyIngredientsStarting
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue area is about to buy ingredients for one recipe.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;BuyIngredientsArgs&gt; BuyIngredientsStarting</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.BuyIngredientsArgs.html">BuyIngredientsArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_CameraDisabled" data-uid="NivalisModKit.GameEvents.CameraDisabled">
+  CameraDisabled
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L229"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player disabled a security camera.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;CameraArgs&gt; CameraDisabled</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.CameraArgs.html">CameraArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_CropHarvested" data-uid="NivalisModKit.GameEvents.CropHarvested">
+  CropHarvested
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A crop was harvested.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;CropHarvestedArgs&gt; CropHarvested</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.CropHarvestedArgs.html">CropHarvestedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_CropPlanted" data-uid="NivalisModKit.GameEvents.CropPlanted">
+  CropPlanted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L176"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A crop was planted in a greenhouse module. Item is the plant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;ItemArgs&gt; CropPlanted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.ItemArgs.html">ItemArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_CurfewEnded" data-uid="NivalisModKit.GameEvents.CurfewEnded">
+  CurfewEnded
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Curfew ended (08:00).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action CurfewEnded</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_CurfewStarted" data-uid="NivalisModKit.GameEvents.CurfewStarted">
+  CurfewStarted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L166"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Curfew began (02:00). Cameras and drones switch on.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action CurfewStarted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_CurfewWarning" data-uid="NivalisModKit.GameEvents.CurfewWarning">
+  CurfewWarning
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L170"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The curfew warning period began (an hour before curfew).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action CurfewWarning</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_DayEnded" data-uid="NivalisModKit.GameEvents.DayEnded">
+  DayEnded
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L271"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The game day ended: curfew began (02:00) or the player slept. Rent is collected and the
+end-of-day summary follows. The next day starts at 08:00 (<a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_DayStarted">DayStarted</a>).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;DayEndedArgs&gt; DayEnded</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.DayEndedArgs.html">DayEndedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_DayStarted" data-uid="NivalisModKit.GameEvents.DayStarted">
+  DayStarted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A new game day started. The game's day turns over at 08:00, not midnight. Doesn't fire
+while a save loads.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;DayStartedArgs&gt; DayStarted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.DayStartedArgs.html">DayStartedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_DeliveryCompleted" data-uid="NivalisModKit.GameEvents.DeliveryCompleted">
+  DeliveryCompleted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Staff put a delivery of bought ingredients into a venue's storage. Reports what actually
+went in; items that didn't fit are delivered later and reported then.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;DeliveryCompletedArgs&gt; DeliveryCompleted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.DeliveryCompletedArgs.html">DeliveryCompletedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_DishCooked" data-uid="NivalisModKit.GameEvents.DishCooked">
+  DishCooked
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A dish finished cooking at a food processor, by staff or the player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;DishCookedArgs&gt; DishCooked</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.DishCookedArgs.html">DishCookedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_DistrictEntered" data-uid="NivalisModKit.GameEvents.DistrictEntered">
+  DistrictEntered
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player arrived in a different district. Going in and out of buildings doesn't count.
+Not raised for the starting district when a save loads; <a class="xref" href="NivalisModKit.GameLoadedArgs.html#NivalisModKit_GameLoadedArgs_District">District</a> has that.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;DistrictEnteredArgs&gt; DistrictEntered</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.DistrictEnteredArgs.html">DistrictEnteredArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_EndOfDayShown" data-uid="NivalisModKit.GameEvents.EndOfDayShown">
+  EndOfDayShown
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L275"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The end-of-day summary screen opened (venues, finances, debt, progress).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action EndOfDayShown</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_EquipmentPurchased" data-uid="NivalisModKit.GameEvents.EquipmentPurchased">
+  EquipmentPurchased
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue bought something outside a restock round: equipment, such as the drinks machine a
+venue needs before it can serve drinks. NPC venues do this too. Needs both BuyIngredients events.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;EquipmentPurchasedArgs&gt; EquipmentPurchased</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.EquipmentPurchasedArgs.html">EquipmentPurchasedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_FishCaught" data-uid="NivalisModKit.GameEvents.FishCaught">
+  FishCaught
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A fish (or other catch) went into the player's inventory.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;ItemArgs&gt; FishCaught</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.ItemArgs.html">ItemArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_FishDiscovered" data-uid="NivalisModKit.GameEvents.FishDiscovered">
+  FishDiscovered
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L174"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player caught a fish species for the first time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;ItemArgs&gt; FishDiscovered</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.ItemArgs.html">ItemArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_FurniturePickedUp" data-uid="NivalisModKit.GameEvents.FurniturePickedUp">
+  FurniturePickedUp
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player picked up a piece of furniture (or another holdable object) into their hands.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;FurnitureArgs&gt; FurniturePickedUp</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.FurnitureArgs.html">FurnitureArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_FurniturePlaced" data-uid="NivalisModKit.GameEvents.FurniturePlaced">
+  FurniturePlaced
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L186"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player placed a piece of furniture or another holdable object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;FurnitureArgs&gt; FurniturePlaced</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.FurnitureArgs.html">FurnitureArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_FurnitureStored" data-uid="NivalisModKit.GameEvents.FurnitureStored">
+  FurnitureStored
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L188"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player picked up and stored a piece of furniture or another holdable object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;FurnitureArgs&gt; FurnitureStored</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.FurnitureArgs.html">FurnitureArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_GameEnded" data-uid="NivalisModKit.GameEvents.GameEnded">
+  GameEnded
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Lifecycle.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player is leaving gameplay for the title screen (the game's own exit-to-title event). Release
+anything you hold on game objects here. Not raised when the game is closed outright.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action GameEnded</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_GameLoaded" data-uid="NivalisModKit.GameEvents.GameLoaded">
+  GameLoaded
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A save finished loading into gameplay.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;GameLoadedArgs&gt; GameLoaded</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.GameLoadedArgs.html">GameLoadedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_GameReady" data-uid="NivalisModKit.GameEvents.GameReady">
+  GameReady
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Lifecycle.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gameplay is ready to use, after a save loaded or a new game started. Raised once per session, after
+<a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_GameLoaded">GameLoaded</a> (or <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_NewGameStarted">NewGameStarted</a>) once the game's managers exist. The safest
+place to read the world, open windows or apply settings.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action GameReady</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_GameSaved" data-uid="NivalisModKit.GameEvents.GameSaved">
+  GameSaved
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The game was saved successfully, manually or by autosave.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;GameSavedArgs&gt; GameSaved</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.GameSavedArgs.html">GameSavedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_HourStarted" data-uid="NivalisModKit.GameEvents.HourStarted">
+  HourStarted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The world clock reached a new hour. Fires once per clock change: when sleeping skips
+several hours it fires once, with the new hour. Doesn't fire while a save loads.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;HourStartedArgs&gt; HourStarted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.HourStartedArgs.html">HourStartedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_IngredientsPurchased" data-uid="NivalisModKit.GameEvents.IngredientsPurchased">
+  IngredientsPurchased
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue area successfully bought one stack of an ingredient. Fires once per vendor
+purchase, inside a restock round (between BuyIngredientsStarting and Finished); failed
+purchases and equipment purchases don't fire. Needs both BuyIngredients events.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;IngredientsPurchasedArgs&gt; IngredientsPurchased</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.IngredientsPurchasedArgs.html">IngredientsPurchasedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_MoneyChanged" data-uid="NivalisModKit.GameEvents.MoneyChanged">
+  MoneyChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player's money changed, as the money display shows it. While the game holds money
+events back (it can lock them during some operations), several changes arrive as one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;MoneyChangedArgs&gt; MoneyChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.MoneyChangedArgs.html">MoneyChangedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_NewGameStarted" data-uid="NivalisModKit.GameEvents.NewGameStarted">
+  NewGameStarted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player started a new game. Fires as the world begins loading; the starting district
+follows as <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_DistrictEntered">DistrictEntered</a>. Loading a save fires <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_GameLoaded">GameLoaded</a> instead.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action NewGameStarted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_PanelHidden" data-uid="NivalisModKit.GameEvents.PanelHidden">
+  PanelHidden
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L286"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A UI screen (any <code>UIPanel</code>) was hidden.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;PanelArgs&gt; PanelHidden</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.PanelArgs.html">PanelArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_PanelShown" data-uid="NivalisModKit.GameEvents.PanelShown">
+  PanelShown
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L282"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A UI screen (any <code>UIPanel</code>) became visible: a shop, a venue tab, a dialog, the end-of-day
+summary. <a class="xref" href="NivalisModKit.PanelArgs.html#NivalisModKit_PanelArgs_Name">Name</a> is the panel's type name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;PanelArgs&gt; PanelShown</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.PanelArgs.html">PanelArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_PlayerBought" data-uid="NivalisModKit.GameEvents.PlayerBought">
+  PlayerBought
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player bought something and paid for it. <code>Vendor</code> is the open shop, or null if
+the purchase happened elsewhere.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;PlayerTradeArgs&gt; PlayerBought</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.PlayerTradeArgs.html">PlayerTradeArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_PlayerCaught" data-uid="NivalisModKit.GameEvents.PlayerCaught">
+  PlayerCaught
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L160"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player was caught: awareness reached 1. The game shows a popup, raises the district's
+security level, and locks furniture against theft for the rest of the curfew.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;PlayerCaughtArgs&gt; PlayerCaught</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.PlayerCaughtArgs.html">PlayerCaughtArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_PlayerSold" data-uid="NivalisModKit.GameEvents.PlayerSold">
+  PlayerSold
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player sold something and was paid. <code>Vendor</code> is the open shop, or null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;PlayerTradeArgs&gt; PlayerSold</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.PlayerTradeArgs.html">PlayerTradeArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_PropertyOwnerChanged" data-uid="NivalisModKit.GameEvents.PropertyOwnerChanged">
+  PropertyOwnerChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L180"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Any property (venue, apartment, greenhouse) was bought, sold, rented or given up.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;PropertyArgs&gt; PropertyOwnerChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.PropertyArgs.html">PropertyArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_QuestCompleted" data-uid="NivalisModKit.GameEvents.QuestCompleted">
+  QuestCompleted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A quest was completed (the game's QuestManager.OnQuestCompleted).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;QuestArgs&gt; QuestCompleted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.QuestArgs.html">QuestArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_QuestFailed" data-uid="NivalisModKit.GameEvents.QuestFailed">
+  QuestFailed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A quest failed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;QuestArgs&gt; QuestFailed</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.QuestArgs.html">QuestArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_QuestMarkerAdded" data-uid="NivalisModKit.GameEvents.QuestMarkerAdded">
+  QuestMarkerAdded
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A quest marker (world point) was switched on. When the game refreshes a marker it switches
+it on, off and on again within a moment, so expect brief Added/Removed/Added sequences.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;QuestMarkerArgs&gt; QuestMarkerAdded</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.QuestMarkerArgs.html">QuestMarkerArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_QuestMarkerRemoved" data-uid="NivalisModKit.GameEvents.QuestMarkerRemoved">
+  QuestMarkerRemoved
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A quest marker was switched off.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;QuestMarkerArgs&gt; QuestMarkerRemoved</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.QuestMarkerArgs.html">QuestMarkerArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_QuestObjectiveCompleted" data-uid="NivalisModKit.GameEvents.QuestObjectiveCompleted">
+  QuestObjectiveCompleted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L129"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A quest objective was completed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;QuestObjectiveArgs&gt; QuestObjectiveCompleted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.QuestObjectiveArgs.html">QuestObjectiveArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_QuestObjectiveStarted" data-uid="NivalisModKit.GameEvents.QuestObjectiveStarted">
+  QuestObjectiveStarted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A quest objective (the game calls them sub-quests) started.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;QuestObjectiveArgs&gt; QuestObjectiveStarted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.QuestObjectiveArgs.html">QuestObjectiveArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_QuestPinnedChanged" data-uid="NivalisModKit.GameEvents.QuestPinnedChanged">
+  QuestPinnedChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player pinned or unpinned a quest as their target.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;QuestPinnedArgs&gt; QuestPinnedChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.QuestPinnedArgs.html">QuestPinnedArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_QuestStarted" data-uid="NivalisModKit.GameEvents.QuestStarted">
+  QuestStarted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A quest started (the game's QuestManager.OnQuestStarted).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;QuestArgs&gt; QuestStarted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.QuestArgs.html">QuestArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_RentStarted" data-uid="NivalisModKit.GameEvents.RentStarted">
+  RentStarted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L182"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A property started being rented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;PropertyArgs&gt; RentStarted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.PropertyArgs.html">PropertyArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_RentStopped" data-uid="NivalisModKit.GameEvents.RentStopped">
+  RentStopped
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L184"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A property stopped being rented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;PropertyArgs&gt; RentStopped</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.PropertyArgs.html">PropertyArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_SaleMade" data-uid="NivalisModKit.GameEvents.SaleMade">
+  SaleMade
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A customer paid: a restaurant receipt was created. Customers pay as they leave a venue;
+vending machine purchases also count, with no venue.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;SaleMadeArgs&gt; SaleMade</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.SaleMadeArgs.html">SaleMadeArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_SecurityLevelChanged" data-uid="NivalisModKit.GameEvents.SecurityLevelChanged">
+  SecurityLevelChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A district's security level changed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;SecurityLevelArgs&gt; SecurityLevelChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.SecurityLevelArgs.html">SecurityLevelArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_ShopClosed" data-uid="NivalisModKit.GameEvents.ShopClosed">
+  ShopClosed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player closed the shop window.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;ShopArgs&gt; ShopClosed</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.ShopArgs.html">ShopArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_ShopOpened" data-uid="NivalisModKit.GameEvents.ShopOpened">
+  ShopOpened
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player opened a vendor's shop window.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;ShopArgs&gt; ShopOpened</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.ShopArgs.html">ShopArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_StaffFired" data-uid="NivalisModKit.GameEvents.StaffFired">
+  StaffFired
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L217"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Staff were fired from a venue.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;StaffArgs&gt; StaffFired</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.StaffArgs.html">StaffArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_StaffHired" data-uid="NivalisModKit.GameEvents.StaffHired">
+  StaffHired
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L215"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Staff were hired at a venue.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;StaffArgs&gt; StaffHired</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.StaffArgs.html">StaffArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_StaffHoursChanged" data-uid="NivalisModKit.GameEvents.StaffHoursChanged">
+  StaffHoursChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L225"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue's staff working hours changed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;StaffHoursArgs&gt; StaffHoursChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.StaffHoursArgs.html">StaffHoursArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_StaffPaid" data-uid="NivalisModKit.GameEvents.StaffPaid">
+  StaffPaid
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L219"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue's wage payment to a staff member came due (Paid says whether it went through).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;StaffPaidArgs&gt; StaffPaid</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.StaffPaidArgs.html">StaffPaidArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_StaffRolesChanged" data-uid="NivalisModKit.GameEvents.StaffRolesChanged">
+  StaffRolesChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L223"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A staff member's roles (serving, cooking, cleaning, managing) were changed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;StaffRolesArgs&gt; StaffRolesChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.StaffRolesArgs.html">StaffRolesArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_StaffSkillGained" data-uid="NivalisModKit.GameEvents.StaffSkillGained">
+  StaffSkillGained
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L221"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A person gained experience in a skill.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;StaffSkillArgs&gt; StaffSkillGained</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.StaffSkillArgs.html">StaffSkillArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_TheftCommitted" data-uid="NivalisModKit.GameEvents.TheftCommitted">
+  TheftCommitted
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L227"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player stole furniture from a venue they don't own (during curfew).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;TheftArgs&gt; TheftCommitted</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.TheftArgs.html">TheftArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_VenueClosed" data-uid="NivalisModKit.GameEvents.VenueClosed">
+  VenueClosed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L245"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue closed. Detected on its hourly update, so up to an hour late.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;VenueArgs&gt; VenueClosed</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.VenueArgs.html">VenueArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_VenueHour" data-uid="NivalisModKit.GameEvents.VenueHour">
+  VenueHour
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue area ran its hourly update. Fires for every venue in the world, not only the
+player's; check <code>Area.PlayerOwned</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;VenueHourArgs&gt; VenueHour</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.VenueHourArgs.html">VenueHourArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_VenueOpened" data-uid="NivalisModKit.GameEvents.VenueOpened">
+  VenueOpened
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L243"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue opened. Detected on its hourly update, so up to an hour late.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;VenueArgs&gt; VenueOpened</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.VenueArgs.html">VenueArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_VenueOwnerChanged" data-uid="NivalisModKit.GameEvents.VenueOwnerChanged">
+  VenueOwnerChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L194"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue was bought, sold, given or rented, by the player or an NPC owner.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;VenueOwnerArgs&gt; VenueOwnerChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.VenueOwnerArgs.html">VenueOwnerArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_VenueSetupQuestUpdated" data-uid="NivalisModKit.GameEvents.VenueSetupQuestUpdated">
+  VenueSetupQuestUpdated
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L144"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A venue setup quest changed state or progress.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;VenueSetupQuestArgs&gt; VenueSetupQuestUpdated</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.VenueSetupQuestArgs.html">VenueSetupQuestArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_GameEvents_VenueStorageChanged" data-uid="NivalisModKit.GameEvents.VenueStorageChanged">
+  VenueStorageChanged
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/GameEvents.cs/#L293"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Storage furniture was added to or removed from a venue, changing its storage capacity. Since game
+patch 2, decorations with storage count too. <a class="xref" href="NivalisModKit.Venues.html#NivalisModKit_Venues_StorageOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_">StorageOf(VenueAreaGhost)</a> has the new totals.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;VenueStorageArgs&gt; VenueStorageChanged</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.VenueStorageArgs.html">VenueStorageArgs</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Nivalis ModKit by BGASM · <a href="https://github.com/BGASM/NivalisModKit">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

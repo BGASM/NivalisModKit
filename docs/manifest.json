@@ -1,0 +1,1340 @@
+{
+  "docfx_version": "2.81.0+ba844df625370a6bd7c1ecab0d0ec4d1d9128ac4",
+  "source_base_path": "E:/Nivalis/NivalisModKit/docfx",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ApartmentArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ApartmentArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ApartmentArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ApartmentArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.ApartmentEntered\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.ApartmentLeft\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.AwarenessArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.AwarenessArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.AwarenessArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.AwarenessArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.AwarenessIncreased\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.AwarenessGainContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.AwarenessGainContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.AwarenessGainContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.AwarenessGainContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Tuning.AwarenessGain\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.BoatDockArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.BoatDockArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.BoatDockArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.BoatDockArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.BoatDocked\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.BoatUndocked\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.BoatRefueledArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.BoatRefueledArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.BoatRefueledArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.BoatRefueledArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.BoatRefueled\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.BoatTravelArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.BoatTravelArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.BoatTravelArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.BoatTravelArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.BoatTravel\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.BuyIngredientsArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.BuyIngredientsArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.BuyIngredientsArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.BuyIngredientsArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.BuyIngredientsStarting\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.BuyIngredientsFinished\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.CameraArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.CameraArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.CameraArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.CameraArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.CameraDisabled\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.CatchContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.CatchContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.CatchContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.CatchContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Tuning.Catch\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.CommandArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.CommandArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.CommandArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.CommandArgs.yml\" sourcestartlinenumber=\"1\">A dev command's arguments (<code>?name=value&amp;flag</code>). Names ignore case.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.CropGrowthContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.CropGrowthContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.CropGrowthContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.CropGrowthContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Tuning.CropGrowthSpeed\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.CropHarvestedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.CropHarvestedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.CropHarvestedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.CropHarvestedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.CropHarvested\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.CropYieldContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.CropYieldContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.CropYieldContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.CropYieldContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Tuning.CropYield\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.DayEndedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.DayEndedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.DayEndedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.DayEndedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.DayEnded\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.DayStartedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.DayStartedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.DayStartedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.DayStartedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.DayStarted\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.DeliveryCompletedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.DeliveryCompletedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.DeliveryCompletedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.DeliveryCompletedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.DeliveryCompleted\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.DevCommands.Command.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.DevCommands.Command.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.DevCommands.Command",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.DevCommands.Command.yml\" sourcestartlinenumber=\"1\">A registered command.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.DevCommands.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.DevCommands.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.DevCommands",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.DevCommands.yml\" sourcestartlinenumber=\"1\">Named commands that development tools can run in the game through the dev bridge\n(<code>POST <a href=\"http://127.0.0.1:5710/cmd/name?arg=value\" sourcefile=\"api/NivalisModKit.DevCommands.yml\" sourcestartlinenumber=\"2\">http://127.0.0.1:5710/cmd/name?arg=value</a></code>, or <code>tools/bridge.sh cmd name arg=value</code>).\nFor test mods and debugging: open a window, set up a situation, read back a result. Commands run on the main\nthread, so they can use the game and the kit freely. Running them needs the kit's <code>[DevBridge] Enabled</code> and\n<code>AllowCommands</code>; registering always works and costs nothing.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.DishCookedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.DishCookedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.DishCookedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.DishCookedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.DishCooked\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.DistrictEnteredArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.DistrictEnteredArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.DistrictEnteredArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.DistrictEnteredArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.DistrictEntered\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Economy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Economy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Economy",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Economy.yml\" sourcestartlinenumber=\"1\">Vendors, prices, stock, and the player's money.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.EquipmentPurchasedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.EquipmentPurchasedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.EquipmentPurchasedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.EquipmentPurchasedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.EquipmentPurchased\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ExperimentalAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ExperimentalAttribute.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ExperimentalAttribute",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ExperimentalAttribute.yml\" sourcestartlinenumber=\"1\">Marks kit API that may change or be removed in a minor release, unlike the rest of the kit (see the\nREADME's Versioning section). Use it, but expect to update your mod when the kit updates.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.FishYieldContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.FishYieldContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.FishYieldContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.FishYieldContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Tuning.FishYield\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.FurnitureArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.FurnitureArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.FurnitureArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.FurnitureArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.FurniturePlaced\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.FurnitureStored\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.GameBuild.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.GameBuild.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.GameBuild",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.GameBuild.yml\" sourcestartlinenumber=\"1\">Which build of the game is running, and whether this kit was tested on it. The game's own version string\nstays &quot;1.0&quot; across patches, so the kit identifies the build by its code (a fingerprint of GameAssembly.dll).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.GameClock.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.GameClock.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.GameClock",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.GameClock.yml\" sourcestartlinenumber=\"1\">The game clock's speed and pausing, shareable between mods. Each mod sets its own factor under its own\nowner name; the kit applies the product of all factors, so two mods that each want 2x get 4x, and\nremoving one restores the other's. Factors survive save loads. Main thread only.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.GameEvents.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.GameEvents.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.GameEvents",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.GameEvents.yml\" sourcestartlinenumber=\"1\">Game events raised by the kit. Subscribe in your plugin's Load. An event whose patch\nfailed to install never fires; check <xref href=\"NivalisModKit.GameEvents.IsAvailable(System.String)\" data-throw-if-not-resolved=\"false\"></xref> to degrade gracefully.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.GameLoadedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.GameLoadedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.GameLoadedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.GameLoadedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.GameLoaded\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.GameSavedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.GameSavedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.GameSavedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.GameSavedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.GameSaved\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.GameTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.GameTime.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.GameTime",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.GameTime.yml\" sourcestartlinenumber=\"1\">The game clock. Values are 0 before gameplay starts.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.HourStartedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.HourStartedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.HourStartedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.HourStartedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.HourStarted\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.IngredientsPurchasedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.IngredientsPurchasedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.IngredientsPurchasedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.IngredientsPurchasedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.IngredientsPurchased\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ItemArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ItemArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ItemArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ItemArgs.yml\" sourcestartlinenumber=\"1\">Arguments for events about one item type (fish caught, crop planted).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Items.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Items.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Items",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Items.yml\" sourcestartlinenumber=\"1\">Item types: ingredients, dishes, equipment, furniture.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.KitPlugin.UntestedBuildMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.KitPlugin.UntestedBuildMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.KitPlugin.UntestedBuildMode",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.KitPlugin.UntestedBuildMode.yml\" sourcestartlinenumber=\"1\">What the kit does on a game build it wasn't tested on.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.KitPlugin.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.KitPlugin.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.KitPlugin",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.KitPlugin.yml\" sourcestartlinenumber=\"1\">BepInEx entry point. Mods use the static API, not this class.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.KitWindow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.KitWindow.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.KitWindow",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.KitWindow.yml\" sourcestartlinenumber=\"1\">A window made by <xref href=\"NivalisModKit.Ui.CreateWindow(System.String%2cNivalisModKit.WindowStyle)\" data-throw-if-not-resolved=\"false\"></xref>. Main thread only.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ModKit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ModKit.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ModKit",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ModKit.yml\" sourcestartlinenumber=\"1\">Identity of the kit, for <code>[BepInDependency]</code> and version checks.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ModMenu.Page.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ModMenu.Page.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ModMenu.Page",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ModMenu.Page.yml\" sourcestartlinenumber=\"1\">A page a mod added to the browser.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ModMenu.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ModMenu.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ModMenu",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ModMenu.yml\" sourcestartlinenumber=\"1\">The kit's &quot;Mods&quot; button in the pause menu, shared by every mod. Clicking it opens the mod browser: by default\nthe kit's own, which lists each mod's settings and the pages mods add with <xref href=\"NivalisModKit.ModMenu.AddPage(System.String%2cSystem.String%2cSystem.Action%7bNivalisModKit.KitWindow%7d)\" data-throw-if-not-resolved=\"false\"></xref>. A mod can\nreplace the browser with its own (<xref href=\"NivalisModKit.ModMenu.SetBrowser(System.String%2cSystem.Action)\" data-throw-if-not-resolved=\"false\"></xref>). Main thread only.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ModSaveData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ModSaveData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ModSaveData",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ModSaveData.yml\" sourcestartlinenumber=\"1\">One mod's values in the current save. Get one from <xref href=\"NivalisModKit.SaveData.For(System.String)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ModSetting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ModSetting.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ModSetting",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ModSetting.yml\" sourcestartlinenumber=\"1\">How a setting appears in the in-game mod browser. Pass one as a tag when you bind the setting:</p>\n<pre><code class=\"lang-csharp\">Config.Bind(\"General\", \"Verbose\", false,\n    new ConfigDescription(\"Log every decision.\", null, new ModSetting { IsAdvanced = true }));</code></pre>\n<p sourcefile=\"api/NivalisModKit.ModSetting.yml\" sourcestartlinenumber=\"6\">Listing is opt-in: a setting appears when it has this tag, or when its mod called\n<xref href=\"NivalisModKit.ModMenu.ListSettings(System.String)\" data-throw-if-not-resolved=\"false\"></xref> (then all of its settings appear, and these flags adjust them). The browser\nalso reads BepInEx ConfigurationManager's <code>ConfigurationManagerAttributes</code> tag to adjust listed settings,\nbut that tag alone doesn't list a setting.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.MoneyChangedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.MoneyChangedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.MoneyChangedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.MoneyChangedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.MoneyChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.NativeHook.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.NativeHook.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.NativeHook",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.NativeHook.yml\" sourcestartlinenumber=\"1\">Native detours, for methods Harmony can't patch safely (by-ref struct parameters such as\nShopTradeRequest or BasicTemp, where the IL2CPP trampoline passes garbage).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.OrderQuantityContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.OrderQuantityContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.OrderQuantityContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.OrderQuantityContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Purchasing.OrderQuantity\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PanelArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PanelArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PanelArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PanelArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.PanelShown\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.PanelHidden\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PlayerCaughtArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PlayerCaughtArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PlayerCaughtArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PlayerCaughtArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.PlayerCaught\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PlayerTradeArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PlayerTradeArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PlayerTradeArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PlayerTradeArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.PlayerBought\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.PlayerSold\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PriceContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PriceContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PriceContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PriceContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Pricing.BuyPrice\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.Pricing.SellPrice\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Pricing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Pricing.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Pricing",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Pricing.yml\" sourcestartlinenumber=\"1\">Change vendor prices. Handlers adjust <xref href=\"NivalisModKit.PriceContext.Price\" data-throw-if-not-resolved=\"false\"></xref>; the result is what the\nshop shows and what is actually charged or paid, for the player and for venue managers alike.\nNothing is installed until a mod subscribes. Prices are recalculated on every lookup, so a\nhandler can change its rules at any time (for example from a live-reloaded setting).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PropertyArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PropertyArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PropertyArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PropertyArgs.yml\" sourcestartlinenumber=\"1\">Arguments for the property events.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PropertyPriceContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PropertyPriceContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PropertyPriceContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PropertyPriceContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Tuning.PropertyPrice\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PurchaseDecisionArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PurchaseDecisionArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PurchaseDecisionArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PurchaseDecisionArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Purchasing.Decision\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PurchaseResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PurchaseResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PurchaseResult",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PurchaseResult.yml\" sourcestartlinenumber=\"1\">What the pipeline did with one vendor offer.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Purchasing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Purchasing.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Purchasing",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Purchasing.yml\" sourcestartlinenumber=\"1\">Manager ingredient purchasing. Once any mod subscribes to <xref href=\"NivalisModKit.Purchasing.VendorOrdering\" data-throw-if-not-resolved=\"false\"></xref> or\n<xref href=\"NivalisModKit.Purchasing.OrderQuantity\" data-throw-if-not-resolved=\"false\"></xref>, the kit takes over each recipe's purchases: it collects the vendor\noffers the game makes, lets handlers set the quantity and the vendor order, then buys only up to\nthat quantity, stopping at the first failed purchase (almost always the venue out of money).\nWith no subscribers the kit leaves purchasing to the game.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.QuestArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.QuestArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.QuestArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.QuestArgs.yml\" sourcestartlinenumber=\"1\">Arguments for the quest events.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.QuestMarkerArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.QuestMarkerArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.QuestMarkerArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.QuestMarkerArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.QuestMarkerAdded\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.QuestMarkerRemoved\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.QuestObjectiveArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.QuestObjectiveArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.QuestObjectiveArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.QuestObjectiveArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.QuestObjectiveStarted\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.QuestObjectiveCompleted\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.QuestPinnedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.QuestPinnedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.QuestPinnedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.QuestPinnedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.QuestPinnedChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Quests.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Quests.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Quests",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Quests.yml\" sourcestartlinenumber=\"1\">Quests the player has.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Recipes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Recipes.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Recipes",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Recipes.yml\" sourcestartlinenumber=\"1\">Meal recipes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.SaleMadeArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.SaleMadeArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.SaleMadeArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.SaleMadeArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.SaleMade\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.SaveData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.SaveData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.SaveData",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.SaveData.yml\" sourcestartlinenumber=\"1\">Data that belongs to one save, stored next to it as <code>&lt;save&gt;.modkit.json</code>. Values are\nkept per mod and per key, as JSON. Read and set them any time during gameplay; the kit writes\nthe file when the game saves and reads it back when that save loads. A new game starts empty.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Scheduler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Scheduler.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Scheduler",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Scheduler.yml\" sourcestartlinenumber=\"1\">Run code later, on the main thread: next frame, after some game time, at a clock hour, or\nafter some days. Game-time schedules are checked every frame against the clock, so sleeping\npast the moment still runs them (once, when the clock passes it). Everything pending is\ncancelled when a save loads or a new game starts; keep longer plans in <xref href=\"NivalisModKit.SaveData\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Security.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Security.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Security",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Security.yml\" sourcestartlinenumber=\"1\">Curfew and CorpSec security state.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.SecurityLevelArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.SecurityLevelArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.SecurityLevelArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.SecurityLevelArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.SecurityLevelChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ShopArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ShopArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ShopArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ShopArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.ShopOpened\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.ShopClosed\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Staff.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Staff.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Staff",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Staff.yml\" sourcestartlinenumber=\"1\">Task priority for characters, staff included. Each character (<code>Person</code>) points to an\n<code>ActionPriorityList</code> asset: an ordered list of the actions it considers, first = most\nimportant. Game patch 2 (October 2, 2026) set the staff order to serve, process ingredient, make meal,\ntake order, deliver, buy, manage complaint, cleanup meal, cleanup trash, cleanup storage.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StaffArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StaffArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StaffArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StaffArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.StaffHired\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.StaffFired\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StaffHoursArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StaffHoursArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StaffHoursArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StaffHoursArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.StaffHoursChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StaffPaidArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StaffPaidArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StaffPaidArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StaffPaidArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.StaffPaid\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StaffRolesArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StaffRolesArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StaffRolesArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StaffRolesArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.StaffRolesChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StaffSkillArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StaffSkillArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StaffSkillArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StaffSkillArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.StaffSkillGained\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StructLayout.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StructLayout.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StructLayout",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StructLayout.yml\" sourcestartlinenumber=\"1\">Field offsets and sizes of IL2CPP types, read from the running game, for code that works\nwith raw pointers (see <xref href=\"NivalisModKit.NativeHook\" data-throw-if-not-resolved=\"false\"></xref>). Results are cached.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.TheftArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.TheftArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.TheftArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.TheftArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.TheftCommitted\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Tuning.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Tuning.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Tuning",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Tuning.yml\" sourcestartlinenumber=\"1\">Change game rules: crop yield and growth speed, fish yield, property prices, security awareness\ngain. Each is an event whose handlers adjust a value; nothing is patched until a mod subscribes\nto that event. Handlers run in the order added, each seeing the previous one's value; one that\nthrows is logged and skipped. For vendor prices see <xref href=\"NivalisModKit.Pricing\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Ui.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Ui.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Ui",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Ui.yml\" sourcestartlinenumber=\"1\">The game's UI: which screens are open, and the game's own notifications and dialogs.\nScreens are <code>UIPanel</code> MonoBehaviours placed in the scene (prefabs), shown and hidden by the\ngame; <xref href=\"NivalisModKit.GameEvents.PanelShown\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.PanelHidden\" data-throw-if-not-resolved=\"false\"></xref> report them.\nCall these from the main thread (event handlers, Update, the Scheduler).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.UseOrderContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.UseOrderContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.UseOrderContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.UseOrderContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Tuning.UseOrder\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.VendorOffer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.VendorOffer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.VendorOffer",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VendorOffer.yml\" sourcestartlinenumber=\"1\">One vendor's offer for an ingredient, as the game made it.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.VendorOrderingContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.VendorOrderingContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.VendorOrderingContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VendorOrderingContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Purchasing.VendorOrdering\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.VenueArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.VenueArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.VenueArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VenueArgs.yml\" sourcestartlinenumber=\"1\">Arguments for events about one venue.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.VenueHourArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.VenueHourArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.VenueHourArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VenueHourArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.VenueHour\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.VenueOwnerArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.VenueOwnerArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.VenueOwnerArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VenueOwnerArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.VenueOwnerChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.VenueSetupQuestArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.VenueSetupQuestArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.VenueSetupQuestArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VenueSetupQuestArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.VenueSetupQuestUpdated\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.VenueStorage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.VenueStorage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.VenueStorage",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VenueStorage.yml\" sourcestartlinenumber=\"1\">A venue's storage use (see <xref href=\"NivalisModKit.Venues.StorageOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)\" data-throw-if-not-resolved=\"false\"></xref>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.VenueStorageArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.VenueStorageArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.VenueStorageArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VenueStorageArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.VenueStorageChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Venues.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Venues.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Venues",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Venues.yml\" sourcestartlinenumber=\"1\">Venues: restaurants, bars and shops the city's managers run, the player's included.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.WindowStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.WindowStyle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.WindowStyle",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.WindowStyle.yml\" sourcestartlinenumber=\"1\">Which game window a <xref href=\"NivalisModKit.KitWindow\" data-throw-if-not-resolved=\"false\"></xref> is built from.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.World.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.World.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.World",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.World.yml\" sourcestartlinenumber=\"1\">Districts (WorldLocation) and travel distance between them.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit",
+      "Summary": null
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Ui | Nivalis ModKit </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Ui | Nivalis ModKit ">
+      
+      <meta name="description" content="The game&#39;s UI: which screens are open, and the game&#39;s own notifications and dialogs. Screens are UIPanel MonoBehaviours placed in the scene (prefabs), shown and hidden by the game;  and  report them. Call these from the main thread (event handlers, Update, the Scheduler).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/main/apiSpec/new?filename=NivalisModKit_Ui.md&amp;value=---%0Auid%3A%20NivalisModKit.Ui%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Nivalis ModKit">
+            Nivalis ModKit
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="NivalisModKit.Ui">
+
+
+
+  <h1 id="NivalisModKit_Ui" data-uid="NivalisModKit.Ui" class="text-break">
+Class Ui  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/UiWindow.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="NivalisModKit.html">NivalisModKit</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>The game's UI: which screens are open, and the game's own notifications and dialogs.
+Screens are <code>UIPanel</code> MonoBehaviours placed in the scene (prefabs), shown and hidden by the
+game; <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_PanelShown">PanelShown</a> and <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_PanelHidden">PanelHidden</a> report them.
+Call these from the main thread (event handlers, Update, the Scheduler).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class Ui</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">Ui</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="NivalisModKit_Ui_IsDialogOpen_" data-uid="NivalisModKit.Ui.IsDialogOpen*"></a>
+
+  <h3 id="NivalisModKit_Ui_IsDialogOpen" data-uid="NivalisModKit.Ui.IsDialogOpen">
+  IsDialogOpen
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>True while one of the game's popup dialogs is on screen.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsDialogOpen { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_IsMenuModeRequested_" data-uid="NivalisModKit.Ui.IsMenuModeRequested*"></a>
+
+  <h3 id="NivalisModKit_Ui_IsMenuModeRequested" data-uid="NivalisModKit.Ui.IsMenuModeRequested">
+  IsMenuModeRequested
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/MenuMode.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>True while any mod holds a <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_RequestMenuMode_System_String_">RequestMenuMode(string)</a> request.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsMenuModeRequested { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_IsRadialOpen_" data-uid="NivalisModKit.Ui.IsRadialOpen*"></a>
+
+  <h3 id="NivalisModKit_Ui_IsRadialOpen" data-uid="NivalisModKit.Ui.IsRadialOpen">
+  IsRadialOpen
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L526"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>True while the game's radial wheel is open.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsRadialOpen { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_IsVisible_" data-uid="NivalisModKit.Ui.IsVisible*"></a>
+
+  <h3 id="NivalisModKit_Ui_IsVisible" data-uid="NivalisModKit.Ui.IsVisible">
+  IsVisible
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>True while the game's UI is shown (the player can hide it for screenshots).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsVisible { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_MenuModeOwners_" data-uid="NivalisModKit.Ui.MenuModeOwners*"></a>
+
+  <h3 id="NivalisModKit_Ui_MenuModeOwners" data-uid="NivalisModKit.Ui.MenuModeOwners">
+  MenuModeOwners
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/MenuMode.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Who holds menu-mode requests now (for diagnostics).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyList&lt;string&gt; MenuModeOwners { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_OpenPanels_" data-uid="NivalisModKit.Ui.OpenPanels*"></a>
+
+  <h3 id="NivalisModKit_Ui_OpenPanels" data-uid="NivalisModKit.Ui.OpenPanels">
+  OpenPanels
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Every panel that is currently visible. Searches all loaded screens: call when needed, not every frame.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyList&lt;UIPanel&gt; OpenPanels { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<span class="xref">UIPanel</span>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="NivalisModKit_Ui_AddRadialAction_" data-uid="NivalisModKit.Ui.AddRadialAction*"></a>
+
+  <h3 id="NivalisModKit_Ui_AddRadialAction_System_String_System_Action_UnityEngine_Sprite_" data-uid="NivalisModKit.Ui.AddRadialAction(System.String,System.Action,UnityEngine.Sprite)">
+  AddRadialAction(string, Action, Sprite)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L536"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds an action to the game's radial wheel while it's open (for example from a
+<a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_PanelShown">PanelShown</a> handler for <code>RadialMenuUI</code>, after the game added its own).
+The icon can be null. Returns false if the wheel isn't open.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool AddRadialAction(string label, Action action, Sprite icon = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>label</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+    <dt><code>icon</code> <span class="xref">Sprite</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_Below_" data-uid="NivalisModKit.Ui.Below*"></a>
+
+  <h3 id="NivalisModKit_Ui_Below_UnityEngine_GameObject_System_Single_" data-uid="NivalisModKit.Ui.Below(UnityEngine.GameObject,System.Single)">
+  Below(GameObject, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L318"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>An offset that places a copy directly below <code class="paramref">template</code> (its height, plus a gap).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Vector2 Below(GameObject template, float gap = 2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>template</code> <span class="xref">GameObject</span></dt>
+    <dd></dd>
+    <dt><code>gap</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">Vector2</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_ButtonsIn_" data-uid="NivalisModKit.Ui.ButtonsIn*"></a>
+
+  <h3 id="NivalisModKit_Ui_ButtonsIn_Nivalis_UIPanel_" data-uid="NivalisModKit.Ui.ButtonsIn(Nivalis.UIPanel)">
+  ButtonsIn(UIPanel)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The buttons under a panel (inactive ones included), with their paths and label text, to pick a
+template for <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_CloneButton_UnityEngine_UI_Button_System_String_System_Action_UnityEngine_Transform_">CloneButton(Button, string, Action, Transform)</a>. The dev bridge shows the same at <code>/ui?panel=Name</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyList&lt;(Button button, string path, string label)&gt; ButtonsIn(UIPanel panel)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>panel</code> <span class="xref">UIPanel</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;(<span class="xref">Button</span> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-unityengine.ui.button,system.string,system.string-.button">button</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-unityengine.ui.button,system.string,system.string-.path">path</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-unityengine.ui.button,system.string,system.string-.label">label</a>)&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_Clone_" data-uid="NivalisModKit.Ui.Clone*"></a>
+
+  <h3 id="NivalisModKit_Ui_Clone_UnityEngine_GameObject_UnityEngine_Transform_System_String_" data-uid="NivalisModKit.Ui.Clone(UnityEngine.GameObject,UnityEngine.Transform,System.String)">
+  Clone(GameObject, Transform, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L265"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Copies any UI element (a row, a label, a whole group) so it matches the game's look. The copy goes
+right after <code class="paramref">template</code> (or at the end of <code class="paramref">parent</code>), active, with localization
+removed so the game doesn't overwrite its text. Inside a layout group (menus, lists) the group places
+the copy; elsewhere it takes the template's size and position (see the offset overload).
+Buttons inside keep the template's click actions; use <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_CloneButton_UnityEngine_UI_Button_System_String_System_Action_UnityEngine_Transform_">CloneButton(Button, string, Action, Transform)</a> for a new action.
+Returns the copy, or null on failure. Remove it with <code>UnityEngine.Object.Destroy</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static GameObject Clone(GameObject template, Transform parent = null, string name = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>template</code> <span class="xref">GameObject</span></dt>
+    <dd></dd>
+    <dt><code>parent</code> <span class="xref">Transform</span></dt>
+    <dd></dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">GameObject</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="NivalisModKit_Ui_Clone_UnityEngine_GameObject_UnityEngine_Transform_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Experimental. Layout groups place the copy automatically; elsewhere set its position.</p>
+</div>
+
+
+
+
+  <a id="NivalisModKit_Ui_Clone_" data-uid="NivalisModKit.Ui.Clone*"></a>
+
+  <h3 id="NivalisModKit_Ui_Clone_UnityEngine_GameObject_UnityEngine_Vector2_UnityEngine_Transform_System_String_" data-uid="NivalisModKit.Ui.Clone(UnityEngine.GameObject,UnityEngine.Vector2,UnityEngine.Transform,System.String)">
+  Clone(GameObject, Vector2, Transform, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L273"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p><a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_Clone_UnityEngine_GameObject_UnityEngine_Transform_System_String_">Clone(GameObject, Transform, string)</a>, then moves the copy by <code class="paramref">offset</code>
+(UI units, +y up) from the template's position. Use it where no layout group places the copy, or it
+sits exactly on top of the template. <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_Below_UnityEngine_GameObject_System_Single_">Below(GameObject, float)</a> gives an offset one template-height down.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static GameObject Clone(GameObject template, Vector2 offset, Transform parent = null, string name = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>template</code> <span class="xref">GameObject</span></dt>
+    <dd></dd>
+    <dt><code>offset</code> <span class="xref">Vector2</span></dt>
+    <dd></dd>
+    <dt><code>parent</code> <span class="xref">Transform</span></dt>
+    <dd></dd>
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">GameObject</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_CloneButton_" data-uid="NivalisModKit.Ui.CloneButton*"></a>
+
+  <h3 id="NivalisModKit_Ui_CloneButton_UnityEngine_UI_Button_System_String_System_Action_UnityEngine_Transform_" data-uid="NivalisModKit.Ui.CloneButton(UnityEngine.UI.Button,System.String,System.Action,UnityEngine.Transform)">
+  CloneButton(Button, string, Action, Transform)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L342"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a button to a screen by copying an existing one (see <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_Clone_UnityEngine_GameObject_UnityEngine_Transform_System_String_">Clone(GameObject, Transform, string)</a>): your label, and
+<code class="paramref">onClick</code> instead of the template's action. Returns the new button's GameObject, or null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static GameObject CloneButton(Button template, string label, Action onClick, Transform parent = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>template</code> <span class="xref">Button</span></dt>
+    <dd></dd>
+    <dt><code>label</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>onClick</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a></dt>
+    <dd></dd>
+    <dt><code>parent</code> <span class="xref">Transform</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">GameObject</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="NivalisModKit_Ui_CloneButton_UnityEngine_UI_Button_System_String_System_Action_UnityEngine_Transform__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Experimental. Keyboard and controller navigation don't reach the copy yet.</p>
+</div>
+
+
+
+
+  <a id="NivalisModKit_Ui_CloneText_" data-uid="NivalisModKit.Ui.CloneText*"></a>
+
+  <h3 id="NivalisModKit_Ui_CloneText_TMPro_TMP_Text_System_String_UnityEngine_Vector2_UnityEngine_Transform_" data-uid="NivalisModKit.Ui.CloneText(TMPro.TMP_Text,System.String,UnityEngine.Vector2,UnityEngine.Transform)">
+  CloneText(TMP_Text, string, Vector2, Transform)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L329"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Copies a text label (see <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_Clone_UnityEngine_GameObject_UnityEngine_Vector2_UnityEngine_Transform_System_String_">Clone(GameObject, Vector2, Transform, string)</a>) and sets its text. Returns the new label, or null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static TMP_Text CloneText(TMP_Text template, string text, Vector2 offset = default, Transform parent = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>template</code> <span class="xref">TMP_Text</span></dt>
+    <dd></dd>
+    <dt><code>text</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>offset</code> <span class="xref">Vector2</span></dt>
+    <dd></dd>
+    <dt><code>parent</code> <span class="xref">Transform</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">TMP_Text</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_CreateWindow_" data-uid="NivalisModKit.Ui.CreateWindow*"></a>
+
+  <h3 id="NivalisModKit_Ui_CreateWindow_System_String_NivalisModKit_WindowStyle_" data-uid="NivalisModKit.Ui.CreateWindow(System.String,NivalisModKit.WindowStyle)">
+  CreateWindow(string, WindowStyle)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/UiWindow.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a window of your own, built from the game's parts so it matches the game's look, with rows
+you add (text, buttons, toggles, sliders). It behaves like a game screen: shows the cursor and closes
+with Escape. Call <a class="xref" href="NivalisModKit.KitWindow.html#NivalisModKit_KitWindow_Show">Show()</a> when it's ready. Returns null if the game's parts
+aren't loaded yet (call it in gameplay, not on the start menu).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static KitWindow CreateWindow(string title, WindowStyle style = WindowStyle.Panel)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>title</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>style</code> <a class="xref" href="NivalisModKit.WindowStyle.html">WindowStyle</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="NivalisModKit.KitWindow.html">KitWindow</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="NivalisModKit_Ui_CreateWindow_System_String_NivalisModKit_WindowStyle__examples">Examples</h4>
+  <pre><code class="lang-csharp">var w = Ui.CreateWindow("My Mod", WindowStyle.Panel);
+w.AddText("Choose a vendor mode.");
+w.AddToggle("Verbose logging", verbose, v =&gt; verbose = v);
+w.AddSlider("Distance weight", 0, 1, weight, v =&gt; weight = v, "0.00");
+w.AddFooterButton("Close", w.Hide);
+w.Show();</code></pre>
+
+
+  <h4 class="section" id="NivalisModKit_Ui_CreateWindow_System_String_NivalisModKit_WindowStyle__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Experimental. Keyboard and controller navigation don't reach the rows yet.</p>
+</div>
+
+
+
+
+  <a id="NivalisModKit_Ui_Dialog_" data-uid="NivalisModKit.Ui.Dialog*"></a>
+
+  <h3 id="NivalisModKit_Ui_Dialog_System_String_System_String_System_Boolean_System_ValueTuple_System_String_System_Action____" data-uid="NivalisModKit.Ui.Dialog(System.String,System.String,System.Boolean,System.ValueTuple{System.String,System.Action}[])">
+  Dialog(string, string, bool, params (string label, Action action)[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L413"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The same as the other <code>Dialog</code>, with a choice: when
+<code class="paramref">closeOnClick</code> is false the dialog stays open after a button runs, and the player
+closes it with its X (useful for buttons like &quot;Next&quot; or toggles).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Dialog(string title, string message, bool closeOnClick, params (string label, Action action)[] buttons)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>title</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>closeOnClick</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+    <dt><code>buttons</code> (<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.string,system.action-.label">label</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.string,system.action-.action">action</a>)[]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_Dialog_" data-uid="NivalisModKit.Ui.Dialog*"></a>
+
+  <h3 id="NivalisModKit_Ui_Dialog_System_String_System_String_System_ValueTuple_System_String_System_Action____" data-uid="NivalisModKit.Ui.Dialog(System.String,System.String,System.ValueTuple{System.String,System.Action}[])">
+  Dialog(string, string, params (string label, Action action)[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L405"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Shows one of the game's popup dialogs with your own buttons. Each button closes the dialog and
+runs its action (exceptions are caught and logged); the player can also close it with its X. With no buttons the game shows its default.
+Returns false if the dialog couldn't be shown.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Dialog(string title, string message, params (string label, Action action)[] buttons)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>title</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>buttons</code> (<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.string,system.action-.label">label</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.string,system.action-.action">action</a>)[]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="NivalisModKit_Ui_Dialog_System_String_System_String_System_ValueTuple_System_String_System_Action_____examples">Examples</h4>
+  <pre><code class="lang-csharp">Ui.Dialog("Order Fix", "Switch vendor mode to Cheapest?",
+    ("Yes", () =&gt; SetMode(SortMode.Cheapest)),
+    ("No",  null));</code></pre>
+
+
+  <h4 class="section" id="NivalisModKit_Ui_Dialog_System_String_System_String_System_ValueTuple_System_String_System_Action_____remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Calling <code>Dialog</code> while one is open (for example from a button with closeOnClick false)
+replaces its text and buttons in place, for multi-step dialogs.</p>
+</div>
+
+
+
+
+  <a id="NivalisModKit_Ui_Find_" data-uid="NivalisModKit.Ui.Find*"></a>
+
+  <h3 id="NivalisModKit_Ui_Find_System_String_" data-uid="NivalisModKit.Ui.Find(System.String)">
+  Find(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The first loaded panel of the given type name (see <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_NameOf_Nivalis_UIPanel_">NameOf(UIPanel)</a>), open or not, or null.
+<code>&quot;Type:ObjectName&quot;</code> picks a specific one (e.g. <code>&quot;MainMenuUI:P_PauseMenuUI&quot;</code>).
+Includes inactive panels. Searches all loaded screens: call once and keep the result, not every frame.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static UIPanel Find(string typeName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>typeName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">UIPanel</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_FindChild_" data-uid="NivalisModKit.Ui.FindChild*"></a>
+
+  <h3 id="NivalisModKit_Ui_FindChild_Nivalis_UIPanel_System_String_" data-uid="NivalisModKit.Ui.FindChild(Nivalis.UIPanel,System.String)">
+  FindChild(UIPanel, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L163"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The child at a path under a panel (as listed by <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_ButtonsIn_Nivalis_UIPanel_">ButtonsIn(UIPanel)</a> or <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_TextsIn_Nivalis_UIPanel_">TextsIn(UIPanel)</a>), or null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static GameObject FindChild(UIPanel panel, string path)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>panel</code> <span class="xref">UIPanel</span></dt>
+    <dd></dd>
+    <dt><code>path</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">GameObject</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_LabelOf_" data-uid="NivalisModKit.Ui.LabelOf*"></a>
+
+  <h3 id="NivalisModKit_Ui_LabelOf_UnityEngine_UI_Button_" data-uid="NivalisModKit.Ui.LabelOf(UnityEngine.UI.Button)">
+  LabelOf(Button)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L133"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The button's label text, or null if it has none.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string LabelOf(Button button)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>button</code> <span class="xref">Button</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_MakeLive_" data-uid="NivalisModKit.Ui.MakeLive*"></a>
+
+  <h3 id="NivalisModKit_Ui_MakeLive_UnityEngine_GameObject_" data-uid="NivalisModKit.Ui.MakeLive(UnityEngine.GameObject)">
+  MakeLive(GameObject)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L193"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Makes a copied element usable: the game often ships templates disabled or tuned for its own script
+(a greyed &quot;Restore default&quot; button, gamepad-only settings rows, layouts its script drives). Switches on
+every control (button, toggle, slider) and makes it interactable, lets the copy's canvas groups take clicks (alpha left
+as is: some are hidden on purpose), and switches on the copy's own top-level layout. Clone,
+CloneButton and window rows call it; call it yourself on copies you make another way.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void MakeLive(GameObject element)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <span class="xref">GameObject</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_NameOf_" data-uid="NivalisModKit.Ui.NameOf*"></a>
+
+  <h3 id="NivalisModKit_Ui_NameOf_Nivalis_UIPanel_" data-uid="NivalisModKit.Ui.NameOf(Nivalis.UIPanel)">
+  NameOf(UIPanel)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The panel's type name, e.g. <code>ShopUiVendorPanel</code> or <code>EndOfDayWindow</code>. Stable across
+game builds as long as the class keeps its name; use it to recognise screens.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string NameOf(UIPanel panel)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>panel</code> <span class="xref">UIPanel</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_Notify_" data-uid="NivalisModKit.Ui.Notify*"></a>
+
+  <h3 id="NivalisModKit_Ui_Notify_System_String_System_String_" data-uid="NivalisModKit.Ui.Notify(System.String,System.String)">
+  Notify(string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Shows a notification through the game's own notification feed (the toasts at the screen edge).
+Returns false if the game isn't ready to show one.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Notify(string header, string text)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>header</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>text</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_OpenJournal_" data-uid="NivalisModKit.Ui.OpenJournal*"></a>
+
+  <h3 id="NivalisModKit_Ui_OpenJournal_Nivalis_Quest_" data-uid="NivalisModKit.Ui.OpenJournal(Nivalis.Quest)">
+  OpenJournal(Quest)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L482"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Opens the journal on a quest.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool OpenJournal(Quest quest)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quest</code> <span class="xref">Quest</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_OpenMap_" data-uid="NivalisModKit.Ui.OpenMap*"></a>
+
+  <h3 id="NivalisModKit_Ui_OpenMap" data-uid="NivalisModKit.Ui.OpenMap">
+  OpenMap()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L495"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Opens the city map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool OpenMap()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_OpenMenu_" data-uid="NivalisModKit.Ui.OpenMenu*"></a>
+
+  <h3 id="NivalisModKit_Ui_OpenMenu_Nivalis_UI_InGameMenu_InGameMenuTab_" data-uid="NivalisModKit.Ui.OpenMenu(Nivalis.UI.InGameMenu.InGameMenuTab)">
+  OpenMenu(InGameMenuTab)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L469"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Opens the in-game menu on a tab (Inventory, Journal, Characters, Skills, Achievements, Recipes, FishDatabase, Venue).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool OpenMenu(InGameMenuTab tab)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tab</code> <span class="xref">InGameMenuTab</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_OpenVenue_" data-uid="NivalisModKit.Ui.OpenVenue*"></a>
+
+  <h3 id="NivalisModKit_Ui_OpenVenue_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_Nivalis_Locale_UI_VenueWindow_Tab_" data-uid="NivalisModKit.Ui.OpenVenue(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost,Nivalis.Locale.UI.VenueWindow.Tab)">
+  OpenVenue(VenueAreaGhost, Tab)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L508"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Opens a venue's management window on a tab (Overview, Inventory, Reviews, Staff).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool OpenVenue(VenueAreaGhost area, VenueWindow.Tab tab = Tab.Overview)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>area</code> <span class="xref">VenueAreaGhost</span></dt>
+    <dd></dd>
+    <dt><code>tab</code> <span class="xref">VenueWindow</span>.<span class="xref">Tab</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_RadialMenu_" data-uid="NivalisModKit.Ui.RadialMenu*"></a>
+
+  <h3 id="NivalisModKit_Ui_RadialMenu_System_ValueTuple_System_String_System_Action____" data-uid="NivalisModKit.Ui.RadialMenu(System.ValueTuple{System.String,System.Action}[])">
+  RadialMenu(params (string label, Action action)[])
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L553"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Opens the game's radial wheel with your actions (plus the game's close slot). Icons are blank.
+Returns false if the wheel couldn't open.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool RadialMenu(params (string label, Action action)[] actions)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>actions</code> (<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.string,system.action-.label">label</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action">Action</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.string,system.action-.action">action</a>)[]</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="NivalisModKit_Ui_RadialMenu_System_ValueTuple_System_String_System_Action_____remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Experimental: the game opens the wheel for greenhouse modules; this opens it on its own.</p>
+</div>
+
+
+
+
+  <a id="NivalisModKit_Ui_Relayout_" data-uid="NivalisModKit.Ui.Relayout*"></a>
+
+  <h3 id="NivalisModKit_Ui_Relayout_UnityEngine_GameObject_" data-uid="NivalisModKit.Ui.Relayout(UnityEngine.GameObject)">
+  Relayout(GameObject)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L234"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Recomputes an element's layout after you change it: refreshes its text, rebuilds its own layout
+(size fitters), then its parent's (layout groups), now and again next frame. Clone, CloneButton and
+SetText call it; call it yourself after changing a copy in other ways.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Relayout(GameObject element)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <span class="xref">GameObject</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_RequestMenuMode_" data-uid="NivalisModKit.Ui.RequestMenuMode*"></a>
+
+  <h3 id="NivalisModKit_Ui_RequestMenuMode_System_String_" data-uid="NivalisModKit.Ui.RequestMenuMode(System.String)">
+  RequestMenuMode(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/MenuMode.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Puts the game in menu mode until you dispose the returned handle: mouse cursor on, movement and mouse-look
+off, menu keys on, as when one of the game's screens is open. For UI you build yourself (an overlay, a
+console); windows from <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_CreateWindow_System_String_NivalisModKit_WindowStyle_">CreateWindow(string, WindowStyle)</a> already do this. Any number of mods can hold a request; the
+game leaves menu mode when the last one is released. Main thread only.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IDisposable RequestMenuMode(string owner)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>owner</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="NivalisModKit_Ui_RequestMenuMode_System_String__examples">Examples</h4>
+  <pre><code class="lang-csharp">IDisposable menu = Ui.RequestMenuMode(MyGuid);   // while my overlay takes input
+...
+menu.Dispose();                                   // back to normal play</code></pre>
+
+
+  <h4 class="section" id="NivalisModKit_Ui_RequestMenuMode_System_String__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The game decides menu mode from its open screens (UIManager), so the kit shows an invisible screen that asks
+for the mouse while any request is held. It appears in <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_PanelShown">PanelShown</a> as &quot;Kit_MenuMode&quot;.</p>
+</div>
+
+
+
+
+  <a id="NivalisModKit_Ui_SetText_" data-uid="NivalisModKit.Ui.SetText*"></a>
+
+  <h3 id="NivalisModKit_Ui_SetText_UnityEngine_GameObject_System_String_" data-uid="NivalisModKit.Ui.SetText(UnityEngine.GameObject,System.String)">
+  SetText(GameObject, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sets the first text label on (or under) an element, then <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_Relayout_UnityEngine_GameObject_">Relayout(GameObject)</a>s it so elements that
+size themselves to their text (most buttons) fit the new text. Returns false if it has none.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool SetText(GameObject element, string text)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <span class="xref">GameObject</span></dt>
+    <dd></dd>
+    <dt><code>text</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_TextsIn_" data-uid="NivalisModKit.Ui.TextsIn*"></a>
+
+  <h3 id="NivalisModKit_Ui_TextsIn_Nivalis_UIPanel_" data-uid="NivalisModKit.Ui.TextsIn(Nivalis.UIPanel)">
+  TextsIn(UIPanel)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The text labels under a panel (inactive included), with paths and current text: templates for <a class="xref" href="NivalisModKit.Ui.html#NivalisModKit_Ui_CloneText_TMPro_TMP_Text_System_String_UnityEngine_Vector2_UnityEngine_Transform_">CloneText(TMP_Text, string, Vector2, Transform)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IReadOnlyList&lt;(TMP_Text text, string path, string value)&gt; TextsIn(UIPanel panel)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>panel</code> <span class="xref">UIPanel</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;(<span class="xref">TMP_Text</span> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-tmpro.tmp_text,system.string,system.string-.text">text</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-tmpro.tmp_text,system.string,system.string-.path">path</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-tmpro.tmp_text,system.string,system.string-.value">value</a>)&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="NivalisModKit_Ui_Tooltip_" data-uid="NivalisModKit.Ui.Tooltip*"></a>
+
+  <h3 id="NivalisModKit_Ui_Tooltip_UnityEngine_GameObject_System_String_" data-uid="NivalisModKit.Ui.Tooltip(UnityEngine.GameObject,System.String)">
+  Tooltip(GameObject, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Ui.cs/#L372"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gives an element the game's hover tooltip (the <code>HoverOverText</code> component the game uses), or
+changes its text. The element needs a raycast-target graphic (an Image or text) to receive the
+pointer, and must be on a screen that shows the cursor (menus, windows); the in-game HUD has no
+cursor, so tooltips there never show. Returns false on failure.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Tooltip(GameObject element, string text)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>element</code> <span class="xref">GameObject</span></dt>
+    <dd></dd>
+    <dt><code>text</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Nivalis ModKit by BGASM · <a href="https://github.com/BGASM/NivalisModKit">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

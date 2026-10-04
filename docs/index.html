@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Nivalis ModKit | Nivalis ModKit </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Nivalis ModKit | Nivalis ModKit ">
+      
+      
+      <link rel="icon" href="favicon.ico">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/main/docfx/index.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="logo.svg" alt="Nivalis ModKit">
+            Nivalis ModKit
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="nivalis-modkit">Nivalis ModKit</h1>
+
+<p>A shared library for Nivalis Nights mods, by BGASM. It does nothing on its own. Install it when another mod lists it as a requirement.</p>
+<p><strong>Documentation site</strong> (this guide plus the full API reference): <a href="https://bgasm.github.io/NivalisModKit">https://bgasm.github.io/NivalisModKit</a></p>
+<p>Mods that need it: <a href="https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisOrderFix">Better Supplier Choice</a>, formerly Manager Order Fix (2.0 and later; 2.1 needs kit 0.2).</p>
+<p>What you'll see with it installed:</p>
+<ul>
+<li>the kit and game version on the title screen, above the copyright line</li>
+<li>a <strong>Mods</strong> button in the pause menu, where mods that support it let you change their settings in game</li>
+</ul>
+<h2 id="install">Install</h2>
+<ol>
+<li>Install BepInEx 6 (bleeding edge, Unity IL2CPP). See <a href="https://github.com/BGASM/NivalisMods#requirements">the setup steps</a>.</li>
+<li>Launch the game once. Wait for the main menu, then close the game.</li>
+<li>Extract the release zip into the game folder. The file lands at <code>BepInEx\plugins\NivalisModKit.dll</code>.</li>
+</ol>
+<p>To confirm it loaded, open <code>BepInEx\LogOutput.log</code> and look for these lines:</p>
+<pre><code>Nivalis ModKit 0.2.0 loaded
+Game build: 1.0 patch 2, Steam build 25680465 (tested)
+Event BuyIngredientsStarting: live
+...
+Events: 56 of 70 live, 14 waiting for the game
+</code></pre>
+<p>&quot;Waiting for the game&quot; events attach once a save loads.</p>
+<p>After a game update, the build line says <code>untested</code> (see <a href="#compatibility">Compatibility</a>), and an event whose hook no longer matches shows as <code>missing</code> and never fires. The rest keep working. Mods that use a missing event can check for it and switch the feature off. The log line names the method that couldn't be found, which is the thing to report.</p>
+<p>To uninstall, delete <code>NivalisModKit.dll</code>, and any mods that require it. Saves are unaffected.</p>
+<h2 id="for-modders">For modders</h2>
+<p>Reference <code>NivalisModKit.dll</code> (from <code>BepInEx\plugins</code>, not copied to your output) and declare the dependency so BepInEx loads the kit first:</p>
+<pre><code class="lang-csharp">[BepInPlugin(&quot;you.nivalis.yourmod&quot;, &quot;Your Mod&quot;, &quot;1.0.0&quot;)]
+[BepInDependency(ModKit.Guid, &quot;&gt;=0.2.0&quot;)]   // the oldest kit you support; BepInEx won't load your mod with an older one
+public class Plugin : BasePlugin
+</code></pre>
+<p><code>NivalisModKit.xml</code> in the release zip has documentation for every public member. Put it next to the DLL you reference to get it in your editor.</p>
+<h3 id="lifecycle">Lifecycle</h3>
+<p>Your plugin's <code>Load</code> runs at startup, before any game is in progress. From there:</p>
+<ol>
+<li><code>NewGameStarted</code> or <code>GameLoaded</code>: the world is starting or a save finished loading.</li>
+<li><code>GameReady</code>: gameplay is usable (the game's managers exist). The safest place to read the world, open windows or apply settings.</li>
+<li><code>GameEnded</code>: the player is leaving for the title screen. Let go of game objects you hold. Loading another save from the pause menu skips this and goes straight to step 1.</li>
+</ol>
+<p><code>GameEvents.IsInGame</code> is true from <code>GameReady</code> until the player leaves. <code>GameEvents.WhenInGame(action)</code> runs <code>action</code> now if in game, otherwise once at the next <code>GameReady</code>:</p>
+<pre><code class="lang-csharp">public override void Load()
+{
+    GameEvents.WhenInGame(() =&gt; Ui.Notify(&quot;My Mod is active&quot;));   // waits for gameplay
+}
+</code></pre>
+<h3 id="events">Events</h3>
+<p><code>GameEvents</code>. Subscribe in <code>Load</code>. Each handler runs in its own <code>try</code>, so an exception in your handler is logged with your assembly's name and doesn't stop other mods or the game.</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Fires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Game</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>NewGameStarted</code></td>
+<td>A new game started. The starting district follows as <code>DistrictEntered</code>.</td>
+</tr>
+<tr>
+<td><code>GameLoaded</code></td>
+<td>A save finished loading. Has the save name and starting district.</td>
+</tr>
+<tr>
+<td><code>GameReady</code></td>
+<td>Gameplay is usable, after either of the above. See Lifecycle.</td>
+</tr>
+<tr>
+<td><code>GameEnded</code></td>
+<td>The player is leaving for the title screen.</td>
+</tr>
+<tr>
+<td><code>GameSaved</code></td>
+<td>A save was written, manual or autosave.</td>
+</tr>
+<tr>
+<td><strong>UI</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PanelShown</code>, <code>PanelHidden</code></td>
+<td>Any UI screen (<code>UIPanel</code>) shown or hidden: shops, venue tabs, dialogs, the end-of-day summary. <code>Name</code> is the panel's type name.</td>
+</tr>
+<tr>
+<td><code>EndOfDayShown</code></td>
+<td>The end-of-day summary screen opened.</td>
+</tr>
+<tr>
+<td><strong>Time and travel</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>DayStarted</code></td>
+<td>A new game day. The game's day turns over at 08:00, not midnight.</td>
+</tr>
+<tr>
+<td><code>DayEnded</code></td>
+<td>The day closed: curfew began (02:00) or the player slept. Rent is collected around now.</td>
+</tr>
+<tr>
+<td><code>HourStarted</code></td>
+<td>The world clock reached a new hour. Once per change: sleeping from 21:00 fires once at the new hour.</td>
+</tr>
+<tr>
+<td><code>DistrictEntered</code></td>
+<td>The player arrived in a different district. Building doors don't count.</td>
+</tr>
+<tr>
+<td><code>GameClock.TimeSpeedChanged</code></td>
+<td>The clock or simulation speed changed (see <a href="#game-clock">Game clock</a>).</td>
+</tr>
+<tr>
+<td><strong>Player shopping</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>ShopOpened</code>, <code>ShopClosed</code></td>
+<td>The player opened or closed a vendor's shop window.</td>
+</tr>
+<tr>
+<td><code>PlayerBought</code>, <code>PlayerSold</code></td>
+<td>The player bought or sold something, with vendor, item, count and price.</td>
+</tr>
+<tr>
+<td><code>MoneyChanged</code></td>
+<td>The player's money changed: old, new and the difference.</td>
+</tr>
+<tr>
+<td><strong>Quests</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>QuestStarted</code>, <code>QuestCompleted</code>, <code>QuestFailed</code></td>
+<td>A quest changed state. Has the quest, its id and title.</td>
+</tr>
+<tr>
+<td><code>QuestObjectiveStarted</code>, <code>QuestObjectiveCompleted</code></td>
+<td>An objective (the game calls them sub-quests) started or was completed.</td>
+</tr>
+<tr>
+<td><code>QuestPinnedChanged</code></td>
+<td>The player pinned or unpinned a quest.</td>
+</tr>
+<tr>
+<td><code>QuestMarkerAdded</code>, <code>QuestMarkerRemoved</code></td>
+<td>A quest marker in the world was switched on or off. A refresh shows as Added, Removed, Added.</td>
+</tr>
+<tr>
+<td><code>VenueSetupQuestUpdated</code></td>
+<td>A venue setup quest changed state or progress.</td>
+</tr>
+<tr>
+<td><strong>Curfew and security</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>CurfewWarning</code>, <code>CurfewStarted</code>, <code>CurfewEnded</code></td>
+<td>Warning at 01:00, curfew 02:00 to 08:00. The clock stops during curfew; sleeping skips to 08:00.</td>
+</tr>
+<tr>
+<td><code>PlayerCaught</code></td>
+<td>Caught (awareness reached 1): by drone or camera, district, new security level. Furniture locks against theft for the rest of the curfew.</td>
+</tr>
+<tr>
+<td><code>AwarenessIncreased</code></td>
+<td>Security awareness rose: the rise and the new level.</td>
+</tr>
+<tr>
+<td><code>SecurityLevelChanged</code></td>
+<td>A district's security level changed.</td>
+</tr>
+<tr>
+<td><strong>Fishing and farming</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>FishCaught</code>, <code>FishDiscovered</code></td>
+<td>A catch went into the inventory; a species caught for the first time.</td>
+</tr>
+<tr>
+<td><code>CropPlanted</code>, <code>CropHarvested</code></td>
+<td>A greenhouse crop was planted or harvested (with &quot;first time&quot;).</td>
+</tr>
+<tr>
+<td><strong>Property</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PropertyOwnerChanged</code></td>
+<td>Any venue, apartment or greenhouse bought, sold, rented or given up.</td>
+</tr>
+<tr>
+<td><code>RentStarted</code>, <code>RentStopped</code></td>
+<td>A property started or stopped being rented.</td>
+</tr>
+<tr>
+<td><code>FurniturePickedUp</code>, <code>FurniturePlaced</code>, <code>FurnitureStored</code></td>
+<td>The player picked up, placed, or stored furniture (or another holdable object).</td>
+</tr>
+<tr>
+<td><code>ApartmentEntered</code>, <code>ApartmentLeft</code></td>
+<td>The player entered or left an apartment.</td>
+</tr>
+<tr>
+<td><strong>Staff</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>StaffHired</code>, <code>StaffFired</code></td>
+<td>Staff hired at or fired from a venue.</td>
+</tr>
+<tr>
+<td><code>StaffPaid</code></td>
+<td>A wage came due: the amount (hundredths) and whether the owner could pay it.</td>
+</tr>
+<tr>
+<td><code>StaffSkillGained</code></td>
+<td>Someone gained experience in a skill. Frequent.</td>
+</tr>
+<tr>
+<td><code>StaffRolesChanged</code>, <code>StaffHoursChanged</code></td>
+<td>Roles (serving, cooking, cleaning, managing) or shift hours changed in the staff screen. Hours fire once the slider settles, with before and after.</td>
+</tr>
+<tr>
+<td><strong>Theft and security (patched)</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>TheftCommitted</code></td>
+<td>The player stole furniture from a venue they don't own.</td>
+</tr>
+<tr>
+<td><code>CameraDisabled</code></td>
+<td>The player disabled a security camera.</td>
+</tr>
+<tr>
+<td><strong>Boat</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>BoatBoarded</code>, <code>BoatLeft</code></td>
+<td>The player took or left the helm.</td>
+</tr>
+<tr>
+<td><code>BoatDocked</code>, <code>BoatUndocked</code></td>
+<td>The boat docked or left a dock.</td>
+</tr>
+<tr>
+<td><code>BoatTravel</code></td>
+<td>Fast travel by boat, with the destination.</td>
+</tr>
+<tr>
+<td><code>BoatRefueled</code></td>
+<td>A refuel finished: fuel added and fuel now.</td>
+</tr>
+<tr>
+<td><strong>Venues</strong> (NPC venues included, check <code>Area.PlayerOwned</code>)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>VenueOpened</code>, <code>VenueClosed</code></td>
+<td>A venue opened or closed. Detected hourly, so up to an hour late.</td>
+</tr>
+<tr>
+<td><code>VenueOwnerChanged</code></td>
+<td>A venue changed owner, the player's or an NPC's.</td>
+</tr>
+<tr>
+<td><code>VenueStorageChanged</code></td>
+<td>Storage furniture added to or removed from a venue (since game patch 2, decorations with storage count too), with the amounts it provides.</td>
+</tr>
+<tr>
+<td><code>VenueHour</code></td>
+<td>Every venue's hourly update.</td>
+</tr>
+<tr>
+<td><code>BuyIngredientsStarting</code></td>
+<td>A venue is about to buy ingredients for one recipe.</td>
+</tr>
+<tr>
+<td><code>BuyIngredientsFinished</code></td>
+<td>That buying finished. Runs after other mods' patches, so purchases are final.</td>
+</tr>
+<tr>
+<td><code>IngredientsPurchased</code></td>
+<td>One successful ingredient purchase inside a restock round.</td>
+</tr>
+<tr>
+<td><code>EquipmentPurchased</code></td>
+<td>A venue bought equipment or furniture, such as a drinks machine or chairs.</td>
+</tr>
+<tr>
+<td><code>DeliveryCompleted</code></td>
+<td>Staff put a delivery into a venue's storage. Reports what actually went in.</td>
+</tr>
+<tr>
+<td><code>DishCooked</code></td>
+<td>A dish finished cooking, by staff or the player.</td>
+</tr>
+<tr>
+<td><code>SaleMade</code></td>
+<td>A customer paid. Vending machine sales have no venue.</td>
+</tr>
+</tbody>
+</table>
+<p><code>GameEvents.IsAvailable(nameof(GameEvents.VenueHour))</code> is false if that event's hook failed to install.</p>
+<h3 id="purchasing">Purchasing</h3>
+<p>Manager ingredient buying. Once any mod subscribes to <code>VendorOrdering</code> or <code>OrderQuantity</code>, the kit takes over each recipe's purchases: it collects the vendor offers the game makes, asks handlers for the quantity and vendor order, then buys only up to that quantity. It stops at the first failed purchase, usually the venue out of money. With no subscribers, the game buys as normal.</p>
+<pre><code class="lang-csharp">// Cheapest vendor first.
+Purchasing.VendorOrdering += ctx =&gt;
+    ctx.Offers = ctx.Offers.OrderBy(o =&gt; o.Price).ToList();
+
+// Buy double for the player's venues.
+Purchasing.OrderQuantity += ctx =&gt;
+{
+    if (ctx.Area.PlayerOwned) ctx.Quantity *= 2;
+};
+</code></pre>
+<ul>
+<li>Each <code>VendorOffer</code> has <code>Vendor</code>, <code>Item</code>, <code>Price</code>, <code>Stock</code>, <code>Hops</code> (district distance from the venue), <code>Amount</code> (what the game asked for) and <code>Sequence</code> (the game's order).</li>
+<li>Ordering handlers may reorder or remove offers but not add them. A list with added, duplicate or null offers is discarded and logged.</li>
+<li>Raising a quantity above the game's buys from each vendor up to its stock and the venue's per-recipe money limit, as the game does.</li>
+<li>Several handlers run in the order added, each seeing the previous one's result.</li>
+<li><code>Purchasing.Decision</code> reports each offer as bought, skipped or failed. Subscribing to it alone doesn't turn the pipeline on.</li>
+</ul>
+<h3 id="pricing">Pricing</h3>
+<p>Change what vendors charge and pay. The result is both shown in the shop and actually charged,
+for the player and for venue managers. Installed only when a mod subscribes.</p>
+<pre><code class="lang-csharp">// Chicken 20% cheaper at every vendor.
+var chicken = Items.ByName(&quot;Chicken&quot;);
+Pricing.BuyPrice += ctx =&gt;
+{
+    if (ctx.Item?.Pointer == chicken?.Pointer) ctx.Price = (int)(ctx.Price * 0.8f);
+};
+</code></pre>
+<p><code>PriceContext</code> has <code>Vendor</code>, <code>Item</code>, <code>Freshness</code>, <code>GamePrice</code> and the settable <code>Price</code>. Prices and money are whole numbers in hundredths: 611 shows in game as 6.11. The shop's offer list and the amount charged use the adjusted price; the shop's Bonuses breakdown panel computes its own figures and still shows the game's price. Prices are
+looked up very often (shop screens, manager restocks), so keep handlers cheap: cache item lookups.</p>
+<h3 id="tuning">Tuning</h3>
+<p>Change game rules. Like <code>Pricing</code>, each is an event whose handlers adjust a value, and nothing is
+patched until a mod subscribes to that one.</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Adjust</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Tuning.CropYield</code></td>
+<td>Crops a greenhouse module yields (<code>Yield</code>)</td>
+</tr>
+<tr>
+<td><code>Tuning.CropGrowthSpeed</code></td>
+<td>A module's growth speed multiplier (<code>Speed</code>)</td>
+</tr>
+<tr>
+<td><code>Tuning.FishYield</code></td>
+<td>Items a catch gives (<code>Yield</code>)</td>
+</tr>
+<tr>
+<td><code>Tuning.PropertyPrice</code></td>
+<td>Purchase price of a venue, apartment or greenhouse (<code>Price</code>, hundredths)</td>
+</tr>
+<tr>
+<td><code>Tuning.AwarenessGain</code></td>
+<td>How much security awareness rises (<code>Amount</code>; 0 = not noticed)</td>
+</tr>
+<tr>
+<td><code>Tuning.Catch</code></td>
+<td>About to be caught: set <code>Cancel</code> to let the player off (awareness drops to <code>AwarenessAfterCancel</code>, 0.5 by default; furniture stays unlocked)</td>
+</tr>
+<tr>
+<td><code>Tuning.UseOrder</code></td>
+<td>Which items in a stack get used first (cooking, selling, moving). Since game patch 2 the game uses least-fresh first, spoiled included; <code>ctx.Sort(...)</code> overrides that</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-csharp">Tuning.FishYield += c =&gt; c.Yield *= 2;                 // double catches
+Tuning.AwarenessGain += c =&gt; c.Amount *= 0.5f;         // cameras notice you half as fast
+</code></pre>
+<p>Each context also has the game's original value (<code>GameYield</code>, <code>GameSpeed</code>, <code>GamePrice</code>, <code>GameAmount</code>).</p>
+<h3 id="game-clock">Game clock</h3>
+<p><code>GameClock</code>. How fast time passes, shared between mods. Each mod sets its own factor under its GUID; the kit applies the product, so two mods asking for 2x give 4x, and clearing one leaves the other's. Factors survive save loads.</p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>What</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SetClockSpeed(owner, factor)</code>, <code>ClearClockSpeed(owner)</code></td>
+<td>How fast game time passes (days, opening hours, curfew). People, animations and cooking run at normal speed, so a venue serves fewer customers per game hour at 2x. Combined value kept within 0.1 to 20</td>
+</tr>
+<tr>
+<td><code>SetSimulationSpeed(owner, factor)</code>, <code>ClearSimulationSpeed(owner)</code></td>
+<td>Fast-forward or slow motion of everything (Unity's time scale). Costs performance above 1. Combined value kept within 0.25 to 4</td>
+</tr>
+<tr>
+<td><code>ClockSpeed</code>, <code>SimulationSpeed</code>, <code>ClockFactors</code>, <code>SimulationFactors</code></td>
+<td>What's in effect, and who set what</td>
+</tr>
+<tr>
+<td><code>Pause(owner)</code></td>
+<td>Pauses the clock until you dispose the returned handle. Uses the game's own pause, so time only runs again when nobody holds one</td>
+</tr>
+<tr>
+<td><code>IsPaused</code>, <code>TimeSpeedChanged</code></td>
+<td>Paused by anyone; raised when a speed changes</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-csharp">GameClock.SetClockSpeed(MyGuid, 2f);        // days pass twice as fast
+using (GameClock.Pause(MyGuid)) { ... }     // clock stopped inside the block
+</code></pre>
+<h3 id="staff">Staff</h3>
+<p><code>Staff</code>. The task priority lists the game gives staff (which job a worker picks first).</p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>What</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PriorityLists</code>, <code>PriorityListOf(person)</code></td>
+<td>The lists, and the one a worker uses</td>
+</tr>
+<tr>
+<td><code>Order(list)</code>, <code>NameOf(action)</code></td>
+<td>A list's actions, most important first, and their names</td>
+</tr>
+<tr>
+<td><code>SetOrder(list, names...)</code></td>
+<td>Reorder a list (experimental: it changes the game's shared list directly; see <a href="#versioning">Versioning</a>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="queries">Queries</h3>
+<p>Read-only lookups. Each returns a fresh list you can keep, or empty/null outside gameplay. Call them from the main thread: <code>Load</code>, kit event handlers, or Unity callbacks.</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Members</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GameTime</code></td>
+<td><code>Day</code>, <code>Hour</code>, <code>Minute</code>, <code>TotalHours</code>, <code>DayOfWeek</code>. The day turns over at 08:00.</td>
+</tr>
+<tr>
+<td><code>Venues</code></td>
+<td><code>All</code>, <code>PlayerOwned</code>, <code>InDistrict(district)</code>, <code>DistrictOf(area)</code>, <code>NameOf(area)</code>, <code>Stock(area, item)</code></td>
+</tr>
+<tr>
+<td><code>Economy</code></td>
+<td>(amounts in hundredths: 37526 = 375.26 in game) <code>NameOf(vendor)</code>, <code>PlayerMoney</code>, <code>Vendors</code>, <code>VendorsFor(item)</code>, <code>Offers</code>, <code>Price</code>, <code>SellPrice</code>, <code>Stock(vendor, item)</code>, <code>DistrictOf(vendor)</code>, <code>IsUnlocked(vendor)</code></td>
+</tr>
+<tr>
+<td><code>Items</code></td>
+<td><code>All</code>, <code>ByName(&quot;chicken&quot;)</code> (ignores case, spaces, underscores), <code>ById(guid)</code>, <code>NameOf(item)</code></td>
+</tr>
+<tr>
+<td><code>Recipes</code></td>
+<td><code>All</code>, <code>Known</code>, <code>ForDish(item)</code>, <code>InputsOf(recipe)</code> (item and amount per serving), <code>OutputOf(recipe)</code></td>
+</tr>
+<tr>
+<td><code>Quests</code></td>
+<td><code>Active</code>, <code>Completed</code>, <code>Pinned</code></td>
+</tr>
+<tr>
+<td><code>Venues.StorageOf(area)</code></td>
+<td>Items stored and capacity, normal and refrigerated</td>
+</tr>
+<tr>
+<td><code>Security</code></td>
+<td><code>IsCurfew</code>, <code>IsSecurityActive</code>, <code>Awareness</code> (0 to 1), <code>IsCaught</code>, <code>Level</code>, <code>LevelOf(district)</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-csharp">// Cheapest vendor for chicken, and how far it is from your first venue.
+var chicken = Items.ByName(&quot;Chicken&quot;);
+var home = Venues.DistrictOf(Venues.PlayerOwned.FirstOrDefault());
+var best = Economy.VendorsFor(chicken).OrderBy(v =&gt; Economy.Price(v, chicken)).FirstOrDefault();
+int hops = World.Hops(home, Economy.DistrictOf(best));
+</code></pre>
+<p>Prices change every game day and when a save loads. If your own namespace starts with <code>Nivalis.</code>, write <code>NivalisModKit.Economy</code>, since the game also has a <code>Nivalis.Economy</code> namespace.</p>
+<h3 id="per-save-data">Per-save data</h3>
+<p>Values that belong to one save, kept next to it as <code>&lt;save&gt;.modkit.json</code> in the game's save folder. Read and set them any time in gameplay; the kit writes the file when the game saves (manual or autosave) and reads it back when that save loads. A new game starts empty.</p>
+<pre><code class="lang-csharp">static readonly ModSaveData data = SaveData.For(&quot;you.nivalis.yourmod&quot;);
+
+GameEvents.GameLoaded += _ =&gt;
+{
+    int visits = data.Get(&quot;visits&quot;, 0);        // 0 when the save has no value yet
+    data.Set(&quot;visits&quot;, visits + 1);            // any JSON-serializable value
+};
+SaveData.Saving += () =&gt; data.Set(&quot;snapshot&quot;, myState);   // store cached state before the file is written
+</code></pre>
+<p><code>SaveData.Loaded</code> fires just before <code>GameLoaded</code> / <code>NewGameStarted</code>, so the data is ready in those handlers. The file sits beside the game's <code>.sav</code>; it isn't known whether Steam Cloud syncs it. The game's own save-crash recovery (since patch 2) only covers <code>.sav</code> and <code>.png</code> files: if the game crashes mid-save and restores the previous <code>.sav</code>, the <code>.modkit.json</code> may be one save newer.</p>
+<h3 id="scheduler">Scheduler</h3>
+<p>Run code later on the main thread. Each call returns an <code>IDisposable</code>; dispose it to cancel.</p>
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Runs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Scheduler.NextFrame(a)</code></td>
+<td>Next frame</td>
+</tr>
+<tr>
+<td><code>Scheduler.AfterSeconds(s, a)</code></td>
+<td>After <code>s</code> real seconds (counts while paused)</td>
+</tr>
+<tr>
+<td><code>Scheduler.AfterGameHours(h, a)</code></td>
+<td>Once <code>h</code> game hours have passed</td>
+</tr>
+<tr>
+<td><code>Scheduler.AtHour(h, a)</code></td>
+<td>Next time the clock reaches hour <code>h</code>; tomorrow if already past</td>
+</tr>
+<tr>
+<td><code>Scheduler.AfterDays(n, a)</code></td>
+<td>When <code>n</code> game days have started (days turn over at 08:00)</td>
+</tr>
+</tbody>
+</table>
+<p>Game-time jobs compare against the clock each frame, so sleeping past the moment still runs them, once. Pending jobs are cancelled when a save loads or a new game starts; store longer plans in per-save data.</p>
+<h3 id="ui">UI</h3>
+<p><code>Ui</code>. The game's screens are <code>UIPanel</code> prefabs the game shows and hides; the kit reports them and lets you use the game's own notifications and dialogs. Main thread only.</p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>What</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ui.Notify(header, text)</code></td>
+<td>A toast in the game's notification feed</td>
+</tr>
+<tr>
+<td><code>Ui.Dialog(title, message, (label, action)...)</code></td>
+<td>The game's popup dialog with your buttons; each closes it and runs its action. Pass <code>closeOnClick: false</code> (after <code>message</code>) to keep it open; the player closes it with its X</td>
+</tr>
+<tr>
+<td><code>Ui.OpenPanels</code>, <code>Ui.Find(typeName)</code>, <code>Ui.NameOf(panel)</code></td>
+<td>Which screens are open; find one by type name</td>
+</tr>
+<tr>
+<td><code>Ui.IsVisible</code>, <code>Ui.IsDialogOpen</code></td>
+<td>UI shown (not hidden for screenshots); a dialog on screen</td>
+</tr>
+<tr>
+<td><code>Ui.ButtonsIn(panel)</code>, <code>Ui.LabelOf(button)</code></td>
+<td>A panel's buttons with paths and labels, to pick a template</td>
+</tr>
+<tr>
+<td><code>Ui.CloneButton(template, label, onClick)</code></td>
+<td>Adds your button by copying one of the game's (experimental)</td>
+</tr>
+<tr>
+<td><code>Ui.Clone(template)</code>, <code>Ui.CloneText(template, text)</code>, <code>Ui.TextsIn(panel)</code>, <code>Ui.FindChild(panel, path)</code>, <code>Ui.SetText(element, text)</code></td>
+<td>Copy any element or label, find templates, set text (experimental)</td>
+</tr>
+<tr>
+<td><code>Ui.Tooltip(element, text)</code></td>
+<td>The game's hover tooltip on any element</td>
+</tr>
+<tr>
+<td><code>Ui.OpenMenu(tab)</code>, <code>Ui.OpenJournal(quest)</code>, <code>Ui.OpenMap()</code>, <code>Ui.OpenVenue(area, tab)</code></td>
+<td>Open the game's screens</td>
+</tr>
+<tr>
+<td><code>Ui.CreateWindow(title, WindowStyle.Popup / Panel)</code></td>
+<td>A window of your own from the game's parts: <code>AddHeader</code>, <code>AddText</code>, <code>AddButton</code>, <code>AddToggle</code>, <code>AddSlider</code>, <code>AddChoice</code>, <code>AddTextField</code>, <code>AddValue</code>, <code>AddFooterButton</code>, <code>Clear</code>, <code>Show</code>, <code>Hide</code>, <code>Closed</code>. Popup = the game's small confirm popup; Panel = the Settings frame with a scrolling list (experimental)</td>
+</tr>
+<tr>
+<td><code>Ui.RequestMenuMode(owner)</code></td>
+<td>Menu mode (cursor on, movement and mouse-look off) until you dispose the handle, for UI you build yourself. Shared: the game leaves menu mode when the last mod releases. <code>Ui.IsMenuModeRequested</code>, <code>Ui.MenuModeOwners</code></td>
+</tr>
+<tr>
+<td><code>Ui.MakeLive(element)</code></td>
+<td>Make a copy usable: controls interactable, canvas groups clickable, its layout on (Clone and windows do this)</td>
+</tr>
+<tr>
+<td><code>Ui.Relayout(element)</code></td>
+<td>Recompute a copy's layout after changing it (Clone/SetText do this)</td>
+</tr>
+<tr>
+<td><code>Ui.RadialMenu((label, action)...)</code>, <code>Ui.AddRadialAction(label, action)</code>, <code>Ui.IsRadialOpen</code></td>
+<td>The game's radial wheel: open it with your actions, or add to it while open (experimental)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-csharp">GameEvents.PanelShown += a =&gt;
+{
+    if (a.Name == &quot;EndOfDayWindow&quot;) Ui.Notify(&quot;My Mod&quot;, &quot;Day summary is up&quot;);
+};
+</code></pre>
+<p>The button helpers use <code>UnityEngine.UI.Button</code> and the text helpers <code>TMPro.TMP_Text</code>: add references to <code>BepInEx\interop\UnityEngine.UI.dll</code> and <code>Unity.TextMeshPro.dll</code> in your project to call them.</p>
+<p>The dev bridge's <code>/ui</code> path lists the open panels, the quickest way to learn a screen's name; <code>/ui?panel=Name</code> lists that panel's buttons.</p>
+<h3 id="mod-menu">Mod menu</h3>
+<p>The kit adds one <strong>Mods</strong> button to the pause menu, shared by every mod. It opens the mod browser, a sub-screen like the game's Settings: the menu behind it stops taking input, and Escape or Close goes back.</p>
+<p>The kit's browser lists:</p>
+<ul>
+<li>pages mods add with <code>ModMenu.AddPage</code></li>
+<li>the settings of mods that opted in, edited live. Changes are saved to the mod's <code>.cfg</code> and raise <code>SettingChanged</code>, the same as editing the file</li>
+</ul>
+<pre><code class="lang-csharp">ModMenu.AddPage(MyGuid, &quot;My Mod&quot;, w =&gt;
+{
+    w.AddText(&quot;Anything a KitWindow can show.&quot;);
+    w.AddButton(&quot;Do the thing&quot;, DoTheThing);
+});
+</code></pre>
+<p><strong>Which settings show.</strong> Listing is opt-in, so nothing appears unless the mod asks:</p>
+<ul>
+<li><code>ModMenu.ListSettings(myGuid)</code> in <code>Load</code> lists all your settings.</li>
+<li>A <code>ModSetting</code> tag lists one setting.</li>
+</ul>
+<p>Players can also turn on the kit's <code>[ModMenu] ShowOtherMods</code> (in the browser, under Nivalis ModKit). The browser then lists all other mods' settings too, <strong>read-only</strong>, with a note to edit the <code>.cfg</code> and restart. The kit can't tell whether a mod that never heard of it reads a changed value live, so it doesn't offer to change them.</p>
+<p>Either way, the flags below adjust how settings appear:</p>
+<pre><code class="lang-csharp">ModMenu.ListSettings(MyGuid);
+Config.Bind(&quot;Debug&quot;, &quot;Trace&quot;, false, new ConfigDescription(&quot;Log everything.&quot;, null,
+    new ModSetting { IsAdvanced = true }));
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Browsable = false</code></td>
+<td>Hidden.</td>
+</tr>
+<tr>
+<td><code>ReadOnly = true</code></td>
+<td>Shown, not editable.</td>
+</tr>
+<tr>
+<td><code>IsAdvanced = true</code></td>
+<td>Shown only with &quot;Show advanced&quot; ticked.</td>
+</tr>
+<tr>
+<td><code>RequiresRestart = true</code></td>
+<td>Marked &quot;(restart)&quot;: the mod reads it once at startup.</td>
+</tr>
+<tr>
+<td><code>Order</code>, <code>DisplayName</code></td>
+<td>Order within the section (higher first), and the name shown.</td>
+</tr>
+</tbody>
+</table>
+<p>The browser also reads BepInEx ConfigurationManager's <code>ConfigurationManagerAttributes</code> tag (<code>Browsable</code>, <code>ReadOnly</code>, <code>IsAdvanced</code>, <code>Order</code>, <code>DispName</code>) for listed settings. That tag alone doesn't list a setting.</p>
+<p><strong>How each setting is edited:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Editor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bool</code></td>
+<td>Toggle</td>
+</tr>
+<tr>
+<td>Number with an <code>AcceptableValueRange</code></td>
+<td>Slider</td>
+</tr>
+<tr>
+<td><code>enum</code> with up to 12 values</td>
+<td>Button that steps through the values</td>
+</tr>
+<tr>
+<td>Value with an <code>AcceptableValueList</code> of up to 12</td>
+<td>Button that steps through the values</td>
+</tr>
+<tr>
+<td>Anything else (text, numbers without a range, key bindings, colours, long lists)</td>
+<td>Text box. The text is read the same way as in the <code>.cfg</code>; text that can't be read is ignored and the box shows the stored value again</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Replacing the browser.</strong> A mod can provide a better browser:</p>
+<ul>
+<li>Call <code>ModMenu.SetBrowser(myGuid, open)</code> and show your window with <code>ModMenu.OpenAsChild(window)</code>.</li>
+<li>If two mods replace it, the kit's <code>[ModMenu] Browser</code> setting picks one; otherwise the last one wins, and the log says so.</li>
+<li><code>ModMenu.Pages</code> gives your browser the pages other mods added.</li>
+</ul>
+<h3 id="helpers">Helpers</h3>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>World.Locations</code>, <code>World.Find(name)</code></td>
+<td>Districts, and lookup by name (&quot;Meridian Market&quot;), ignoring case and spaces.</td>
+</tr>
+<tr>
+<td><code>World.Hops(from, to)</code></td>
+<td>District transitions on the shortest route, or <code>World.Unreachable</code>.</td>
+</tr>
+<tr>
+<td><code>NativeHook.MethodPointer&lt;T&gt;(name)</code></td>
+<td>Native address of an interop method, by <code>NativeMethodInfoPtr_...</code> field name, or method name if not overloaded.</td>
+</tr>
+<tr>
+<td><code>NativeHook.Install(...)</code></td>
+<td>Native detour. Keeps your delegates alive. For methods with by-reference struct parameters, which Harmony can't patch safely.</td>
+</tr>
+<tr>
+<td><code>StructLayout.FieldOffset&lt;T&gt;(field)</code>, <code>Size&lt;T&gt;()</code></td>
+<td>IL2CPP field offsets and sizes from the running game. Value types have the object header subtracted.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reference example:</strong> <a href="https://github.com/BGASM/NivalisMods/blob/main/mods/NivalisOrderFix/Plugin.cs">Better Supplier Choice</a> is a complete kit mod in about 250 lines: a <code>Purchasing</code> handler, settings listed in the Mods browser with sliders and an advanced flag, a page of its own (<code>ModMenu.AddPage</code>), a dev command, daily stats from <code>GameEvents</code>, and a version dependency. <a href="https://github.com/BGASM/NivalisModKit/tree/main/samples/KitTester">samples/KitTester</a> exercises every kit feature for testing, and <a href="https://github.com/BGASM/NivalisModKit/tree/main/samples/QuantityTester">samples/QuantityTester</a> shows <code>OrderQuantity</code>.</p>
+<h3 id="versioning">Versioning</h3>
+<p>Public members are added, never removed. Anything replaced is marked <code>[Obsolete]</code> first and kept for at least one release. A mod built against 0.2 keeps working with later 0.x releases.</p>
+<p>The exception is members marked <code>[Experimental]</code>. They may change in any release; their note says what to expect. Currently experimental:</p>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Staff.SetOrder</code></td>
+<td>Changes the game's shared list directly. Will become a <code>Tuning</code> hook so several mods can combine.</td>
+</tr>
+<tr>
+<td><code>Tuning.UseOrder</code></td>
+<td>The context may change (for example a perishable flag).</td>
+</tr>
+</tbody>
+</table>
+<p>Declare the oldest kit you support with <code>[BepInDependency(ModKit.Guid, &quot;&gt;=0.2.0&quot;)]</code>. BepInEx then refuses to load your mod with an older kit and says why in the log.</p>
+<h2 id="live-config-reload">Live config reload</h2>
+<p>With the kit installed, any mod's settings reload when you save its <code>.cfg</code> file in <code>BepInEx\config</code>, while the game runs. The log shows what changed:</p>
+<pre><code>Config reloaded: bgasm.nivalis.orderfix.cfg: VendorSort: Balanced -&gt; Cheapest
+</code></pre>
+<p>Changes made in the in-game Mods browser are written to the same files, so the two always agree. A mod picks up the change the next time it reads the setting. For modders: read <code>entry.Value</code> when you use it rather than copying it once in <code>Load</code>, or subscribe to <code>entry.SettingChanged</code>. Reloads run on the main thread, so handlers can touch game objects.</p>
+<p>Some settings only matter at startup, such as ones that decide whether a mod hooks anything at all. Those still need a restart.</p>
+<h2 id="dev-bridge-for-mod-developers">Dev bridge (for mod developers)</h2>
+<p>An HTTP endpoint for inspecting the running game from scripts or a terminal, and optionally for running dev commands. Off by default; turn on <code>[DevBridge] Enabled</code> and restart. It only listens on <code>127.0.0.1</code>, so nothing outside your computer can reach it. Its read paths can't change anything in the game; commands are a separate opt-in (below).</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/status</code></td>
+<td>Kit version, game build, game time, live events</td>
+</tr>
+<tr>
+<td><code>/events</code></td>
+<td>How often each kit event fired</td>
+</tr>
+<tr>
+<td><code>/time</code></td>
+<td>Clock, speed factors, pause state</td>
+</tr>
+<tr>
+<td><code>/money</code>, <code>/quests</code>, <code>/security</code>, <code>/districts</code></td>
+<td>Player money, quests, curfew and security, districts</td>
+</tr>
+<tr>
+<td><code>/venues</code>, <code>/venues?owned=1</code></td>
+<td>Venues: open, in staff hours, storage</td>
+</tr>
+<tr>
+<td><code>/vendors</code>, <code>/items</code>, <code>/recipes</code>, <code>/restock</code></td>
+<td>Economy lookups</td>
+</tr>
+<tr>
+<td><code>/priorities</code></td>
+<td>Staff task priority lists</td>
+</tr>
+<tr>
+<td><code>/ui</code>, <code>/ui?panel=Name</code>, <code>&amp;texts</code>, <code>&amp;rects</code></td>
+<td>Open panels; a panel's buttons, texts and element positions</td>
+</tr>
+<tr>
+<td><code>/perf</code></td>
+<td>Per-event timings (with <code>[Debug] FrameTiming</code>)</td>
+</tr>
+<tr>
+<td><code>/object?type=Nivalis.NotificationHudUi</code></td>
+<td>Fields and properties of the first live instance of any Unity type, like a text-only UnityExplorer</td>
+</tr>
+</tbody>
+</table>
+<pre><code>curl http://127.0.0.1:5710/status
+curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
+</code></pre>
+<h3 id="dev-commands">Dev commands</h3>
+<p>Mods can register named commands that tools run in the game: open a window, set up a situation, return a result. They run on the main thread, so they can use the game and the kit freely.</p>
+<pre><code class="lang-csharp">DevCommands.Register(MyGuid, &quot;give-money&quot;, &quot;amount=N: add money (hundredths)&quot;, args =&gt;
+{
+    int amount = args.GetInt(&quot;amount&quot;, 10000);
+    AddMoney(amount);
+    return new { added = amount, now = Economy.PlayerMoney };   // the reply, as JSON
+});
+</code></pre>
+<p><code>CommandArgs</code> has <code>Get</code>, <code>GetInt</code>, <code>GetFloat</code>, <code>GetBool</code> (on/off/true/false/1/0, or a bare <code>?flag</code>) and <code>Has</code>. A name another mod already registered is refused, and the log says which. Throwing returns the message as an error.</p>
+<p>Three ways to run them:</p>
+<ul>
+<li><strong>In game:</strong> turn on <code>[DevConsole] Enabled</code> and press <code>`</code> (<code>[DevConsole] Key</code>): a terminal drops from the top of the screen. Type <code>demo style=Panel</code>, Enter. Up/Down recall earlier commands, Tab completes names, the mouse wheel or Page Up/Down scroll back, <code>clear</code> empties it, Esc or <code>`</code> closes it. Quote values with spaces: <code>notify text=&quot;hello there&quot;</code>. It needs no bridge, and works on the title screen too (commands that need a save say so).</li>
+<li><strong>Windows terminal:</strong> <code>tools\kit.cmd demo style=Panel</code> (<code>tools\kit.cmd</code> alone lists them). Needs <code>[DevBridge] Enabled</code> and <code>AllowCommands</code>.</li>
+<li><strong>Git Bash or scripts:</strong> <code>tools/bridge.sh cmd demo style=Panel</code>, same requirements.</li>
+</ul>
+<p>Without the script: <code>POST http://127.0.0.1:5710/cmd/&lt;name&gt;?arg=value</code> with the header <code>X-Kit-Token</code>, whose value the kit writes to <code>BepInEx\cache\nivalismodkit-bridge.token</code> at every start. The token is what stops a web page from running commands: browsers can't send custom headers to localhost. Requests from a browser (with an <code>Origin</code> header) are refused too.</p>
+<p>The kit's own commands:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>help</code></td>
+<td>Lists the commands</td>
+</tr>
+<tr>
+<td><code>notify text=... [header=...]</code></td>
+<td>A notification in the game's feed</td>
+</tr>
+<tr>
+<td><code>open what=Map / Venue / &lt;menu tab&gt;</code></td>
+<td>Opens a game screen</td>
+</tr>
+<tr>
+<td><code>mods</code></td>
+<td>Opens the Mods browser</td>
+</tr>
+<tr>
+<td><code>money amount=N</code></td>
+<td>Adds money in hundredths (10000 = 100.00; negative takes it away)</td>
+</tr>
+<tr>
+<td><code>give item=Name [amount=N]</code></td>
+<td>Puts items in the player's inventory</td>
+</tr>
+<tr>
+<td><code>config [mod=name] [key=Section.Key] [value=...]</code></td>
+<td>Lists mods with settings, a mod's settings, one setting in detail, or changes it (saved to the <code>.cfg</code>, <code>SettingChanged</code> raised). Works on any mod; ignores the browser's opt-in and read-only rules</td>
+</tr>
+<tr>
+<td><code>clock [speed=X] [sim=X] [pause=on/off]</code></td>
+<td>Clock and simulation speed (1 clears), shared pause</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Without commands.</strong> Live reload works as a command channel too: saving a <code>.cfg</code> applies within a second, so a test mod can treat settings as triggers. <a href="https://github.com/BGASM/NivalisModKit/tree/main/samples/KitTester">KitTester</a> still accepts <code>[Ui] Demo = Panel</code> and <code>[Ui] Open = Map</code> in its <code>.cfg</code>.</p>
+<h2 id="settings">Settings</h2>
+<p><code>BepInEx\config\bgasm.nivalis.modkit.cfg</code>, or in game: pause menu &gt; Mods &gt; Nivalis ModKit (Debug and Dev bridge under &quot;Show advanced&quot;).</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[General] LiveConfigReload</code></td>
+<td>true</td>
+<td>Reload mods' settings when their <code>.cfg</code> file is saved. Restart to apply.</td>
+</tr>
+<tr>
+<td><code>[General] UntestedBuild</code></td>
+<td>Warn</td>
+<td>On a game build the kit wasn't tested on: <code>Warn</code> or <code>Disable</code> (see <a href="#compatibility">Compatibility</a>). Restart to apply.</td>
+</tr>
+<tr>
+<td><code>[ModMenu] Enabled</code></td>
+<td>true</td>
+<td>The Mods button in the pause menu.</td>
+</tr>
+<tr>
+<td><code>[ModMenu] ShowOtherMods</code></td>
+<td>false</td>
+<td>Also list mods that didn't opt in, read-only.</td>
+</tr>
+<tr>
+<td><code>[ModMenu] ButtonLabel</code></td>
+<td>Mods</td>
+<td>Text on the pause menu button. Restart to apply.</td>
+</tr>
+<tr>
+<td><code>[ModMenu] Browser</code></td>
+<td>empty</td>
+<td>Which mod's browser the button opens when more than one mod provides one (a GUID).</td>
+</tr>
+<tr>
+<td><code>[DevBridge] Enabled</code></td>
+<td>false</td>
+<td>Read-only HTTP endpoint on 127.0.0.1 for development tools. Restart to apply.</td>
+</tr>
+<tr>
+<td><code>[DevBridge] Port</code></td>
+<td>5710</td>
+<td>Its port. Restart to apply.</td>
+</tr>
+<tr>
+<td><code>[DevBridge] AllowCommands</code></td>
+<td>false</td>
+<td>Let tools run mods' dev commands through the bridge (token required). Leave off unless developing.</td>
+</tr>
+<tr>
+<td><code>[DevConsole] Enabled</code></td>
+<td>false</td>
+<td>In-game console for dev commands.</td>
+</tr>
+<tr>
+<td><code>[DevConsole] Key</code></td>
+<td>Backquote</td>
+<td>Key that opens and closes it (Unity Input System name; Backquote is <code>`</code>).</td>
+</tr>
+<tr>
+<td><code>[DevConsole] Font</code></td>
+<td>empty</td>
+<td>Console font by name (the log lists the game's fonts); empty picks a plain one. Restart to apply.</td>
+</tr>
+<tr>
+<td><code>[Debug] FrameTiming</code></td>
+<td>false</td>
+<td>Log slow frames with the kit's share of them; per-event timings at <code>/perf</code>. For diagnosing lag.</td>
+</tr>
+<tr>
+<td><code>[Debug] FrameThresholdMs</code></td>
+<td>50</td>
+<td>What counts as a slow frame.</td>
+</tr>
+<tr>
+<td><code>[Debug] SimulateMissing</code></td>
+<td>empty</td>
+<td>Comma-separated event names to treat as missing. For testing a mod's fallback. Not shown in game.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compatibility">Compatibility</h2>
+<p>Tested on Nivalis Nights 1.0 patch 2 (Steam build 25680465) with BepInEx be.788.</p>
+<p>The game's version string stays &quot;1.0&quot; across patches, so the kit identifies the build by a fingerprint of <code>GameAssembly.dll</code>. The title screen shows the kit version and game build above the copyright line. On a build this kit wasn't tested on (usually right after a game patch), what happens depends on <code>[General] UntestedBuild</code>:</p>
+<ul>
+<li><code>Warn</code> (default): the kit runs normally. The title line turns orange, the log warns, and a notification appears once in game.</li>
+<li><code>Disable</code>: the kit installs nothing. Mods using it are inactive and the game runs unmodded until the kit is updated.</li>
+</ul>
+<p>Mods can check the build too: <code>GameBuild.IsTested</code>, <code>GameBuild.Describe()</code> and <code>GameBuild.SteamBuildId</code>.</p>
+<p>Other mods that detour <code>Vendor.BuyItem</code> directly will conflict with the purchasing pipeline. Build on <code>Purchasing</code> instead.</p>
+<h2 id="changes">Changes</h2>
+<p><strong>0.2.0</strong></p>
+<p>For players:</p>
+<ul>
+<li>A <strong>Mods</strong> button in the pause menu. Mods that support it show their settings there, changed live and saved to their <code>.cfg</code>. Turn on <code>[ModMenu] ShowOtherMods</code> to see every other mod's settings read-only.</li>
+<li>The title screen shows the kit version and game build. The kit recognises game builds by fingerprint and warns when it runs on one it wasn't tested on (<code>[General] UntestedBuild</code>: <code>Warn</code> or <code>Disable</code>).</li>
+<li>Fixed start-menu stutter: the kit no longer retries hooks every frame before a save loads.</li>
+<li>Tested on game patch 2 (Steam build 25680465).</li>
+</ul>
+<p>For modders:</p>
+<ul>
+<li>Lifecycle: <code>GameEvents.GameReady</code>, <code>GameEnded</code>, <code>IsInGame</code>, <code>WhenInGame</code>.</li>
+<li>New events: <code>PanelShown</code>, <code>PanelHidden</code>, <code>VenueStorageChanged</code>, <code>GameClock.TimeSpeedChanged</code>.</li>
+<li><code>ModMenu</code>: <code>ListSettings</code>, <code>AddPage</code>, <code>SetBrowser</code>, <code>OpenAsChild</code>. <code>ModSetting</code> tags (hidden, read-only, advanced, needs restart, order, display name); ConfigurationManager tags are read too.</li>
+<li><code>Ui.CreateWindow</code> (Popup and Panel) with rows: <code>AddHeader</code>, <code>AddText</code>, <code>AddButton</code>, <code>AddToggle</code>, <code>AddSlider</code>, <code>AddChoice</code>, <code>AddTextField</code>, <code>AddValue</code>, <code>AddFooterButton</code>, <code>Clear</code>.</li>
+<li><code>Ui.RequestMenuMode</code>: shared menu mode (cursor on, movement off) for UI you build yourself.</li>
+<li>More <code>Ui</code>: <code>Find(&quot;Type:Object&quot;)</code>, <code>Clone</code>, <code>CloneText</code>, <code>CloneButton</code>, <code>Tooltip</code>, <code>MakeLive</code>, <code>Relayout</code>, <code>OpenMenu</code>, <code>OpenJournal</code>, <code>OpenMap</code>, <code>OpenVenue</code>, <code>RadialMenu</code>, <code>AddRadialAction</code>.</li>
+<li><code>GameClock</code>: shared clock and simulation speed factors, and a shared pause.</li>
+<li><code>Tuning.UseOrder</code> (experimental), <code>Staff</code> priority lists (<code>SetOrder</code> experimental), <code>Venues.StorageOf</code>, <code>Economy.NameOf(vendor)</code>.</li>
+<li><code>GameBuild</code>: <code>IsTested</code>, <code>Describe()</code>, <code>Fingerprint</code>, <code>SteamBuildId</code>.</li>
+<li>Dev tools: <code>DevCommands.Register</code> with built-in <code>help</code>, <code>notify</code>, <code>open</code>, <code>mods</code>, <code>clock</code>, <code>money</code>, <code>give</code>, <code>config</code> (read or change any mod's settings). Run them from the in-game console (<code>[DevConsole] Enabled</code>, the <code>`</code> key) or through the dev bridge (<code>[DevBridge] AllowCommands</code>, token required; <code>tools\kit.cmd</code>). The bridge gained <code>/ui</code>, <code>/time</code>, <code>/perf</code>, <code>/priorities</code> and venue storage.</li>
+<li><code>[Experimental]</code> marks API that may still change. <code>ModKit.TestedGameVersion</code> is obsolete (use <code>GameBuild</code>).</li>
+<li>Live config reload skips the kit's own saves, so editing in the Mods browser doesn't fight it.</li>
+<li><a href="https://github.com/BGASM/NivalisMods/blob/main/mods/NivalisOrderFix/Plugin.cs">Better Supplier Choice</a> (formerly Manager Order Fix) is the reference example of a kit mod.</li>
+</ul>
+<p><strong>0.1.0</strong></p>
+<ul>
+<li>First release.</li>
+</ul>
+<h2 id="building-from-source">Building from source</h2>
+<pre><code>dotnet build NivalisModKit.slnx -c Release
+</code></pre>
+<p>The project references BepInEx and the game's interop assemblies from your game folder, set in <code>Directory.Build.props</code> (<code>GameDir</code>, or pass <code>-p:GameDir=...</code>). A Release build copies <code>NivalisModKit.dll</code> to <code>BepInEx\plugins</code> and writes the release zip to <code>releases/</code>. The test mods in <code>samples/</code> only update a copy already in <code>plugins</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Folder</th>
+<th>What</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NivalisModKit/</code></td>
+<td>The kit</td>
+</tr>
+<tr>
+<td><code>samples/KitTester</code></td>
+<td>Logs every kit event and exercises every feature; the kit's regression test</td>
+</tr>
+<tr>
+<td><code>samples/QuantityTester</code></td>
+<td><code>Purchasing.OrderQuantity</code> example</td>
+</tr>
+<tr>
+<td><code>tools/</code></td>
+<td><code>kit.cmd</code> / <code>kit.ps1</code> / <code>bridge.sh</code> (dev commands and bridge queries), <code>lastlog.sh</code> (log summary), <code>docs.ps1</code> (builds the documentation site)</td>
+</tr>
+<tr>
+<td><code>docfx/</code>, <code>docs/</code></td>
+<td>Documentation site source, and the built site GitHub Pages serves</td>
+</tr>
+</tbody>
+</table>
+<p>Mods built on the kit live in <a href="https://github.com/BGASM/NivalisMods">BGASM/NivalisMods</a>; Better Supplier Choice there is the reference example.</p>
+<h2 id="license">License</h2>
+<p>MIT</p>
+
+</article>
+
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Nivalis ModKit by BGASM · <a href="https://github.com/BGASM/NivalisModKit">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

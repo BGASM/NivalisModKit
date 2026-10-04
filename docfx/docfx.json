@@ -1,0 +1,26 @@
+{
+  "metadata": [
+    {
+      "src": [ { "src": "../NivalisModKit", "files": [ "NivalisModKit.csproj" ] } ],
+      "dest": "api",
+      "includePrivateMembers": false,
+      "disableGitFeatures": false,
+      "namespaceLayout": "flattened"
+    }
+  ],
+  "build": {
+    "content": [
+      { "files": [ "api/**.yml", "api/index.md" ] },
+      { "files": [ "index.md", "toc.yml" ] }
+    ],
+    "output": "../docs",
+    "template": [ "default", "modern" ],
+    "globalMetadata": {
+      "_appName": "Nivalis ModKit",
+      "_appTitle": "Nivalis ModKit",
+      "_appFooter": "Nivalis ModKit by BGASM · <a href=\"https://github.com/BGASM/NivalisModKit\">GitHub</a>",
+      "_enableSearch": true,
+      "_disableContribution": true
+    }
+  }
+}

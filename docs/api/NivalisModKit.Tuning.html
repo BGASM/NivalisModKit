@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Tuning | Nivalis ModKit </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Tuning | Nivalis ModKit ">
+      
+      <meta name="description" content="Change game rules: crop yield and growth speed, fish yield, property prices, security awareness gain. Each is an event whose handlers adjust a value; nothing is patched until a mod subscribes to that event. Handlers run in the order added, each seeing the previous one&#39;s value; one that throws is logged and skipped. For vendor prices see .">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/main/apiSpec/new?filename=NivalisModKit_Tuning.md&amp;value=---%0Auid%3A%20NivalisModKit.Tuning%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Nivalis ModKit">
+            Nivalis ModKit
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="NivalisModKit.Tuning">
+
+
+
+  <h1 id="NivalisModKit_Tuning" data-uid="NivalisModKit.Tuning" class="text-break">
+Class Tuning  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Tuning.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="NivalisModKit.html">NivalisModKit</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Change game rules: crop yield and growth speed, fish yield, property prices, security awareness
+gain. Each is an event whose handlers adjust a value; nothing is patched until a mod subscribes
+to that event. Handlers run in the order added, each seeing the previous one's value; one that
+throws is logged and skipped. For vendor prices see <a class="xref" href="NivalisModKit.Pricing.html">Pricing</a>.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class Tuning</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">Tuning</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="NivalisModKit_Tuning_DefaultAwarenessAfterCancel" data-uid="NivalisModKit.Tuning.DefaultAwarenessAfterCancel">
+  DefaultAwarenessAfterCancel
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Tuning.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Default awareness the kit sets when a catch is cancelled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const float DefaultAwarenessAfterCancel = 0.5</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="events">Events
+</h2>
+
+
+
+  <h3 id="NivalisModKit_Tuning_AwarenessGain" data-uid="NivalisModKit.Tuning.AwarenessGain">
+  AwarenessGain
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Tuning.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How much security awareness rises (before it's applied). Set to 0 to ignore a rise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;AwarenessGainContext&gt; AwarenessGain</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.AwarenessGainContext.html">AwarenessGainContext</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_Tuning_Catch" data-uid="NivalisModKit.Tuning.Catch">
+  Catch
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Tuning.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The player is about to be caught (awareness reached 1). Set <code>Cancel</code> to let them off:
+the kit then drops awareness to <code>AwarenessAfterCancel</code> (0.5 by default), so furniture
+stays unlocked, and clears every camera's and drone's lock-on, so only a fresh sighting builds
+awareness up again before the next catch. Set it
+close to 1 and a drone overhead re-triggers the catch within a few steps. To stop awareness
+rising at all, use <a class="xref" href="NivalisModKit.Tuning.html#NivalisModKit_Tuning_AwarenessGain">AwarenessGain</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;CatchContext&gt; Catch</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.CatchContext.html">CatchContext</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_Tuning_CropGrowthSpeed" data-uid="NivalisModKit.Tuning.CropGrowthSpeed">
+  CropGrowthSpeed
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Tuning.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A greenhouse module's growth speed (a multiplier; compost and upgrades are already in it).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;CropGrowthContext&gt; CropGrowthSpeed</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.CropGrowthContext.html">CropGrowthContext</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_Tuning_CropYield" data-uid="NivalisModKit.Tuning.CropYield">
+  CropYield
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Tuning.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How many crops a greenhouse module yields when harvested.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;CropYieldContext&gt; CropYield</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.CropYieldContext.html">CropYieldContext</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_Tuning_FishYield" data-uid="NivalisModKit.Tuning.FishYield">
+  FishYield
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Tuning.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>How many items a catch gives.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;FishYieldContext&gt; FishYield</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.FishYieldContext.html">FishYieldContext</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_Tuning_PropertyPrice" data-uid="NivalisModKit.Tuning.PropertyPrice">
+  PropertyPrice
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Tuning.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The purchase price of a property (venue, apartment, greenhouse), in hundredths.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static event Action&lt;PropertyPriceContext&gt; PropertyPrice</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.PropertyPriceContext.html">PropertyPriceContext</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h3 id="NivalisModKit_Tuning_UseOrder" data-uid="NivalisModKit.Tuning.UseOrder">
+  UseOrder
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Tuning.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Items are about to be taken from a stack (cooking, selling, moving, delivering). Call
+<code>Sort</code> to choose which go first. Since game patch 2 the game itself sorts stacks used for
+cooking by remaining freshness, least first, which puts spoiled items first; this runs after
+that, so your order wins.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Experimental(&quot;May gain a perishable flag and a different context shape&quot;)]
+public static event Action&lt;UseOrderContext&gt; UseOrder</code></pre>
+  </div>
+
+
+
+
+
+
+  <h4 class="section">Event Type</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="NivalisModKit.UseOrderContext.html">UseOrderContext</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+  <h4 class="section" id="NivalisModKit_Tuning_UseOrder_examples">Examples</h4>
+  <pre><code class="lang-csharp">// Never take spoiled items while fresh ones remain; otherwise least time left first.
+Tuning.UseOrder += ctx =&gt; ctx.Sort((a, b) =&gt;
+{
+    bool sa = a.remainingDecayTime &lt;= 0, sb = b.remainingDecayTime &lt;= 0;
+    if (sa != sb) return sa ? 1 : -1;
+    return a.remainingDecayTime.CompareTo(b.remainingDecayTime);
+});</code></pre>
+
+
+
+
+
+
+
+</article>
+
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Nivalis ModKit by BGASM · <a href="https://github.com/BGASM/NivalisModKit">GitHub</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

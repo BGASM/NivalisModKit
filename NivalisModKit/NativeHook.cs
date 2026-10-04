@@ -79,8 +79,6 @@ public static class NativeHook
     /// <summary>Looks up <paramref name="method"/> on <typeparamref name="T"/> and detours it.</summary>
     /// <inheritdoc cref="Install{TDelegate}(IntPtr, TDelegate, out TDelegate)"/>
     /// <param name="method">As for <see cref="MethodPointer(Type, string)"/>.</param>
-    /// <param name="hook">Your replacement.</param>
-    /// <param name="original">Calls the game's original code.</param>
     public static INativeDetour Install<T, TDelegate>(string method, TDelegate hook, out TDelegate original)
         where TDelegate : Delegate
         => Install(MethodPointer<T>(method), hook, out original);
