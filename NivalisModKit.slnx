@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="NivalisModKit/NivalisModKit.csproj" />
+  <Folder Name="/samples/">
+    <Project Path="samples/KitTester/KitTester.csproj" />
+    <Project Path="samples/QuantityTester/QuantityTester.csproj" />
+  </Folder>
+</Solution>

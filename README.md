@@ -2,7 +2,7 @@
 
 A shared library for Nivalis Nights mods, by BGASM. It does nothing on its own. Install it when another mod lists it as a requirement.
 
-Mods that need it: [Better Supplier Choice](../NivalisOrderFix), formerly Manager Order Fix (2.0 and later; 2.1 needs kit 0.2).
+Mods that need it: [Better Supplier Choice](https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisOrderFix), formerly Manager Order Fix (2.0 and later; 2.1 needs kit 0.2).
 
 What you'll see with it installed:
 - the kit and game version on the title screen, above the copyright line
@@ -10,7 +10,7 @@ What you'll see with it installed:
 
 ## Install
 
-1. Install BepInEx. See the [root README](../../README.md).
+1. Install BepInEx 6 (bleeding edge, Unity IL2CPP). See [the setup steps](https://github.com/BGASM/NivalisMods#requirements).
 2. Launch the game once. Wait for the main menu, then close the game.
 3. Extract the release zip into the game folder. The file lands at `BepInEx\plugins\NivalisModKit.dll`.
 
@@ -372,7 +372,7 @@ The browser also reads BepInEx ConfigurationManager's `ConfigurationManagerAttri
 | `NativeHook.Install(...)` | Native detour. Keeps your delegates alive. For methods with by-reference struct parameters, which Harmony can't patch safely. |
 | `StructLayout.FieldOffset<T>(field)`, `Size<T>()` | IL2CPP field offsets and sizes from the running game. Value types have the object header subtracted. |
 
-**Reference example:** [Better Supplier Choice](../NivalisOrderFix/Plugin.cs) is a complete kit mod in about 250 lines: a `Purchasing` handler, settings listed in the Mods browser with sliders and an advanced flag, a page of its own (`ModMenu.AddPage`), a dev command, daily stats from `GameEvents`, and a version dependency. [samples/KitTester](../../samples/KitTester) exercises every kit feature for testing, and [samples/QuantityTester](../../samples/QuantityTester) shows `OrderQuantity`.
+**Reference example:** [Better Supplier Choice](https://github.com/BGASM/NivalisMods/blob/main/mods/NivalisOrderFix/Plugin.cs) is a complete kit mod in about 250 lines: a `Purchasing` handler, settings listed in the Mods browser with sliders and an advanced flag, a page of its own (`ModMenu.AddPage`), a dev command, daily stats from `GameEvents`, and a version dependency. [samples/KitTester](samples/KitTester) exercises every kit feature for testing, and [samples/QuantityTester](samples/QuantityTester) shows `OrderQuantity`.
 
 ### Versioning
 
@@ -457,7 +457,7 @@ The kit's own commands:
 | `config [mod=name] [key=Section.Key] [value=...]` | Lists mods with settings, a mod's settings, one setting in detail, or changes it (saved to the `.cfg`, `SettingChanged` raised). Works on any mod; ignores the browser's opt-in and read-only rules |
 | `clock [speed=X] [sim=X] [pause=on/off]` | Clock and simulation speed (1 clears), shared pause |
 
-**Without commands.** Live reload works as a command channel too: saving a `.cfg` applies within a second, so a test mod can treat settings as triggers. [KitTester](../../samples/KitTester) still accepts `[Ui] Demo = Panel` and `[Ui] Open = Map` in its `.cfg`.
+**Without commands.** Live reload works as a command channel too: saving a `.cfg` applies within a second, so a test mod can treat settings as triggers. [KitTester](samples/KitTester) still accepts `[Ui] Demo = Panel` and `[Ui] Open = Map` in its `.cfg`.
 
 ## Settings
 
@@ -516,10 +516,27 @@ For modders:
 - Dev tools: `DevCommands.Register` with built-in `help`, `notify`, `open`, `mods`, `clock`, `money`, `give`, `config` (read or change any mod's settings). Run them from the in-game console (`[DevConsole] Enabled`, the `` ` `` key) or through the dev bridge (`[DevBridge] AllowCommands`, token required; `tools\kit.cmd`). The bridge gained `/ui`, `/time`, `/perf`, `/priorities` and venue storage.
 - `[Experimental]` marks API that may still change. `ModKit.TestedGameVersion` is obsolete (use `GameBuild`).
 - Live config reload skips the kit's own saves, so editing in the Mods browser doesn't fight it.
-- [Better Supplier Choice](../NivalisOrderFix/Plugin.cs) (formerly Manager Order Fix) is the reference example of a kit mod.
+- [Better Supplier Choice](https://github.com/BGASM/NivalisMods/blob/main/mods/NivalisOrderFix/Plugin.cs) (formerly Manager Order Fix) is the reference example of a kit mod.
 
 **0.1.0**
 - First release.
+
+## Building from source
+
+```
+dotnet build NivalisModKit.slnx -c Release
+```
+
+The project references BepInEx and the game's interop assemblies from your game folder, set in `Directory.Build.props` (`GameDir`, or pass `-p:GameDir=...`). A Release build copies `NivalisModKit.dll` to `BepInEx\plugins` and writes the release zip to `releases/`. The test mods in `samples/` only update a copy already in `plugins`.
+
+| Folder | What |
+|---|---|
+| `NivalisModKit/` | The kit |
+| `samples/KitTester` | Logs every kit event and exercises every feature; the kit's regression test |
+| `samples/QuantityTester` | `Purchasing.OrderQuantity` example |
+| `tools/` | `kit.cmd` / `kit.ps1` / `bridge.sh` (dev commands and bridge queries), `lastlog.sh` (log summary) |
+
+Mods built on the kit live in [BGASM/NivalisMods](https://github.com/BGASM/NivalisMods); Better Supplier Choice there is the reference example.
 
 ## License
 

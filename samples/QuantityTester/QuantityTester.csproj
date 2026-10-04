@@ -7,6 +7,6 @@
     <DeployIfInstalled>true</DeployIfInstalled>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\mods\NivalisModKit\NivalisModKit.csproj" Private="false" />
+    <ProjectReference Include="..\..\NivalisModKit\NivalisModKit.csproj" Private="false" />
   </ItemGroup>
 </Project>

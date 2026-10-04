@@ -7,6 +7,5 @@ releases/
 .vscode/
 research/
 
-# Local debug tooling, not published
-mods/NivalisManagerDebug/
+# Local notes
 TODO.md
