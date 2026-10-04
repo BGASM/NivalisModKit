@@ -13,8 +13,9 @@ public static class ModKit
     public const string Version = "0.2.0";
 
     /// <summary>
-    /// Game version (Unity <c>Application.version</c>) this kit build was tested on.
-    /// The kit warns at startup when the running game differs. Empty until first recorded.
+    /// Game version (Unity <c>Application.version</c>) this kit build was tested on. The game keeps "1.0"
+    /// across patches, so use <see cref="GameBuild"/> to tell builds apart.
     /// </summary>
+    [System.Obsolete("The game's version string doesn't change with patches; use GameBuild.IsTested / GameBuild.Describe().")]
     public const string TestedGameVersion = "1.0";
 }

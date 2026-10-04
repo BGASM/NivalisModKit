@@ -392,7 +392,13 @@ curl "http://127.0.0.1:5710/object?type=Nivalis.NotificationHudUi"
 
 ## Compatibility
 
-Tested on Nivalis Nights 1.0 with BepInEx be.788. The log warns when the game version differs from the tested one.
+Tested on Nivalis Nights 1.0 patch 2 (Steam build 25680465) with BepInEx be.788.
+
+The game's version string stays "1.0" across patches, so the kit identifies the build by a fingerprint of `GameAssembly.dll`. The title screen shows the kit version and game build above the copyright line. On a build this kit wasn't tested on (usually right after a game patch), what happens depends on `[General] UntestedBuild`:
+- `Warn` (default): the kit runs normally. The title line turns orange, the log warns, and a notification appears once in game.
+- `Disable`: the kit installs nothing. Mods using it are inactive and the game runs unmodded until the kit is updated.
+
+Mods can check the build too: `GameBuild.IsTested`, `GameBuild.Describe()` and `GameBuild.SteamBuildId`.
 
 Other mods that detour `Vendor.BuyItem` directly will conflict with the purchasing pipeline. Build on `Purchasing` instead.
 

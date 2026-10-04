@@ -120,7 +120,8 @@ internal static class ConfigBrowser
             {
                 bool whole = type == typeof(int) || type == typeof(long) || type == typeof(short) || type == typeof(byte);
                 row = window.AddSlider(label, min, max, Convert.ToSingle(entry.BoxedValue, CultureInfo.InvariantCulture),
-                    v => Set(cfg, entry, Convert.ChangeType(whole ? Math.Round(v) : v, type, CultureInfo.InvariantCulture)),
+                    // Saved as shown: whole numbers, or two decimals (a drag otherwise stores 0.13877352).
+                    v => Set(cfg, entry, Convert.ChangeType(Math.Round(v, whole ? 0 : 2), type, CultureInfo.InvariantCulture)),
                     whole ? "0" : "0.##", whole)?.gameObject;
             }
             else if (type.IsEnum && !type.IsDefined(typeof(FlagsAttribute), false) && Enum.GetNames(type).Length <= MaxChoices)

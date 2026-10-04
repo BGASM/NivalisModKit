@@ -16,6 +16,16 @@ public class KitPlugin : BasePlugin
     internal static ConfigEntry<bool> BridgeEnabled;
     internal static ConfigEntry<int> BridgePort;
     internal static ConfigEntry<bool> ModMenuEnabled, ShowOtherMods;
+    internal static ConfigEntry<UntestedBuildMode> UntestedBuild;
+
+    /// <summary>What the kit does on a game build it wasn't tested on.</summary>
+    public enum UntestedBuildMode
+    {
+        /// <summary>Run normally; warn in the log, on the title screen and once in game.</summary>
+        Warn,
+        /// <summary>Install nothing: the game runs as if no kit mods were installed.</summary>
+        Disable,
+    }
     internal static ConfigEntry<string> ModMenuLabel, PreferredBrowser;
 
     static ConfigDescription Desc(string text, ModSetting flags) => new(text, null, flags);
@@ -32,6 +42,10 @@ public class KitPlugin : BasePlugin
             "to test the missing-event fallback. Leave empty.", new ModSetting { Browsable = false }));
         var liveReload = Config.Bind("General", "LiveConfigReload", true, Desc(
             "Reload a mod's settings when its .cfg file in BepInEx\\config is saved, while the game runs.", restart));
+        UntestedBuild = Config.Bind("General", "UntestedBuild", UntestedBuildMode.Warn, Desc(
+            "On a game build this kit version wasn't tested on (usually right after a game patch): Warn = run, " +
+            "with a warning on the title screen and in game; Disable = the kit installs nothing, so its mods are " +
+            "inactive and the game runs unmodded until the kit is updated.", restart));
         ModMenuEnabled = Config.Bind("ModMenu", "Enabled", true,
             "Add a Mods button to the pause menu, for mods' settings and pages.");
         ShowOtherMods = Config.Bind("ModMenu", "ShowOtherMods", false,
@@ -54,11 +68,18 @@ public class KitPlugin : BasePlugin
         frameThreshold.SettingChanged += (_, _) => Perf.ThresholdMs = frameThreshold.Value;
 
         L.LogInfo($"{ModKit.Name} {ModKit.Version} loaded");
-        CheckGameVersion();
+        GameBuild.Detect();
+        if (!GameBuild.IsTested && UntestedBuild.Value == UntestedBuildMode.Disable)
+        {
+            L.LogError($"{ModKit.Name}: untested game build and [General] UntestedBuild = Disable, so the kit installs " +
+                       "nothing. Mods using the kit are inactive until the kit is updated (or set UntestedBuild = Warn).");
+            return;
+        }
         EventPatches.InstallAll();
         ModMenu.Install();
         ModMenu.ListSettings(ModKit.Guid);
         ConfigBrowser.Install();
+        TitleLine.Install();
         StartServices(liveReload.Value);
     }
 
@@ -84,20 +105,5 @@ public class KitPlugin : BasePlugin
         }
     }
 
-    static void CheckGameVersion()
-    {
-        try
-        {
-            string running = Application.version;
-            string tested = ModKit.TestedGameVersion; // local, so the compiler doesn't fold the const
-            if (tested == "")
-                L.LogInfo($"Game version {running} (tested version not recorded)");
-            else if (running == tested)
-                L.LogInfo($"Game version {running} (tested)");
-            else
-                L.LogWarning($"Game version {running}, kit tested on {tested}. " +
-                             "Check the event list below for anything missing.");
-        }
-        catch (Exception e) { L.LogWarning($"Could not read game version: {e.Message}"); }
-    }
+
 }

@@ -212,7 +212,10 @@ internal static class Bridge
         {
             kit = ModKit.Version,
             game = gameVersion,
-            testedOn = ModKit.TestedGameVersion,
+            gameBuild = GameBuild.Describe(),
+            buildTested = GameBuild.IsTested,
+            buildFingerprint = GameBuild.Fingerprint,
+            steamBuild = GameBuild.SteamBuildId,
             day = Try(() => TimeOfDayManager.GameplayGameDay),
             time = Try(() => $"{TimeOfDayManager.ClockHour:00}:{TimeOfDayManager.ClockMinute:00}"),
             purchasingPipeline = Purchasing.IsAvailable,
