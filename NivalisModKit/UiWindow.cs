@@ -348,10 +348,9 @@ public sealed class KitWindow
                     if (bodyRt != null)
                     {
                         LayoutRebuilder.ForceRebuildLayoutImmediate(bodyRt);
-                        // Backstop: set the body's height from its preferred height directly.
-                        float bh = LayoutUtility.GetPreferredHeight(bodyRt);
-                        if (bh > bodyRt.rect.height + 1f) bodyRt.sizeDelta = new Vector2(bodyRt.sizeDelta.x, bh);
-                        LayoutRebuilder.ForceRebuildLayoutImmediate(bodyRt);
+                        // The game's popup script placed the title, text and buttons itself; without it nothing
+                        // stacks them. If the layout didn't give Content its height, stack the body ourselves.
+                        if (crt.rect.height < h - 1f) StackPopupBody(bodyRt, crt, Math.Max(h, 40f));
                     }
                     LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
                     if (!loggedLayout)
@@ -368,7 +367,50 @@ public sealed class KitWindow
         catch (Exception e) { KitPlugin.L.LogWarning($"KitWindow layout: {e.Message}"); }
     }
     bool loggedLayout;
-    static bool loggedRow, loggedToggle;
+    static bool loggedRow, loggedToggle, loggedBody;
+
+    // Lays the popup body's children out top to bottom (title, content, buttons) and sizes the body to fit.
+    static void StackPopupBody(RectTransform body, RectTransform content, float contentHeight)
+    {
+        const float pad = 16f, gap = 8f;
+        if (!loggedBody)
+        {
+            loggedBody = true;
+            var comps = string.Join(", ", body.GetComponents<Component>().Select(c => { try { return c.GetIl2CppType().Name; } catch { return "?"; } }));
+            KitPlugin.L.LogInfo($"KitWindow Popup body '{body.name}' components: {comps}; stacking children manually");
+        }
+        var vlg = body.GetComponent<VerticalLayoutGroup>();
+        if (vlg != null) vlg.enabled = false;
+        var fit = body.GetComponent<ContentSizeFitter>();
+        if (fit != null) fit.enabled = false;
+
+        float width = Math.Max(body.rect.width, 600f);
+        float y = pad;
+        for (int i = 0; i < body.childCount; i++)
+        {
+            var child = body.GetChild(i).TryCast<RectTransform>();
+            if (child == null || !child.gameObject.activeSelf) continue;
+            if (child.name == "Background")
+            {
+                // Fills the whole body.
+                child.anchorMin = Vector2.zero; child.anchorMax = Vector2.one;
+                child.offsetMin = Vector2.zero; child.offsetMax = Vector2.zero;
+                continue;
+            }
+            float ch = child == content ? contentHeight : Math.Max(child.rect.height, LayoutUtility.GetPreferredHeight(child));
+            if (ch <= 0f) continue;
+            bool narrow = child != content && child.rect.width > 0f && child.rect.width < width - 1f;
+            float cw = narrow ? child.rect.width : width - 2f * pad;
+            if (child.name.Contains("TitleFrame")) { cw = width; }
+            child.anchorMin = child.anchorMax = new Vector2(0.5f, 1f);
+            child.pivot = new Vector2(0.5f, 1f);
+            child.sizeDelta = new Vector2(cw, ch);
+            child.anchoredPosition = new Vector2(0f, child.name.Contains("TitleFrame") ? 0f : -y);
+            y = (child.name.Contains("TitleFrame") ? ch : y + ch) + gap;
+        }
+        body.sizeDelta = new Vector2(width, y - gap + pad);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+    }
 
     // ---------- per frame, only while a kit window is open ----------
 
