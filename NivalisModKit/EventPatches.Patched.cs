@@ -25,6 +25,8 @@ static partial class EventPatches
             postfix: nameof(StaffFiredPostfix), args: () => Args(typeof(Venue), typeof(Person)));
         // PayStaff charges RuntimeData.Wage only if the owner can afford it (otherwise the
         // employee's happiness drops), so compare the owner's money before and after.
+        Install(nameof(GameEvents.FoodSpoiled), () => typeof(Nivalis.InventorySystem.ItemContainer), "UpdateItemDecay",
+            prefix: nameof(DecayPrefix), postfix: nameof(DecayPostfix), args: () => new[] { typeof(bool), typeof(int) });
         Install(nameof(GameEvents.StaffPaid), () => typeof(VenueAreaGhost), "PayStaff",
             prefix: nameof(StaffPaidPrefix), postfix: nameof(StaffPaidPostfix), args: () => Args(typeof(Person)));
 
@@ -120,6 +122,48 @@ static partial class EventPatches
             return inv == null ? null : new Nivalis.InventorySystem.IMoneyContainer(inv.Pointer).Money;
         }
         catch { return null; }
+    }
+
+    // Spoilage: the container's counts before and after its daily decay pass; what dropped spoiled (Rotten Food, which
+    // rises, is left out). Only when the pass makes Rotten Food: vendor stock decays too, often, and isn't counted.
+    static void DecayPrefix(Nivalis.InventorySystem.ItemContainer __instance, bool createRottenFood,
+                            out Dictionary<IntPtr, (Nivalis.InventorySystem.ItemType item, int count)> __state)
+    {
+        __state = null;
+        if (!createRottenFood) return;
+        try { __state = CountByType(__instance); } catch { }
+    }
+
+    static void DecayPostfix(Nivalis.InventorySystem.ItemContainer __instance,
+                             Dictionary<IntPtr, (Nivalis.InventorySystem.ItemType item, int count)> __state)
+    {
+        if (__state == null || __state.Count == 0) return;
+        Raise(nameof(GameEvents.FoodSpoiled), () =>
+        {
+            var after = CountByType(__instance);
+            var lost = new Dictionary<Nivalis.InventorySystem.ItemType, int>();
+            foreach (var (ptr, (item, before)) in __state)
+            {
+                int now = after.TryGetValue(ptr, out var a) ? a.count : 0;
+                if (now < before) lost[item] = before - now;
+            }
+            if (lost.Count > 0) GameEvents.RaiseFoodSpoiled(new FoodSpoiledArgs(__instance, lost));
+        });
+    }
+
+    static Dictionary<IntPtr, (Nivalis.InventorySystem.ItemType item, int count)> CountByType(Nivalis.InventorySystem.ItemContainer c)
+    {
+        var map = new Dictionary<IntPtr, (Nivalis.InventorySystem.ItemType, int)>();
+        var stacks = c?._items;
+        if (stacks == null) return map;
+        foreach (var stack in stacks)
+        {
+            var type = stack?._type;
+            if (type == null) continue;
+            int n = stack._instanceData?.Count ?? 0;
+            map[type.Pointer] = (type, (map.TryGetValue(type.Pointer, out var have) ? have.Item2 : 0) + n);
+        }
+        return map;
     }
 
     static void StaffPaidPrefix(VenueAreaGhost __instance, out int __state) =>

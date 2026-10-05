@@ -34,6 +34,24 @@
     <!-- XML docs, for projects that generate them (the kit), so modders get IntelliSense. -->
     <Copy SourceFiles="$(TargetDir)$(AssemblyName).xml" DestinationFolder="$(StageDir)BepInEx\plugins"
           Condition="'$(GenerateDocumentationFile)' == 'true' And Exists('$(TargetDir)$(AssemblyName).xml')" />
+    <!-- Thunderstore / LUZ metadata at the zip root: manifest.json, icon.png (256x256), README.md. A project sets
+         TsName (letters, digits, _), TsDescription (250 characters at most, no ; or "), TsWebsite and TsDependencies
+         (Team-Name-Version, separated by ;). No BepInEx dependency: Thunderstore's pack is an older build than the one
+         the mods are tested on, and launchers install BepInEx separately. -->
+    <PropertyGroup>
+      <TsName Condition="'$(TsName)' == ''">$(AssemblyName)</TsName>
+    </PropertyGroup>
+    <ItemGroup>
+      <_TsDependency Include="$(TsDependencies)" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_TsDependencyJson>@(_TsDependency->'"%(Identity)"', ', ')</_TsDependencyJson>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(StageDir)manifest.json" Overwrite="true" Lines="{;  &quot;name&quot;: &quot;$(TsName)&quot;,;  &quot;version_number&quot;: &quot;$(Version)&quot;,;  &quot;website_url&quot;: &quot;$(TsWebsite)&quot;,;  &quot;description&quot;: &quot;$(TsDescription)&quot;,;  &quot;dependencies&quot;: [$(_TsDependencyJson)];}" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\icon.png" DestinationFolder="$(StageDir)" Condition="Exists('$(MSBuildProjectDirectory)\icon.png')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\README.md" DestinationFolder="$(StageDir)" Condition="Exists('$(MSBuildProjectDirectory)\README.md')" />
+    <Copy SourceFiles="$(RepoRoot)README.md" DestinationFolder="$(StageDir)" Condition="!Exists('$(MSBuildProjectDirectory)\README.md') And Exists('$(RepoRoot)README.md')" />
+    <Warning Text="$(AssemblyName): no icon.png for the release zip (Thunderstore needs a 256x256 PNG)" Condition="!Exists('$(MSBuildProjectDirectory)\icon.png')" />
     <MakeDir Directories="$(RepoRoot)releases" />
     <ZipDirectory SourceDirectory="$(StageDir)" DestinationFile="$(RepoRoot)releases\$(AssemblyName)-$(Version).zip" Overwrite="true" />
   </Target>
