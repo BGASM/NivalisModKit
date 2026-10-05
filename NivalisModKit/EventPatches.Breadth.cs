@@ -63,25 +63,6 @@ static partial class EventPatches
             GreenhouseModuleGhost.add_OnPlanted(action);   // static event: once is enough
             return () => true;
         });
-        // The module's static OnHarvested says where the produce went and how many (the manager's event above doesn't).
-        Subscribe(nameof(GameEvents.ProduceHarvested), () =>
-        {
-            Il2CppSystem.Action<ItemContainer, ItemTypeAmount> action = (Action<ItemContainer, ItemTypeAmount>)((container, produce) =>
-                Raise(nameof(GameEvents.ProduceHarvested), () =>
-                {
-                    bool mine = false;
-                    try
-                    {
-                        mine = container != null && Singleton<PlayerManager>.InstanceExist(out var pm) &&
-                               pm.LocalPlayer?.Inventory?.Items?.Pointer == container.Pointer;
-                    }
-                    catch { }
-                    GameEvents.RaiseProduceHarvested(new ProduceHarvestedArgs(produce.type, produce.amount, container, mine));
-                }));
-            keepAlive.Add(action);
-            GreenhouseModuleGhost.add_OnHarvested(action);   // static event: once is enough
-            return () => true;
-        });
         Subscribe(nameof(GameEvents.CropHarvested), () =>
         {
             Il2CppSystem.Action<ItemType, bool> action = (Action<ItemType, bool>)((plant, firstTime) =>

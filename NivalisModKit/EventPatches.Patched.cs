@@ -25,6 +25,10 @@ static partial class EventPatches
             postfix: nameof(StaffFiredPostfix), args: () => Args(typeof(Venue), typeof(Person)));
         // PayStaff charges RuntimeData.Wage only if the owner can afford it (otherwise the
         // employee's happiness drops), so compare the owner's money before and after.
+        // Harvest: the crop's count in the player's inventory before and after (the module's own OnHarvested event
+        // carries an ItemTypeAmount, which the interop can't subscribe to).
+        Install(nameof(GameEvents.ProduceHarvested), () => typeof(GreenhouseModuleGhost), "TryHarvestCrop",
+            prefix: nameof(HarvestPrefix), postfix: nameof(HarvestPostfix));
         Install(nameof(GameEvents.FoodSpoiled), () => typeof(Nivalis.InventorySystem.ItemContainer), "UpdateItemDecay",
             prefix: nameof(DecayPrefix), postfix: nameof(DecayPostfix), args: () => new[] { typeof(bool), typeof(int) });
         Install(nameof(GameEvents.StaffPaid), () => typeof(VenueAreaGhost), "PayStaff",
@@ -122,6 +126,36 @@ static partial class EventPatches
             return inv == null ? null : new Nivalis.InventorySystem.IMoneyContainer(inv.Pointer).Money;
         }
         catch { return null; }
+    }
+
+    static void HarvestPrefix(GreenhouseModuleGhost __instance, PlayerManager.Player player,
+                              out (Nivalis.InventorySystem.ItemType item, int before) __state)
+    {
+        __state = (null, 0);
+        try
+        {
+            var item = __instance.plantType;
+            if (item == null) return;
+            __state = (item, CountOf(player?.Inventory?.Items, item));
+        }
+        catch { }
+    }
+
+    static void HarvestPostfix(PlayerManager.Player player, bool __result, (Nivalis.InventorySystem.ItemType item, int before) __state)
+    {
+        if (!__result || __state.item == null) return;
+        Raise(nameof(GameEvents.ProduceHarvested), () =>
+        {
+            var items = player?.Inventory?.Items;
+            int n = CountOf(items, __state.item) - __state.before;
+            if (n > 0) GameEvents.RaiseProduceHarvested(new ProduceHarvestedArgs(__state.item, n, items, true));
+        });
+    }
+
+    static int CountOf(Nivalis.InventorySystem.ItemContainer c, Nivalis.InventorySystem.ItemType item)
+    {
+        if (c == null || item == null) return 0;
+        return CountByType(c).TryGetValue(item.Pointer, out var x) ? x.count : 0;
     }
 
     // Spoilage: the container's counts before and after its daily decay pass; what dropped spoiled (Rotten Food, which

@@ -33,8 +33,13 @@ public static class Tuning
             postfix: nameof(PropertyPricePostfix));
     });
     static readonly Hook<AwarenessGainContext> awarenessGain = new(nameof(AwarenessGain), () => Patch(
-        typeof(CurfewManager), nameof(CurfewManager.IncreaseAwarness), new[] { typeof(float), typeof(bool) },
+        typeof(CurfewManager), AwarenessMethod(), new[] { typeof(float), typeof(bool) },
         prefix: nameof(AwarenessPrefix)));
+
+    // Patch 3 fixed the method's spelling (IncreaseAwarness -> IncreaseAwareness); by name, so either build works.
+    static string AwarenessMethod() =>
+        HarmonyLib.AccessTools.Method(typeof(CurfewManager), "IncreaseAwareness", new[] { typeof(float), typeof(bool) }) != null
+            ? "IncreaseAwareness" : "IncreaseAwarness";
 
     static readonly Hook<CatchContext> catchHook = new(nameof(Catch), () => Patch(
         typeof(CurfewManager), nameof(CurfewManager.CatchPlayer), new[] { typeof(bool) },
