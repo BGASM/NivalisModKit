@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class VendorOrderingContext | Nivalis ModKit </title>
+      <title>Class MenuEntry | Nivalis ModKit </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class VendorOrderingContext | Nivalis ModKit ">
+      <meta name="title" content="Class MenuEntry | Nivalis ModKit ">
       
-      <meta name="description" content="Arguments for .">
+      <meta name="description" content="A dish on a venue&#39;s menu: see .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/venue-ledger/apiSpec/new?filename=NivalisModKit_VendorOrderingContext.md&amp;value=---%0Auid%3A%20NivalisModKit.VendorOrderingContext%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/venue-ledger/apiSpec/new?filename=NivalisModKit_MenuEntry.md&amp;value=---%0Auid%3A%20NivalisModKit.MenuEntry%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,12 +84,12 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="NivalisModKit.VendorOrderingContext">
+        <article data-uid="NivalisModKit.MenuEntry">
 
 
 
-  <h1 id="NivalisModKit_VendorOrderingContext" data-uid="NivalisModKit.VendorOrderingContext" class="text-break">
-Class VendorOrderingContext  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  <h1 id="NivalisModKit_MenuEntry" data-uid="NivalisModKit.MenuEntry" class="text-break">
+Class MenuEntry  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/VenueData.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,12 +97,13 @@ Class VendorOrderingContext  <a class="header-action link-secondary" title="View
   <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Arguments for <a class="xref" href="NivalisModKit.Purchasing.html#NivalisModKit_Purchasing_VendorOrdering">VendorOrdering</a>.</p>
+  <div class="markdown summary"><p>A dish on a venue's menu: see <a class="xref" href="NivalisModKit.Venues.html#NivalisModKit_Venues_MenuOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_">MenuOf(VenueAreaGhost)</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class VendorOrderingContext</code></pre>
+    <pre><code class="lang-csharp hljs">[Experimental(&quot;New in 0.5.&quot;)]
+public sealed class MenuEntry</code></pre>
   </div>
 
 
@@ -112,7 +113,7 @@ Class VendorOrderingContext  <a class="header-action link-secondary" title="View
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">VendorOrderingContext</span></div>
+      <div><span class="xref">MenuEntry</span></div>
     </dd>
   </dl>
 
@@ -150,51 +151,19 @@ Class VendorOrderingContext  <a class="header-action link-secondary" title="View
 </h2>
 
 
-  <a id="NivalisModKit_VendorOrderingContext_Area_" data-uid="NivalisModKit.VendorOrderingContext.Area*"></a>
+  <a id="NivalisModKit_MenuEntry_Dish_" data-uid="NivalisModKit.MenuEntry.Dish*"></a>
 
-  <h3 id="NivalisModKit_VendorOrderingContext_Area" data-uid="NivalisModKit.VendorOrderingContext.Area">
-  Area
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <h3 id="NivalisModKit_MenuEntry_Dish" data-uid="NivalisModKit.MenuEntry.Dish">
+  Dish
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/VenueData.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The venue area buying.</p>
+  <div class="markdown level1 summary"><p>The dish it makes.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public VenueAreaGhost Area { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><span class="xref">VenueAreaGhost</span></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="NivalisModKit_VendorOrderingContext_Item_" data-uid="NivalisModKit.VendorOrderingContext.Item*"></a>
-
-  <h3 id="NivalisModKit_VendorOrderingContext_Item" data-uid="NivalisModKit.VendorOrderingContext.Item">
-  Item
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L168"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The ingredient.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ItemType Item { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ItemType Dish { get; }</code></pre>
   </div>
 
 
@@ -214,20 +183,19 @@ Class VendorOrderingContext  <a class="header-action link-secondary" title="View
 
 
 
-  <a id="NivalisModKit_VendorOrderingContext_Offers_" data-uid="NivalisModKit.VendorOrderingContext.Offers*"></a>
+  <a id="NivalisModKit_MenuEntry_Ingredients_" data-uid="NivalisModKit.MenuEntry.Ingredients*"></a>
 
-  <h3 id="NivalisModKit_VendorOrderingContext_Offers" data-uid="NivalisModKit.VendorOrderingContext.Offers">
-  Offers
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L180"><i class="bi bi-code-slash"></i></a>
+  <h3 id="NivalisModKit_MenuEntry_Ingredients" data-uid="NivalisModKit.MenuEntry.Ingredients">
+  Ingredients
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/VenueData.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The offers, in buying order. Starts in the game's order. Reorder in place, remove offers,
-or assign a new list of the same offers.</p>
+  <div class="markdown level1 summary"><p>The ingredients per plate, as chosen on the menu (one entry per slot; the same item may appear twice).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;VendorOffer&gt; Offers { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyList&lt;(ItemType Item, int Amount)&gt; Ingredients { get; }</code></pre>
   </div>
 
 
@@ -236,7 +204,7 @@ or assign a new list of the same offers.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="NivalisModKit.VendorOffer.html">VendorOffer</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;(<span class="xref">ItemType</span> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-nivalis.inventorysystem.itemtype,system.int32-.item">Item</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-nivalis.inventorysystem.itemtype,system.int32-.amount">Amount</a>)&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -247,19 +215,19 @@ or assign a new list of the same offers.</p>
 
 
 
-  <a id="NivalisModKit_VendorOrderingContext_Quantity_" data-uid="NivalisModKit.VendorOrderingContext.Quantity*"></a>
+  <a id="NivalisModKit_MenuEntry_Price_" data-uid="NivalisModKit.MenuEntry.Price*"></a>
 
-  <h3 id="NivalisModKit_VendorOrderingContext_Quantity" data-uid="NivalisModKit.VendorOrderingContext.Quantity">
-  Quantity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L174"><i class="bi bi-code-slash"></i></a>
+  <h3 id="NivalisModKit_MenuEntry_Price" data-uid="NivalisModKit.MenuEntry.Price">
+  Price
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/VenueData.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>How many will be bought, after OrderQuantity.</p>
+  <div class="markdown level1 summary"><p>The menu price, in hundredths.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Quantity { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int Price { get; }</code></pre>
   </div>
 
 
@@ -279,14 +247,14 @@ or assign a new list of the same offers.</p>
 
 
 
-  <a id="NivalisModKit_VendorOrderingContext_Recipe_" data-uid="NivalisModKit.VendorOrderingContext.Recipe*"></a>
+  <a id="NivalisModKit_MenuEntry_Recipe_" data-uid="NivalisModKit.MenuEntry.Recipe*"></a>
 
-  <h3 id="NivalisModKit_VendorOrderingContext_Recipe" data-uid="NivalisModKit.VendorOrderingContext.Recipe">
+  <h3 id="NivalisModKit_MenuEntry_Recipe" data-uid="NivalisModKit.MenuEntry.Recipe">
   Recipe
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L165"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/VenueData.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The recipe being bought for.</p>
+  <div class="markdown level1 summary"><p>The recipe as the venue makes it (with the ingredients chosen for it).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -301,38 +269,6 @@ or assign a new list of the same offers.</p>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><span class="xref">IRecipe</span></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="NivalisModKit_VendorOrderingContext_VenueLocation_" data-uid="NivalisModKit.VendorOrderingContext.VenueLocation*"></a>
-
-  <h3 id="NivalisModKit_VendorOrderingContext_VenueLocation" data-uid="NivalisModKit.VendorOrderingContext.VenueLocation">
-  VenueLocation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L171"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The venue's district, or null.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public WorldLocation VenueLocation { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><span class="xref">WorldLocation</span></dt>
     <dd></dd>
   </dl>
 

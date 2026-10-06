@@ -447,6 +447,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.FoodSpoiledArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.FoodSpoiledArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.FoodSpoiledArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.FoodSpoiledArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.FoodSpoiled\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.FurnitureArgs.yml",
       "output": {
         ".html": {
@@ -657,6 +671,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.MenuEntry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.MenuEntry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.MenuEntry",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.MenuEntry.yml\" sourcestartlinenumber=\"1\">A dish on a venue's menu: see <xref href=\"NivalisModKit.Venues.MenuOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.ModKit.yml",
       "output": {
         ".html": {
@@ -780,6 +808,20 @@
       "IsMRef": true,
       "Title": "NivalisModKit.Navigation",
       "Summary": "<p sourcefile=\"api/NivalisModKit.Navigation.yml\" sourcestartlinenumber=\"1\">The walkable surfaces NPCs path over (Unity's navigation mesh), and walking routes across them.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.OrderInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.OrderInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.OrderInfo",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.OrderInfo.yml\" sourcestartlinenumber=\"1\">A customer order waiting to be filled: see <xref href=\"NivalisModKit.Venues.OrdersOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -951,6 +993,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ProduceHarvestedArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ProduceHarvestedArgs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ProduceHarvestedArgs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ProduceHarvestedArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.ProduceHarvested\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.PropertyArgs.yml",
       "output": {
         ".html": {
@@ -1105,6 +1161,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ReceiptInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ReceiptInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ReceiptInfo",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ReceiptInfo.yml\" sourcestartlinenumber=\"1\">A venue receipt: see <xref href=\"NivalisModKit.Venues.ReceiptsOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost%2cSystem.Nullable%7bSystem.Int32%7d)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.Recipes.yml",
       "output": {
         ".html": {
@@ -1116,6 +1186,20 @@
       "IsMRef": true,
       "Title": "NivalisModKit.Recipes",
       "Summary": "<p sourcefile=\"api/NivalisModKit.Recipes.yml\" sourcestartlinenumber=\"1\">Meal recipes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ReviewInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ReviewInfo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ReviewInfo",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ReviewInfo.yml\" sourcestartlinenumber=\"1\">A customer review: see <xref href=\"NivalisModKit.Venues.ReviewsOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1256,6 +1340,20 @@
       "IsMRef": true,
       "Title": "NivalisModKit.StaffHoursArgs",
       "Summary": "<p sourcefile=\"api/NivalisModKit.StaffHoursArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.StaffHoursChanged\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StaffMember.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StaffMember.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StaffMember",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StaffMember.yml\" sourcestartlinenumber=\"1\">A member of staff: see <xref href=\"NivalisModKit.Venues.StaffOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",

@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/world-and-navigation/docfx/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/docfx/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -98,11 +98,11 @@
 <li>Extract the release zip into the game folder. The file lands at <code>BepInEx\plugins\NivalisModKit.dll</code>.</li>
 </ol>
 <p>To confirm it loaded, open <code>BepInEx\LogOutput.log</code> and look for these lines:</p>
-<pre><code>Nivalis ModKit 0.4.0 loaded
-Game build: 1.0 patch 2, Steam build 25680465 (tested)
+<pre><code>Nivalis ModKit 0.5.0 loaded
+Game build: 1.0 patch 3 hotfix, Steam build 25738165 (tested)
 Event BuyIngredientsStarting: live
 ...
-Events: 56 of 70 live, 14 waiting for the game
+Events: 58 of 72 live, 14 waiting for the game
 </code></pre>
 <p>&quot;Waiting for the game&quot; events attach once a save loads.</p>
 <p>After a game update, the build line says <code>untested</code> (see <a href="#compatibility">Compatibility</a>), and an event whose hook no longer matches shows as <code>missing</code> and never fires. The rest keep working. Mods that use a missing event can check for it and switch the feature off. The log line names the method that couldn't be found, which is the thing to report.</p>
@@ -270,6 +270,10 @@ public class Plugin : BasePlugin
 <td>A greenhouse crop was planted or harvested (with &quot;first time&quot;).</td>
 </tr>
 <tr>
+<td><code>ProduceHarvested</code></td>
+<td>Produce from a harvest went into an inventory: the item and how many. Grown items are the same items as bought ones (grown chicken is Chicken). Experimental.</td>
+</tr>
+<tr>
 <td><strong>Property</strong></td>
 <td></td>
 </tr>
@@ -360,6 +364,10 @@ public class Plugin : BasePlugin
 <tr>
 <td><code>VenueHour</code></td>
 <td>Every venue's hourly update.</td>
+</tr>
+<tr>
+<td><code>FoodSpoiled</code></td>
+<td>Food rotted in a container (venue storage, the player's inventory): what and how many. Experimental.</td>
 </tr>
 <tr>
 <td><code>BuyIngredientsStarting</code></td>
@@ -916,6 +924,59 @@ foreach (var q in Quests.Markers())                    // pinned quests: where t
 </table>
 <p><strong>Searches, not events.</strong> <code>World.Places</code>, <code>Economy.Stalls</code> and <code>Venues.Entrances</code> search the whole scene: call them when a scene loads and again a few seconds later (a district fills in over a few seconds), not every frame. <code>Quests.Markers</code> is cheap enough for once a second.</p>
 <p><strong>Pictures stay on the player's machine.</strong> A <code>Photo</code> is the player's own game rendering itself; save it to <code>BepInEx\cache</code> and draw it once. A mod that ships pictures of the game would be shipping game assets.</p>
+<h3 id="venue-data-experimental-kit-050">Venue data (experimental, kit 0.5.0+)</h3>
+<p>What a venue's own screens know, as plain lists: its menu with prices and ingredients, stock, open orders, staff and their pay, reviews, dish popularity, and the receipts behind the end-of-day screen. Built for (and tested by) the <a href="https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisLedger">Nivalis Ledger</a>, a live profit tracker in the browser.</p>
+<pre><code class="lang-csharp">foreach (var area in Venues.PlayerOwned)
+{
+    foreach (var dish in Venues.MenuOf(area))                  // price and ingredients per dish
+        Log.LogInfo($&quot;{Items.NameOf(dish.Dish)}: {dish.Price / 100f:0.00}, {dish.Ingredients.Count} ingredients&quot;);
+    int sold = Venues.ReceiptsOf(area, GameTime.Day)            // today's sales, from the receipts
+        .Where(r =&gt; r.Type == &quot;Restaurant&quot;).Sum(r =&gt; r.Count);
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Gives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Venues.MenuOf(area)</code></td>
+<td>The menu: each dish, its price, and its ingredients with amounts (one per plate).</td>
+</tr>
+<tr>
+<td><code>Venues.StockOf(area)</code></td>
+<td>Ingredients in the venue's storage, by item.</td>
+</tr>
+<tr>
+<td><code>Venues.OrdersOf(area)</code></td>
+<td>Open orders: id, dishes, price, how many dishes are prepared and delivered.</td>
+</tr>
+<tr>
+<td><code>Venues.StaffOf(area)</code></td>
+<td>Staff: name, wage per hour, shift, roles, hours still to work today.</td>
+</tr>
+<tr>
+<td><code>Venues.ReviewsOf(area)</code></td>
+<td>Reviews: score, dish, reviewer, day and hour, service, cleanliness and comfort, whether all the food came.</td>
+</tr>
+<tr>
+<td><code>Venues.PopularityOf(area)</code>, <code>MealsServedOf(area)</code></td>
+<td>How popular each dish is; meals served so far.</td>
+</tr>
+<tr>
+<td><code>Venues.ReceiptsOf(area, day)</code></td>
+<td>The receipts the end-of-day screen reads: sales (with the dish), ingredient purchases (totals only), wages, rent.</td>
+</tr>
+<tr>
+<td><code>Economy.PlayerStock()</code>, <code>Economy.PlayerReceipts(day)</code></td>
+<td>The player's inventory by item; the player's own receipts (vendor purchases and sales).</td>
+</tr>
+</tbody>
+</table>
+<p>Amounts are in hundredths, positive coming in and negative going out. The game merges similar receipts, so <code>Count</code> says how many transactions one covers. Rent receipts name the property they're for: check it's the player's (an NPC tenant's rent is a receipt too). These are queries, not events: call them when you need them (once a second is fine), and use <code>GameEvents.SaleMade</code>, <code>IngredientsPurchased</code>, <code>ProduceHarvested</code> and <code>FoodSpoiled</code> for things as they happen.</p>
 <h3 id="helpers">Helpers</h3>
 <table>
 <thead>
@@ -970,6 +1031,14 @@ foreach (var q in Quests.Markers())                    // pinned quests: where t
 <tr>
 <td><code>Content</code>, <code>ContentPacks</code></td>
 <td>First version, not yet tested in game; the API may grow.</td>
+</tr>
+<tr>
+<td>World and navigation (0.4)</td>
+<td><code>Navigation</code>, <code>Player</code>, <code>World.Places</code>, <code>Economy.Stalls</code>, <code>Venues.Entrances</code>, <code>Quests.Markers</code>, <code>Photo</code>: first version, shaped by one mod (the Minimap).</td>
+</tr>
+<tr>
+<td>Venue data (0.5)</td>
+<td><code>Venues.MenuOf</code> and the other queries, <code>Economy.PlayerStock</code> / <code>PlayerReceipts</code>, <code>ProduceHarvested</code>, <code>FoodSpoiled</code>: first version, shaped by one mod (the Ledger).</td>
 </tr>
 </tbody>
 </table>
@@ -1102,6 +1171,10 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <td>What the world queries see here: player, camera, navigation mesh, places, stalls, venues, quest markers</td>
 </tr>
 <tr>
+<td><code>venue [name=...]</code></td>
+<td>The player's venues as the venue queries see them: menu, stock, orders, staff, reviews, popularity, the last two days of receipts</td>
+</tr>
+<tr>
 <td><code>travel [to=District]</code></td>
 <td>Fast travels there as the game's map does (no taxi or train scene; doesn't check the district is unlocked); alone, lists the districts</td>
 </tr>
@@ -1197,7 +1270,7 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 </tbody>
 </table>
 <h2 id="compatibility">Compatibility</h2>
-<p>Tested on Nivalis Nights 1.0 patch 2 (Steam build 25680465) with BepInEx be.788.</p>
+<p>Tested on Nivalis Nights 1.0 patch 3 hotfix (Steam build 25738165) with BepInEx be.788.</p>
 <p>The game's version string stays &quot;1.0&quot; across patches, so the kit identifies the build by a fingerprint of <code>GameAssembly.dll</code>. The title screen shows the kit version and game build above the copyright line. On a build this kit wasn't tested on (usually right after a game patch), what happens depends on <code>[General] UntestedBuild</code>:</p>
 <ul>
 <li><code>Warn</code> (default): the kit runs normally. The title line turns orange, the log warns, and a notification appears once in game.</li>
@@ -1206,6 +1279,20 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <p>Mods can check the build too: <code>GameBuild.IsTested</code>, <code>GameBuild.Describe()</code> and <code>GameBuild.SteamBuildId</code>.</p>
 <p>Other mods that detour <code>Vendor.BuyItem</code> directly will conflict with the purchasing pipeline. Build on <code>Purchasing</code> instead.</p>
 <h2 id="changes">Changes</h2>
+<p><strong>0.5.0</strong></p>
+<p>For players:</p>
+<ul>
+<li>Mods can now track how your venues are doing: sales, costs, stock, staff pay and reviews (see the <a href="https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisLedger">Nivalis Ledger</a>).</li>
+<li>Tested on game patch 3 and its hotfix (Steam build 25738165). Patch 3 renamed and changed a few things the kit hooks; all events are live again.</li>
+</ul>
+<p>For modders (all experimental):</p>
+<ul>
+<li><strong>Venue data:</strong> <code>Venues.MenuOf</code>, <code>StockOf</code>, <code>OrdersOf</code>, <code>StaffOf</code>, <code>ReviewsOf</code>, <code>PopularityOf</code>, <code>MealsServedOf</code>, <code>ReceiptsOf</code>; <code>Economy.PlayerStock</code>, <code>PlayerReceipts</code>.</li>
+<li>New events: <code>ProduceHarvested</code> (produce into an inventory, with the item and count) and <code>FoodSpoiled</code> (what rotted, and where).</li>
+<li>Dev command <code>venue</code>.</li>
+<li>Patch 3: the harvest event now comes from a hook on the harvest itself (the game's new harvest callback can't be subscribed to from a mod), and the awareness tuning hook finds the method under its new spelling (<code>IncreaseAwareness</code>) or the old one.</li>
+<li>Release zips carry Thunderstore metadata (<code>manifest.json</code>, <code>icon.png</code>, <code>README.md</code>).</li>
+</ul>
 <p><strong>0.4.0</strong></p>
 <p>For players:</p>
 <ul>

@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class VendorOrderingContext | Nivalis ModKit </title>
+      <title>Class ProduceHarvestedArgs | Nivalis ModKit </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class VendorOrderingContext | Nivalis ModKit ">
+      <meta name="title" content="Class ProduceHarvestedArgs | Nivalis ModKit ">
       
       <meta name="description" content="Arguments for .">
       <link rel="icon" href="../favicon.ico">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/venue-ledger/apiSpec/new?filename=NivalisModKit_VendorOrderingContext.md&amp;value=---%0Auid%3A%20NivalisModKit.VendorOrderingContext%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/venue-ledger/apiSpec/new?filename=NivalisModKit_ProduceHarvestedArgs.md&amp;value=---%0Auid%3A%20NivalisModKit.ProduceHarvestedArgs%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,12 +84,12 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="NivalisModKit.VendorOrderingContext">
+        <article data-uid="NivalisModKit.ProduceHarvestedArgs">
 
 
 
-  <h1 id="NivalisModKit_VendorOrderingContext" data-uid="NivalisModKit.VendorOrderingContext" class="text-break">
-Class VendorOrderingContext  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  <h1 id="NivalisModKit_ProduceHarvestedArgs" data-uid="NivalisModKit.ProduceHarvestedArgs" class="text-break">
+Class ProduceHarvestedArgs  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L446"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,12 +97,13 @@ Class VendorOrderingContext  <a class="header-action link-secondary" title="View
   <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Arguments for <a class="xref" href="NivalisModKit.Purchasing.html#NivalisModKit_Purchasing_VendorOrdering">VendorOrdering</a>.</p>
+  <div class="markdown summary"><p>Arguments for <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_ProduceHarvested">ProduceHarvested</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class VendorOrderingContext</code></pre>
+    <pre><code class="lang-csharp hljs">[Experimental(&quot;New in 0.5.&quot;)]
+public sealed class ProduceHarvestedArgs</code></pre>
   </div>
 
 
@@ -112,7 +113,7 @@ Class VendorOrderingContext  <a class="header-action link-secondary" title="View
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">VendorOrderingContext</span></div>
+      <div><span class="xref">ProduceHarvestedArgs</span></div>
     </dd>
   </dl>
 
@@ -150,19 +151,19 @@ Class VendorOrderingContext  <a class="header-action link-secondary" title="View
 </h2>
 
 
-  <a id="NivalisModKit_VendorOrderingContext_Area_" data-uid="NivalisModKit.VendorOrderingContext.Area*"></a>
+  <a id="NivalisModKit_ProduceHarvestedArgs_Container_" data-uid="NivalisModKit.ProduceHarvestedArgs.Container*"></a>
 
-  <h3 id="NivalisModKit_VendorOrderingContext_Area" data-uid="NivalisModKit.VendorOrderingContext.Area">
-  Area
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <h3 id="NivalisModKit_ProduceHarvestedArgs_Container" data-uid="NivalisModKit.ProduceHarvestedArgs.Container">
+  Container
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L456"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The venue area buying.</p>
+  <div class="markdown level1 summary"><p>Where it went (the player's inventory when they harvest by hand).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public VenueAreaGhost Area { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ItemContainer Container { get; }</code></pre>
   </div>
 
 
@@ -171,7 +172,7 @@ Class VendorOrderingContext  <a class="header-action link-secondary" title="View
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">VenueAreaGhost</span></dt>
+    <dt><span class="xref">ItemContainer</span></dt>
     <dd></dd>
   </dl>
 
@@ -182,84 +183,19 @@ Class VendorOrderingContext  <a class="header-action link-secondary" title="View
 
 
 
-  <a id="NivalisModKit_VendorOrderingContext_Item_" data-uid="NivalisModKit.VendorOrderingContext.Item*"></a>
+  <a id="NivalisModKit_ProduceHarvestedArgs_Count_" data-uid="NivalisModKit.ProduceHarvestedArgs.Count*"></a>
 
-  <h3 id="NivalisModKit_VendorOrderingContext_Item" data-uid="NivalisModKit.VendorOrderingContext.Item">
-  Item
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  <h3 id="NivalisModKit_ProduceHarvestedArgs_Count" data-uid="NivalisModKit.ProduceHarvestedArgs.Count">
+  Count
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L453"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The ingredient.</p>
+  <div class="markdown level1 summary"><p>How many.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ItemType Item { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><span class="xref">ItemType</span></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="NivalisModKit_VendorOrderingContext_Offers_" data-uid="NivalisModKit.VendorOrderingContext.Offers*"></a>
-
-  <h3 id="NivalisModKit_VendorOrderingContext_Offers" data-uid="NivalisModKit.VendorOrderingContext.Offers">
-  Offers
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L180"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The offers, in buying order. Starts in the game's order. Reorder in place, remove offers,
-or assign a new list of the same offers.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;VendorOffer&gt; Offers { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="NivalisModKit.VendorOffer.html">VendorOffer</a>&gt;</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="NivalisModKit_VendorOrderingContext_Quantity_" data-uid="NivalisModKit.VendorOrderingContext.Quantity*"></a>
-
-  <h3 id="NivalisModKit_VendorOrderingContext_Quantity" data-uid="NivalisModKit.VendorOrderingContext.Quantity">
-  Quantity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L174"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>How many will be bought, after OrderQuantity.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public int Quantity { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int Count { get; }</code></pre>
   </div>
 
 
@@ -279,19 +215,19 @@ or assign a new list of the same offers.</p>
 
 
 
-  <a id="NivalisModKit_VendorOrderingContext_Recipe_" data-uid="NivalisModKit.VendorOrderingContext.Recipe*"></a>
+  <a id="NivalisModKit_ProduceHarvestedArgs_IntoPlayerInventory_" data-uid="NivalisModKit.ProduceHarvestedArgs.IntoPlayerInventory*"></a>
 
-  <h3 id="NivalisModKit_VendorOrderingContext_Recipe" data-uid="NivalisModKit.VendorOrderingContext.Recipe">
-  Recipe
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L165"><i class="bi bi-code-slash"></i></a>
+  <h3 id="NivalisModKit_ProduceHarvestedArgs_IntoPlayerInventory" data-uid="NivalisModKit.ProduceHarvestedArgs.IntoPlayerInventory">
+  IntoPlayerInventory
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L459"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The recipe being bought for.</p>
+  <div class="markdown level1 summary"><p>True if it went into the player's inventory.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IRecipe Recipe { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IntoPlayerInventory { get; }</code></pre>
   </div>
 
 
@@ -300,7 +236,7 @@ or assign a new list of the same offers.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">IRecipe</span></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
     <dd></dd>
   </dl>
 
@@ -311,19 +247,19 @@ or assign a new list of the same offers.</p>
 
 
 
-  <a id="NivalisModKit_VendorOrderingContext_VenueLocation_" data-uid="NivalisModKit.VendorOrderingContext.VenueLocation*"></a>
+  <a id="NivalisModKit_ProduceHarvestedArgs_Item_" data-uid="NivalisModKit.ProduceHarvestedArgs.Item*"></a>
 
-  <h3 id="NivalisModKit_VendorOrderingContext_VenueLocation" data-uid="NivalisModKit.VendorOrderingContext.VenueLocation">
-  VenueLocation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Purchasing.cs/#L171"><i class="bi bi-code-slash"></i></a>
+  <h3 id="NivalisModKit_ProduceHarvestedArgs_Item" data-uid="NivalisModKit.ProduceHarvestedArgs.Item">
+  Item
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L450"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The venue's district, or null.</p>
+  <div class="markdown level1 summary"><p>The produce (e.g. Chicken: grown items are the same items as bought ones).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public WorldLocation VenueLocation { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ItemType Item { get; }</code></pre>
   </div>
 
 
@@ -332,7 +268,7 @@ or assign a new list of the same offers.</p>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">WorldLocation</span></dt>
+    <dt><span class="xref">ItemType</span></dt>
     <dd></dd>
   </dl>
 

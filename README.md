@@ -31,11 +31,11 @@ See [Building from source](#building-from-source) to get set up.
 To confirm it loaded, open `BepInEx\LogOutput.log` and look for these lines:
 
 ```
-Nivalis ModKit 0.4.0 loaded
-Game build: 1.0 patch 2, Steam build 25680465 (tested)
+Nivalis ModKit 0.5.0 loaded
+Game build: 1.0 patch 3 hotfix, Steam build 25738165 (tested)
 Event BuyIngredientsStarting: live
 ...
-Events: 56 of 70 live, 14 waiting for the game
+Events: 58 of 72 live, 14 waiting for the game
 ```
 
 "Waiting for the game" events attach once a save loads.
@@ -112,6 +112,7 @@ public override void Load()
 | **Fishing and farming** | |
 | `FishCaught`, `FishDiscovered` | A catch went into the inventory; a species caught for the first time. |
 | `CropPlanted`, `CropHarvested` | A greenhouse crop was planted or harvested (with "first time"). |
+| `ProduceHarvested` | Produce from a harvest went into an inventory: the item and how many. Grown items are the same items as bought ones (grown chicken is Chicken). Experimental. |
 | **Property** | |
 | `PropertyOwnerChanged` | Any venue, apartment or greenhouse bought, sold, rented or given up. |
 | `RentStarted`, `RentStopped` | A property started or stopped being rented. |
@@ -135,6 +136,7 @@ public override void Load()
 | `VenueOwnerChanged` | A venue changed owner, the player's or an NPC's. |
 | `VenueStorageChanged` | Storage furniture added to or removed from a venue (since game patch 2, decorations with storage count too), with the amounts it provides. |
 | `VenueHour` | Every venue's hourly update. |
+| `FoodSpoiled` | Food rotted in a container (venue storage, the player's inventory): what and how many. Experimental. |
 | `BuyIngredientsStarting` | A venue is about to buy ingredients for one recipe. |
 | `BuyIngredientsFinished` | That buying finished. Runs after other mods' patches, so purchases are final. |
 | `IngredientsPurchased` | One successful ingredient purchase inside a restock round. |
@@ -456,6 +458,33 @@ foreach (var q in Quests.Markers())                    // pinned quests: where t
 
 **Pictures stay on the player's machine.** A `Photo` is the player's own game rendering itself; save it to `BepInEx\cache` and draw it once. A mod that ships pictures of the game would be shipping game assets.
 
+### Venue data (experimental, kit 0.5.0+)
+
+What a venue's own screens know, as plain lists: its menu with prices and ingredients, stock, open orders, staff and their pay, reviews, dish popularity, and the receipts behind the end-of-day screen. Built for (and tested by) the [Nivalis Ledger](https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisLedger), a live profit tracker in the browser.
+
+```csharp
+foreach (var area in Venues.PlayerOwned)
+{
+    foreach (var dish in Venues.MenuOf(area))                  // price and ingredients per dish
+        Log.LogInfo($"{Items.NameOf(dish.Dish)}: {dish.Price / 100f:0.00}, {dish.Ingredients.Count} ingredients");
+    int sold = Venues.ReceiptsOf(area, GameTime.Day)            // today's sales, from the receipts
+        .Where(r => r.Type == "Restaurant").Sum(r => r.Count);
+}
+```
+
+| API | Gives |
+|---|---|
+| `Venues.MenuOf(area)` | The menu: each dish, its price, and its ingredients with amounts (one per plate). |
+| `Venues.StockOf(area)` | Ingredients in the venue's storage, by item. |
+| `Venues.OrdersOf(area)` | Open orders: id, dishes, price, how many dishes are prepared and delivered. |
+| `Venues.StaffOf(area)` | Staff: name, wage per hour, shift, roles, hours still to work today. |
+| `Venues.ReviewsOf(area)` | Reviews: score, dish, reviewer, day and hour, service, cleanliness and comfort, whether all the food came. |
+| `Venues.PopularityOf(area)`, `MealsServedOf(area)` | How popular each dish is; meals served so far. |
+| `Venues.ReceiptsOf(area, day)` | The receipts the end-of-day screen reads: sales (with the dish), ingredient purchases (totals only), wages, rent. |
+| `Economy.PlayerStock()`, `Economy.PlayerReceipts(day)` | The player's inventory by item; the player's own receipts (vendor purchases and sales). |
+
+Amounts are in hundredths, positive coming in and negative going out. The game merges similar receipts, so `Count` says how many transactions one covers. Rent receipts name the property they're for: check it's the player's (an NPC tenant's rent is a receipt too). These are queries, not events: call them when you need them (once a second is fine), and use `GameEvents.SaleMade`, `IngredientsPurchased`, `ProduceHarvested` and `FoodSpoiled` for things as they happen.
+
 ### Helpers
 
 | Helper | Does |
@@ -479,6 +508,8 @@ The exception is members marked `[Experimental]`. They may change in any release
 | `Staff.SetOrder` | Changes the game's shared list directly. Will become a `Tuning` hook so several mods can combine. |
 | `Tuning.UseOrder` | The context may change (for example a perishable flag). |
 | `Content`, `ContentPacks` | First version, not yet tested in game; the API may grow. |
+| World and navigation (0.4) | `Navigation`, `Player`, `World.Places`, `Economy.Stalls`, `Venues.Entrances`, `Quests.Markers`, `Photo`: first version, shaped by one mod (the Minimap). |
+| Venue data (0.5) | `Venues.MenuOf` and the other queries, `Economy.PlayerStock` / `PlayerReceipts`, `ProduceHarvested`, `FoodSpoiled`: first version, shaped by one mod (the Ledger). |
 
 Declare the oldest kit you support with `[BepInDependency(ModKit.Guid, ">=0.2.0")]`. BepInEx then refuses to load your mod with an older kit and says why in the log.
 
@@ -553,6 +584,7 @@ The kit's own commands:
 | `clock [speed=X] [sim=X] [pause=on/off]` | Clock and simulation speed (1 clears), shared pause |
 | `content [dump]` | Custom items and recipes mods added; `content dump` writes every item, recipe and vendor to JSON |
 | `world` | What the world queries see here: player, camera, navigation mesh, places, stalls, venues, quest markers |
+| `venue [name=...]` | The player's venues as the venue queries see them: menu, stock, orders, staff, reviews, popularity, the last two days of receipts |
 | `travel [to=District]` | Fast travels there as the game's map does (no taxi or train scene; doesn't check the district is unlocked); alone, lists the districts |
 
 **Without commands.** Live reload works as a command channel too: saving a `.cfg` applies within a second, so a test mod can treat settings as triggers. [KitTester](samples/KitTester) still accepts `[Ui] Demo = Panel` and `[Ui] Open = Map` in its `.cfg`.
@@ -581,7 +613,7 @@ The kit's own commands:
 
 ## Compatibility
 
-Tested on Nivalis Nights 1.0 patch 2 (Steam build 25680465) with BepInEx be.788.
+Tested on Nivalis Nights 1.0 patch 3 hotfix (Steam build 25738165) with BepInEx be.788.
 
 The game's version string stays "1.0" across patches, so the kit identifies the build by a fingerprint of `GameAssembly.dll`. The title screen shows the kit version and game build above the copyright line. On a build this kit wasn't tested on (usually right after a game patch), what happens depends on `[General] UntestedBuild`:
 - `Warn` (default): the kit runs normally. The title line turns orange, the log warns, and a notification appears once in game.
@@ -592,6 +624,19 @@ Mods can check the build too: `GameBuild.IsTested`, `GameBuild.Describe()` and `
 Other mods that detour `Vendor.BuyItem` directly will conflict with the purchasing pipeline. Build on `Purchasing` instead.
 
 ## Changes
+
+**0.5.0**
+
+For players:
+- Mods can now track how your venues are doing: sales, costs, stock, staff pay and reviews (see the [Nivalis Ledger](https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisLedger)).
+- Tested on game patch 3 and its hotfix (Steam build 25738165). Patch 3 renamed and changed a few things the kit hooks; all events are live again.
+
+For modders (all experimental):
+- **Venue data:** `Venues.MenuOf`, `StockOf`, `OrdersOf`, `StaffOf`, `ReviewsOf`, `PopularityOf`, `MealsServedOf`, `ReceiptsOf`; `Economy.PlayerStock`, `PlayerReceipts`.
+- New events: `ProduceHarvested` (produce into an inventory, with the item and count) and `FoodSpoiled` (what rotted, and where).
+- Dev command `venue`.
+- Patch 3: the harvest event now comes from a hook on the harvest itself (the game's new harvest callback can't be subscribed to from a mod), and the awareness tuning hook finds the method under its new spelling (`IncreaseAwareness`) or the old one.
+- Release zips carry Thunderstore metadata (`manifest.json`, `icon.png`, `README.md`).
 
 **0.4.0**
 

@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class StaffArgs | Nivalis ModKit </title>
+      <title>Class FoodSpoiledArgs | Nivalis ModKit </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class StaffArgs | Nivalis ModKit ">
+      <meta name="title" content="Class FoodSpoiledArgs | Nivalis ModKit ">
       
-      <meta name="description" content="Arguments for  and .">
+      <meta name="description" content="Arguments for .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/venue-ledger/apiSpec/new?filename=NivalisModKit_StaffArgs.md&amp;value=---%0Auid%3A%20NivalisModKit.StaffArgs%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/venue-ledger/apiSpec/new?filename=NivalisModKit_FoodSpoiledArgs.md&amp;value=---%0Auid%3A%20NivalisModKit.FoodSpoiledArgs%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,12 +84,12 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="NivalisModKit.StaffArgs">
+        <article data-uid="NivalisModKit.FoodSpoiledArgs">
 
 
 
-  <h1 id="NivalisModKit_StaffArgs" data-uid="NivalisModKit.StaffArgs" class="text-break">
-Class StaffArgs  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L550"><i class="bi bi-code-slash"></i></a>
+  <h1 id="NivalisModKit_FoodSpoiledArgs" data-uid="NivalisModKit.FoodSpoiledArgs" class="text-break">
+Class FoodSpoiledArgs  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L429"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,12 +97,13 @@ Class StaffArgs  <a class="header-action link-secondary" title="View source" hre
   <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Arguments for <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_StaffHired">StaffHired</a> and <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_StaffFired">StaffFired</a>.</p>
+  <div class="markdown summary"><p>Arguments for <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_FoodSpoiled">FoodSpoiled</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class StaffArgs</code></pre>
+    <pre><code class="lang-csharp hljs">[Experimental(&quot;New in 0.5.&quot;)]
+public sealed class FoodSpoiledArgs</code></pre>
   </div>
 
 
@@ -112,7 +113,7 @@ Class StaffArgs  <a class="header-action link-secondary" title="View source" hre
     <dt>Inheritance</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
-      <div><span class="xref">StaffArgs</span></div>
+      <div><span class="xref">FoodSpoiledArgs</span></div>
     </dd>
   </dl>
 
@@ -150,19 +151,19 @@ Class StaffArgs  <a class="header-action link-secondary" title="View source" hre
 </h2>
 
 
-  <a id="NivalisModKit_StaffArgs_Person_" data-uid="NivalisModKit.StaffArgs.Person*"></a>
+  <a id="NivalisModKit_FoodSpoiledArgs_Container_" data-uid="NivalisModKit.FoodSpoiledArgs.Container*"></a>
 
-  <h3 id="NivalisModKit_StaffArgs_Person" data-uid="NivalisModKit.StaffArgs.Person">
-  Person
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L556"><i class="bi bi-code-slash"></i></a>
+  <h3 id="NivalisModKit_FoodSpoiledArgs_Container" data-uid="NivalisModKit.FoodSpoiledArgs.Container">
+  Container
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L433"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The staff member.</p>
+  <div class="markdown level1 summary"><p>The container it spoiled in.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Person Person { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public ItemContainer Container { get; }</code></pre>
   </div>
 
 
@@ -171,7 +172,7 @@ Class StaffArgs  <a class="header-action link-secondary" title="View source" hre
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">Person</span></dt>
+    <dt><span class="xref">ItemContainer</span></dt>
     <dd></dd>
   </dl>
 
@@ -182,19 +183,19 @@ Class StaffArgs  <a class="header-action link-secondary" title="View source" hre
 
 
 
-  <a id="NivalisModKit_StaffArgs_Venue_" data-uid="NivalisModKit.StaffArgs.Venue*"></a>
+  <a id="NivalisModKit_FoodSpoiledArgs_Items_" data-uid="NivalisModKit.FoodSpoiledArgs.Items*"></a>
 
-  <h3 id="NivalisModKit_StaffArgs_Venue" data-uid="NivalisModKit.StaffArgs.Venue">
-  Venue
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L553"><i class="bi bi-code-slash"></i></a>
+  <h3 id="NivalisModKit_FoodSpoiledArgs_Items" data-uid="NivalisModKit.FoodSpoiledArgs.Items">
+  Items
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/EventArgs.cs/#L436"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The venue.</p>
+  <div class="markdown level1 summary"><p>What spoiled, by item (how many of each).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Venue Venue { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyDictionary&lt;ItemType, int&gt; Items { get; }</code></pre>
   </div>
 
 
@@ -203,7 +204,7 @@ Class StaffArgs  <a class="header-action link-secondary" title="View source" hre
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><span class="xref">Venue</span></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlydictionary-2">IReadOnlyDictionary</a>&lt;<span class="xref">ItemType</span>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
     <dd></dd>
   </dl>
 
