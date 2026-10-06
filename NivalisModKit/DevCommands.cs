@@ -169,6 +169,36 @@ public static class DevCommands
             return new { travelling = World.NameOf(where), arrival = key.name };
         });
 
+        Register(kit, "venue", "The player's venues as the venue queries see them: menu (price, ingredients), stock, orders, staff, reviews, popularity", a =>
+        {
+            string want = a.Get("name");
+            return Venues.PlayerOwned
+                .Where(v => want == null || (Venues.DisplayNameOf(v) ?? "").IndexOf(want, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Select(v => new
+                {
+                    name = Venues.DisplayNameOf(v),
+                    district = World.NameOf(Venues.DistrictOf(v)),
+                    mealsServed = Venues.MealsServedOf(v),
+                    menu = Venues.MenuOf(v).Select(m => new
+                    {
+                        dish = Items.NameOf(m.Dish), price = m.Price,
+                        ingredients = m.Ingredients.Select(i => Items.NameOf(i.Item)).ToArray(),
+                    }).ToArray(),
+                    stock = Venues.StockOf(v).GroupBy(kv => Items.NameOf(kv.Key) ?? "?").OrderBy(g => g.Key).ToDictionary(g => g.Key, g => g.Sum(kv => kv.Value)),
+                    orders = Venues.OrdersOf(v).Select(o => new { o.Id, dishes = o.Dishes.Select(Items.NameOf).ToArray(), o.Price, o.Prepared, o.Delivered }).ToArray(),
+                    staff = Venues.StaffOf(v).Select(s => new { s.Name, s.Wage, s.ShiftStart, s.ShiftEnd, s.Roles, s.HoursLeftToday }).ToArray(),
+                    reviews = Venues.ReviewsOf(v).TakeLast(5).Select(r => new { r.Score, dish = Items.NameOf(r.Dish), r.Reviewer, r.Day, r.Hour, r.ServiceQuality, r.Cleanliness, r.Comfort }).ToArray(),
+                    popularity = Venues.PopularityOf(v),
+                    gameDay = GameTime.Day,
+                    receiptsByDay = Venues.ReceiptsOf(v).GroupBy(r => r.Day).OrderBy(g => g.Key).TakeLast(2).Select(g => new
+                    {
+                        day = g.Key,
+                        byType = g.GroupBy(r => r.Type).ToDictionary(t => t.Key, t => new { amount = t.Sum(r => r.Amount), count = t.Sum(r => r.Count) }),
+                        dishes = g.Where(r => r.Dish != null).GroupBy(r => Items.NameOf(r.Dish)).ToDictionary(d => d.Key, d => d.Sum(r => r.Count)),
+                    }).ToArray(),
+                }).ToArray();
+        });
+
         Register(kit, "world","What the world queries see here: player, camera, navigation mesh, places, stalls, venues, quest markers", _ =>
         {
             var mesh = Navigation.Triangulate();

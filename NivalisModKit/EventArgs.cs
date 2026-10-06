@@ -425,6 +425,48 @@ public sealed class ItemArgs
     internal ItemArgs(ItemType item) => Item = item;
 }
 
+/// <summary>Arguments for <see cref="GameEvents.FoodSpoiled"/>.</summary>
+[Experimental("New in 0.5.")]
+public sealed class FoodSpoiledArgs
+{
+    /// <summary>The container it spoiled in.</summary>
+    public ItemContainer Container { get; }
+
+    /// <summary>What spoiled, by item (how many of each).</summary>
+    public IReadOnlyDictionary<ItemType, int> Items { get; }
+
+    internal FoodSpoiledArgs(ItemContainer container, IReadOnlyDictionary<ItemType, int> items)
+    {
+        Container = container;
+        Items = items;
+    }
+}
+
+/// <summary>Arguments for <see cref="GameEvents.ProduceHarvested"/>.</summary>
+[Experimental("New in 0.5.")]
+public sealed class ProduceHarvestedArgs
+{
+    /// <summary>The produce (e.g. Chicken: grown items are the same items as bought ones).</summary>
+    public ItemType Item { get; }
+
+    /// <summary>How many.</summary>
+    public int Count { get; }
+
+    /// <summary>Where it went (the player's inventory when they harvest by hand).</summary>
+    public ItemContainer Container { get; }
+
+    /// <summary>True if it went into the player's inventory.</summary>
+    public bool IntoPlayerInventory { get; }
+
+    internal ProduceHarvestedArgs(ItemType item, int count, ItemContainer container, bool intoPlayerInventory)
+    {
+        Item = item;
+        Count = count;
+        Container = container;
+        IntoPlayerInventory = intoPlayerInventory;
+    }
+}
+
 /// <summary>Arguments for <see cref="GameEvents.CropHarvested"/>.</summary>
 public sealed class CropHarvestedArgs
 {

@@ -1446,6 +1446,35 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Economy.PlayerMoney
   nameWithType: Economy.PlayerMoney
+- uid: NivalisModKit.Economy.PlayerReceipts(System.Nullable{System.Int32})
+  name: PlayerReceipts(int?)
+  href: api/NivalisModKit.Economy.html#NivalisModKit_Economy_PlayerReceipts_System_Nullable_System_Int32__
+  commentId: M:NivalisModKit.Economy.PlayerReceipts(System.Nullable{System.Int32})
+  name.vb: PlayerReceipts(Integer?)
+  fullName: NivalisModKit.Economy.PlayerReceipts(int?)
+  fullName.vb: NivalisModKit.Economy.PlayerReceipts(Integer?)
+  nameWithType: Economy.PlayerReceipts(int?)
+  nameWithType.vb: Economy.PlayerReceipts(Integer?)
+- uid: NivalisModKit.Economy.PlayerReceipts*
+  name: PlayerReceipts
+  href: api/NivalisModKit.Economy.html#NivalisModKit_Economy_PlayerReceipts_
+  commentId: Overload:NivalisModKit.Economy.PlayerReceipts
+  isSpec: "True"
+  fullName: NivalisModKit.Economy.PlayerReceipts
+  nameWithType: Economy.PlayerReceipts
+- uid: NivalisModKit.Economy.PlayerStock
+  name: PlayerStock()
+  href: api/NivalisModKit.Economy.html#NivalisModKit_Economy_PlayerStock
+  commentId: M:NivalisModKit.Economy.PlayerStock
+  fullName: NivalisModKit.Economy.PlayerStock()
+  nameWithType: Economy.PlayerStock()
+- uid: NivalisModKit.Economy.PlayerStock*
+  name: PlayerStock
+  href: api/NivalisModKit.Economy.html#NivalisModKit_Economy_PlayerStock_
+  commentId: Overload:NivalisModKit.Economy.PlayerStock
+  isSpec: "True"
+  fullName: NivalisModKit.Economy.PlayerStock
+  nameWithType: Economy.PlayerStock
 - uid: NivalisModKit.Economy.Price(Nivalis.Economy.Vendor,Nivalis.InventorySystem.ItemType,Nivalis.InventorySystem.FoodFreshness)
   name: Price(Vendor, ItemType, FoodFreshness)
   href: api/NivalisModKit.Economy.html#NivalisModKit_Economy_Price_Nivalis_Economy_Vendor_Nivalis_InventorySystem_ItemType_Nivalis_InventorySystem_FoodFreshness_
@@ -1691,6 +1720,38 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.FishYieldContext.Yield
   nameWithType: FishYieldContext.Yield
+- uid: NivalisModKit.FoodSpoiledArgs
+  name: FoodSpoiledArgs
+  href: api/NivalisModKit.FoodSpoiledArgs.html
+  commentId: T:NivalisModKit.FoodSpoiledArgs
+  fullName: NivalisModKit.FoodSpoiledArgs
+  nameWithType: FoodSpoiledArgs
+- uid: NivalisModKit.FoodSpoiledArgs.Container
+  name: Container
+  href: api/NivalisModKit.FoodSpoiledArgs.html#NivalisModKit_FoodSpoiledArgs_Container
+  commentId: P:NivalisModKit.FoodSpoiledArgs.Container
+  fullName: NivalisModKit.FoodSpoiledArgs.Container
+  nameWithType: FoodSpoiledArgs.Container
+- uid: NivalisModKit.FoodSpoiledArgs.Container*
+  name: Container
+  href: api/NivalisModKit.FoodSpoiledArgs.html#NivalisModKit_FoodSpoiledArgs_Container_
+  commentId: Overload:NivalisModKit.FoodSpoiledArgs.Container
+  isSpec: "True"
+  fullName: NivalisModKit.FoodSpoiledArgs.Container
+  nameWithType: FoodSpoiledArgs.Container
+- uid: NivalisModKit.FoodSpoiledArgs.Items
+  name: Items
+  href: api/NivalisModKit.FoodSpoiledArgs.html#NivalisModKit_FoodSpoiledArgs_Items
+  commentId: P:NivalisModKit.FoodSpoiledArgs.Items
+  fullName: NivalisModKit.FoodSpoiledArgs.Items
+  nameWithType: FoodSpoiledArgs.Items
+- uid: NivalisModKit.FoodSpoiledArgs.Items*
+  name: Items
+  href: api/NivalisModKit.FoodSpoiledArgs.html#NivalisModKit_FoodSpoiledArgs_Items_
+  commentId: Overload:NivalisModKit.FoodSpoiledArgs.Items
+  isSpec: "True"
+  fullName: NivalisModKit.FoodSpoiledArgs.Items
+  nameWithType: FoodSpoiledArgs.Items
 - uid: NivalisModKit.FurnitureArgs
   name: FurnitureArgs
   href: api/NivalisModKit.FurnitureArgs.html
@@ -2137,6 +2198,12 @@ references:
   commentId: E:NivalisModKit.GameEvents.FishDiscovered
   fullName: NivalisModKit.GameEvents.FishDiscovered
   nameWithType: GameEvents.FishDiscovered
+- uid: NivalisModKit.GameEvents.FoodSpoiled
+  name: FoodSpoiled
+  href: api/NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_FoodSpoiled
+  commentId: E:NivalisModKit.GameEvents.FoodSpoiled
+  fullName: NivalisModKit.GameEvents.FoodSpoiled
+  nameWithType: GameEvents.FoodSpoiled
 - uid: NivalisModKit.GameEvents.FurniturePickedUp
   name: FurniturePickedUp
   href: api/NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_FurniturePickedUp
@@ -2262,6 +2329,12 @@ references:
   commentId: E:NivalisModKit.GameEvents.PlayerSold
   fullName: NivalisModKit.GameEvents.PlayerSold
   nameWithType: GameEvents.PlayerSold
+- uid: NivalisModKit.GameEvents.ProduceHarvested
+  name: ProduceHarvested
+  href: api/NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_ProduceHarvested
+  commentId: E:NivalisModKit.GameEvents.ProduceHarvested
+  fullName: NivalisModKit.GameEvents.ProduceHarvested
+  nameWithType: GameEvents.ProduceHarvested
 - uid: NivalisModKit.GameEvents.PropertyOwnerChanged
   name: PropertyOwnerChanged
   href: api/NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_PropertyOwnerChanged
@@ -3222,6 +3295,64 @@ references:
   commentId: F:NivalisModKit.Layers.WorldUI
   fullName: NivalisModKit.Layers.WorldUI
   nameWithType: Layers.WorldUI
+- uid: NivalisModKit.MenuEntry
+  name: MenuEntry
+  href: api/NivalisModKit.MenuEntry.html
+  commentId: T:NivalisModKit.MenuEntry
+  fullName: NivalisModKit.MenuEntry
+  nameWithType: MenuEntry
+- uid: NivalisModKit.MenuEntry.Dish
+  name: Dish
+  href: api/NivalisModKit.MenuEntry.html#NivalisModKit_MenuEntry_Dish
+  commentId: P:NivalisModKit.MenuEntry.Dish
+  fullName: NivalisModKit.MenuEntry.Dish
+  nameWithType: MenuEntry.Dish
+- uid: NivalisModKit.MenuEntry.Dish*
+  name: Dish
+  href: api/NivalisModKit.MenuEntry.html#NivalisModKit_MenuEntry_Dish_
+  commentId: Overload:NivalisModKit.MenuEntry.Dish
+  isSpec: "True"
+  fullName: NivalisModKit.MenuEntry.Dish
+  nameWithType: MenuEntry.Dish
+- uid: NivalisModKit.MenuEntry.Ingredients
+  name: Ingredients
+  href: api/NivalisModKit.MenuEntry.html#NivalisModKit_MenuEntry_Ingredients
+  commentId: P:NivalisModKit.MenuEntry.Ingredients
+  fullName: NivalisModKit.MenuEntry.Ingredients
+  nameWithType: MenuEntry.Ingredients
+- uid: NivalisModKit.MenuEntry.Ingredients*
+  name: Ingredients
+  href: api/NivalisModKit.MenuEntry.html#NivalisModKit_MenuEntry_Ingredients_
+  commentId: Overload:NivalisModKit.MenuEntry.Ingredients
+  isSpec: "True"
+  fullName: NivalisModKit.MenuEntry.Ingredients
+  nameWithType: MenuEntry.Ingredients
+- uid: NivalisModKit.MenuEntry.Price
+  name: Price
+  href: api/NivalisModKit.MenuEntry.html#NivalisModKit_MenuEntry_Price
+  commentId: P:NivalisModKit.MenuEntry.Price
+  fullName: NivalisModKit.MenuEntry.Price
+  nameWithType: MenuEntry.Price
+- uid: NivalisModKit.MenuEntry.Price*
+  name: Price
+  href: api/NivalisModKit.MenuEntry.html#NivalisModKit_MenuEntry_Price_
+  commentId: Overload:NivalisModKit.MenuEntry.Price
+  isSpec: "True"
+  fullName: NivalisModKit.MenuEntry.Price
+  nameWithType: MenuEntry.Price
+- uid: NivalisModKit.MenuEntry.Recipe
+  name: Recipe
+  href: api/NivalisModKit.MenuEntry.html#NivalisModKit_MenuEntry_Recipe
+  commentId: P:NivalisModKit.MenuEntry.Recipe
+  fullName: NivalisModKit.MenuEntry.Recipe
+  nameWithType: MenuEntry.Recipe
+- uid: NivalisModKit.MenuEntry.Recipe*
+  name: Recipe
+  href: api/NivalisModKit.MenuEntry.html#NivalisModKit_MenuEntry_Recipe_
+  commentId: Overload:NivalisModKit.MenuEntry.Recipe
+  isSpec: "True"
+  fullName: NivalisModKit.MenuEntry.Recipe
+  nameWithType: MenuEntry.Recipe
 - uid: NivalisModKit.ModKit
   name: ModKit
   href: api/NivalisModKit.ModKit.html
@@ -3844,6 +3975,90 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Navigation.Triangulate
   nameWithType: Navigation.Triangulate
+- uid: NivalisModKit.OrderInfo
+  name: OrderInfo
+  href: api/NivalisModKit.OrderInfo.html
+  commentId: T:NivalisModKit.OrderInfo
+  fullName: NivalisModKit.OrderInfo
+  nameWithType: OrderInfo
+- uid: NivalisModKit.OrderInfo.Delivered
+  name: Delivered
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Delivered
+  commentId: P:NivalisModKit.OrderInfo.Delivered
+  fullName: NivalisModKit.OrderInfo.Delivered
+  nameWithType: OrderInfo.Delivered
+- uid: NivalisModKit.OrderInfo.Delivered*
+  name: Delivered
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Delivered_
+  commentId: Overload:NivalisModKit.OrderInfo.Delivered
+  isSpec: "True"
+  fullName: NivalisModKit.OrderInfo.Delivered
+  nameWithType: OrderInfo.Delivered
+- uid: NivalisModKit.OrderInfo.Dishes
+  name: Dishes
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Dishes
+  commentId: P:NivalisModKit.OrderInfo.Dishes
+  fullName: NivalisModKit.OrderInfo.Dishes
+  nameWithType: OrderInfo.Dishes
+- uid: NivalisModKit.OrderInfo.Dishes*
+  name: Dishes
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Dishes_
+  commentId: Overload:NivalisModKit.OrderInfo.Dishes
+  isSpec: "True"
+  fullName: NivalisModKit.OrderInfo.Dishes
+  nameWithType: OrderInfo.Dishes
+- uid: NivalisModKit.OrderInfo.Id
+  name: Id
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Id
+  commentId: P:NivalisModKit.OrderInfo.Id
+  fullName: NivalisModKit.OrderInfo.Id
+  nameWithType: OrderInfo.Id
+- uid: NivalisModKit.OrderInfo.Id*
+  name: Id
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Id_
+  commentId: Overload:NivalisModKit.OrderInfo.Id
+  isSpec: "True"
+  fullName: NivalisModKit.OrderInfo.Id
+  nameWithType: OrderInfo.Id
+- uid: NivalisModKit.OrderInfo.Prepared
+  name: Prepared
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Prepared
+  commentId: P:NivalisModKit.OrderInfo.Prepared
+  fullName: NivalisModKit.OrderInfo.Prepared
+  nameWithType: OrderInfo.Prepared
+- uid: NivalisModKit.OrderInfo.Prepared*
+  name: Prepared
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Prepared_
+  commentId: Overload:NivalisModKit.OrderInfo.Prepared
+  isSpec: "True"
+  fullName: NivalisModKit.OrderInfo.Prepared
+  nameWithType: OrderInfo.Prepared
+- uid: NivalisModKit.OrderInfo.Price
+  name: Price
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Price
+  commentId: P:NivalisModKit.OrderInfo.Price
+  fullName: NivalisModKit.OrderInfo.Price
+  nameWithType: OrderInfo.Price
+- uid: NivalisModKit.OrderInfo.Price*
+  name: Price
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_Price_
+  commentId: Overload:NivalisModKit.OrderInfo.Price
+  isSpec: "True"
+  fullName: NivalisModKit.OrderInfo.Price
+  nameWithType: OrderInfo.Price
+- uid: NivalisModKit.OrderInfo.ServiceQuality
+  name: ServiceQuality
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_ServiceQuality
+  commentId: P:NivalisModKit.OrderInfo.ServiceQuality
+  fullName: NivalisModKit.OrderInfo.ServiceQuality
+  nameWithType: OrderInfo.ServiceQuality
+- uid: NivalisModKit.OrderInfo.ServiceQuality*
+  name: ServiceQuality
+  href: api/NivalisModKit.OrderInfo.html#NivalisModKit_OrderInfo_ServiceQuality_
+  commentId: Overload:NivalisModKit.OrderInfo.ServiceQuality
+  isSpec: "True"
+  fullName: NivalisModKit.OrderInfo.ServiceQuality
+  nameWithType: OrderInfo.ServiceQuality
 - uid: NivalisModKit.OrderQuantityContext
   name: OrderQuantityContext
   href: api/NivalisModKit.OrderQuantityContext.html
@@ -4716,6 +4931,64 @@ references:
   commentId: E:NivalisModKit.Pricing.SellPrice
   fullName: NivalisModKit.Pricing.SellPrice
   nameWithType: Pricing.SellPrice
+- uid: NivalisModKit.ProduceHarvestedArgs
+  name: ProduceHarvestedArgs
+  href: api/NivalisModKit.ProduceHarvestedArgs.html
+  commentId: T:NivalisModKit.ProduceHarvestedArgs
+  fullName: NivalisModKit.ProduceHarvestedArgs
+  nameWithType: ProduceHarvestedArgs
+- uid: NivalisModKit.ProduceHarvestedArgs.Container
+  name: Container
+  href: api/NivalisModKit.ProduceHarvestedArgs.html#NivalisModKit_ProduceHarvestedArgs_Container
+  commentId: P:NivalisModKit.ProduceHarvestedArgs.Container
+  fullName: NivalisModKit.ProduceHarvestedArgs.Container
+  nameWithType: ProduceHarvestedArgs.Container
+- uid: NivalisModKit.ProduceHarvestedArgs.Container*
+  name: Container
+  href: api/NivalisModKit.ProduceHarvestedArgs.html#NivalisModKit_ProduceHarvestedArgs_Container_
+  commentId: Overload:NivalisModKit.ProduceHarvestedArgs.Container
+  isSpec: "True"
+  fullName: NivalisModKit.ProduceHarvestedArgs.Container
+  nameWithType: ProduceHarvestedArgs.Container
+- uid: NivalisModKit.ProduceHarvestedArgs.Count
+  name: Count
+  href: api/NivalisModKit.ProduceHarvestedArgs.html#NivalisModKit_ProduceHarvestedArgs_Count
+  commentId: P:NivalisModKit.ProduceHarvestedArgs.Count
+  fullName: NivalisModKit.ProduceHarvestedArgs.Count
+  nameWithType: ProduceHarvestedArgs.Count
+- uid: NivalisModKit.ProduceHarvestedArgs.Count*
+  name: Count
+  href: api/NivalisModKit.ProduceHarvestedArgs.html#NivalisModKit_ProduceHarvestedArgs_Count_
+  commentId: Overload:NivalisModKit.ProduceHarvestedArgs.Count
+  isSpec: "True"
+  fullName: NivalisModKit.ProduceHarvestedArgs.Count
+  nameWithType: ProduceHarvestedArgs.Count
+- uid: NivalisModKit.ProduceHarvestedArgs.IntoPlayerInventory
+  name: IntoPlayerInventory
+  href: api/NivalisModKit.ProduceHarvestedArgs.html#NivalisModKit_ProduceHarvestedArgs_IntoPlayerInventory
+  commentId: P:NivalisModKit.ProduceHarvestedArgs.IntoPlayerInventory
+  fullName: NivalisModKit.ProduceHarvestedArgs.IntoPlayerInventory
+  nameWithType: ProduceHarvestedArgs.IntoPlayerInventory
+- uid: NivalisModKit.ProduceHarvestedArgs.IntoPlayerInventory*
+  name: IntoPlayerInventory
+  href: api/NivalisModKit.ProduceHarvestedArgs.html#NivalisModKit_ProduceHarvestedArgs_IntoPlayerInventory_
+  commentId: Overload:NivalisModKit.ProduceHarvestedArgs.IntoPlayerInventory
+  isSpec: "True"
+  fullName: NivalisModKit.ProduceHarvestedArgs.IntoPlayerInventory
+  nameWithType: ProduceHarvestedArgs.IntoPlayerInventory
+- uid: NivalisModKit.ProduceHarvestedArgs.Item
+  name: Item
+  href: api/NivalisModKit.ProduceHarvestedArgs.html#NivalisModKit_ProduceHarvestedArgs_Item
+  commentId: P:NivalisModKit.ProduceHarvestedArgs.Item
+  fullName: NivalisModKit.ProduceHarvestedArgs.Item
+  nameWithType: ProduceHarvestedArgs.Item
+- uid: NivalisModKit.ProduceHarvestedArgs.Item*
+  name: Item
+  href: api/NivalisModKit.ProduceHarvestedArgs.html#NivalisModKit_ProduceHarvestedArgs_Item_
+  commentId: Overload:NivalisModKit.ProduceHarvestedArgs.Item
+  isSpec: "True"
+  fullName: NivalisModKit.ProduceHarvestedArgs.Item
+  nameWithType: ProduceHarvestedArgs.Item
 - uid: NivalisModKit.PropertyArgs
   name: PropertyArgs
   href: api/NivalisModKit.PropertyArgs.html
@@ -5289,6 +5562,103 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Quests.Pinned
   nameWithType: Quests.Pinned
+- uid: NivalisModKit.ReceiptInfo
+  name: ReceiptInfo
+  href: api/NivalisModKit.ReceiptInfo.html
+  commentId: T:NivalisModKit.ReceiptInfo
+  fullName: NivalisModKit.ReceiptInfo
+  nameWithType: ReceiptInfo
+- uid: NivalisModKit.ReceiptInfo.Amount
+  name: Amount
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Amount
+  commentId: P:NivalisModKit.ReceiptInfo.Amount
+  fullName: NivalisModKit.ReceiptInfo.Amount
+  nameWithType: ReceiptInfo.Amount
+- uid: NivalisModKit.ReceiptInfo.Amount*
+  name: Amount
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Amount_
+  commentId: Overload:NivalisModKit.ReceiptInfo.Amount
+  isSpec: "True"
+  fullName: NivalisModKit.ReceiptInfo.Amount
+  nameWithType: ReceiptInfo.Amount
+- uid: NivalisModKit.ReceiptInfo.Count
+  name: Count
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Count
+  commentId: P:NivalisModKit.ReceiptInfo.Count
+  fullName: NivalisModKit.ReceiptInfo.Count
+  nameWithType: ReceiptInfo.Count
+- uid: NivalisModKit.ReceiptInfo.Count*
+  name: Count
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Count_
+  commentId: Overload:NivalisModKit.ReceiptInfo.Count
+  isSpec: "True"
+  fullName: NivalisModKit.ReceiptInfo.Count
+  nameWithType: ReceiptInfo.Count
+- uid: NivalisModKit.ReceiptInfo.Day
+  name: Day
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Day
+  commentId: P:NivalisModKit.ReceiptInfo.Day
+  fullName: NivalisModKit.ReceiptInfo.Day
+  nameWithType: ReceiptInfo.Day
+- uid: NivalisModKit.ReceiptInfo.Day*
+  name: Day
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Day_
+  commentId: Overload:NivalisModKit.ReceiptInfo.Day
+  isSpec: "True"
+  fullName: NivalisModKit.ReceiptInfo.Day
+  nameWithType: ReceiptInfo.Day
+- uid: NivalisModKit.ReceiptInfo.DaySeconds
+  name: DaySeconds
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_DaySeconds
+  commentId: P:NivalisModKit.ReceiptInfo.DaySeconds
+  fullName: NivalisModKit.ReceiptInfo.DaySeconds
+  nameWithType: ReceiptInfo.DaySeconds
+- uid: NivalisModKit.ReceiptInfo.DaySeconds*
+  name: DaySeconds
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_DaySeconds_
+  commentId: Overload:NivalisModKit.ReceiptInfo.DaySeconds
+  isSpec: "True"
+  fullName: NivalisModKit.ReceiptInfo.DaySeconds
+  nameWithType: ReceiptInfo.DaySeconds
+- uid: NivalisModKit.ReceiptInfo.Dish
+  name: Dish
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Dish
+  commentId: P:NivalisModKit.ReceiptInfo.Dish
+  fullName: NivalisModKit.ReceiptInfo.Dish
+  nameWithType: ReceiptInfo.Dish
+- uid: NivalisModKit.ReceiptInfo.Dish*
+  name: Dish
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Dish_
+  commentId: Overload:NivalisModKit.ReceiptInfo.Dish
+  isSpec: "True"
+  fullName: NivalisModKit.ReceiptInfo.Dish
+  nameWithType: ReceiptInfo.Dish
+- uid: NivalisModKit.ReceiptInfo.Property
+  name: Property
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Property
+  commentId: P:NivalisModKit.ReceiptInfo.Property
+  fullName: NivalisModKit.ReceiptInfo.Property
+  nameWithType: ReceiptInfo.Property
+- uid: NivalisModKit.ReceiptInfo.Property*
+  name: Property
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Property_
+  commentId: Overload:NivalisModKit.ReceiptInfo.Property
+  isSpec: "True"
+  fullName: NivalisModKit.ReceiptInfo.Property
+  nameWithType: ReceiptInfo.Property
+- uid: NivalisModKit.ReceiptInfo.Type
+  name: Type
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Type
+  commentId: P:NivalisModKit.ReceiptInfo.Type
+  fullName: NivalisModKit.ReceiptInfo.Type
+  nameWithType: ReceiptInfo.Type
+- uid: NivalisModKit.ReceiptInfo.Type*
+  name: Type
+  href: api/NivalisModKit.ReceiptInfo.html#NivalisModKit_ReceiptInfo_Type_
+  commentId: Overload:NivalisModKit.ReceiptInfo.Type
+  isSpec: "True"
+  fullName: NivalisModKit.ReceiptInfo.Type
+  nameWithType: ReceiptInfo.Type
 - uid: NivalisModKit.Recipes
   name: Recipes
   href: api/NivalisModKit.Recipes.html
@@ -5360,6 +5730,194 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Recipes.OutputOf
   nameWithType: Recipes.OutputOf
+- uid: NivalisModKit.ReviewInfo
+  name: ReviewInfo
+  href: api/NivalisModKit.ReviewInfo.html
+  commentId: T:NivalisModKit.ReviewInfo
+  fullName: NivalisModKit.ReviewInfo
+  nameWithType: ReviewInfo
+- uid: NivalisModKit.ReviewInfo.AllFoodDelivered
+  name: AllFoodDelivered
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_AllFoodDelivered
+  commentId: P:NivalisModKit.ReviewInfo.AllFoodDelivered
+  fullName: NivalisModKit.ReviewInfo.AllFoodDelivered
+  nameWithType: ReviewInfo.AllFoodDelivered
+- uid: NivalisModKit.ReviewInfo.AllFoodDelivered*
+  name: AllFoodDelivered
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_AllFoodDelivered_
+  commentId: Overload:NivalisModKit.ReviewInfo.AllFoodDelivered
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.AllFoodDelivered
+  nameWithType: ReviewInfo.AllFoodDelivered
+- uid: NivalisModKit.ReviewInfo.Cleanliness
+  name: Cleanliness
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Cleanliness
+  commentId: P:NivalisModKit.ReviewInfo.Cleanliness
+  fullName: NivalisModKit.ReviewInfo.Cleanliness
+  nameWithType: ReviewInfo.Cleanliness
+- uid: NivalisModKit.ReviewInfo.Cleanliness*
+  name: Cleanliness
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Cleanliness_
+  commentId: Overload:NivalisModKit.ReviewInfo.Cleanliness
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.Cleanliness
+  nameWithType: ReviewInfo.Cleanliness
+- uid: NivalisModKit.ReviewInfo.Comfort
+  name: Comfort
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Comfort
+  commentId: P:NivalisModKit.ReviewInfo.Comfort
+  fullName: NivalisModKit.ReviewInfo.Comfort
+  nameWithType: ReviewInfo.Comfort
+- uid: NivalisModKit.ReviewInfo.Comfort*
+  name: Comfort
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Comfort_
+  commentId: Overload:NivalisModKit.ReviewInfo.Comfort
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.Comfort
+  nameWithType: ReviewInfo.Comfort
+- uid: NivalisModKit.ReviewInfo.Day
+  name: Day
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Day
+  commentId: P:NivalisModKit.ReviewInfo.Day
+  fullName: NivalisModKit.ReviewInfo.Day
+  nameWithType: ReviewInfo.Day
+- uid: NivalisModKit.ReviewInfo.Day*
+  name: Day
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Day_
+  commentId: Overload:NivalisModKit.ReviewInfo.Day
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.Day
+  nameWithType: ReviewInfo.Day
+- uid: NivalisModKit.ReviewInfo.Dish
+  name: Dish
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Dish
+  commentId: P:NivalisModKit.ReviewInfo.Dish
+  fullName: NivalisModKit.ReviewInfo.Dish
+  nameWithType: ReviewInfo.Dish
+- uid: NivalisModKit.ReviewInfo.Dish*
+  name: Dish
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Dish_
+  commentId: Overload:NivalisModKit.ReviewInfo.Dish
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.Dish
+  nameWithType: ReviewInfo.Dish
+- uid: NivalisModKit.ReviewInfo.GameSeconds
+  name: GameSeconds
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_GameSeconds
+  commentId: P:NivalisModKit.ReviewInfo.GameSeconds
+  fullName: NivalisModKit.ReviewInfo.GameSeconds
+  nameWithType: ReviewInfo.GameSeconds
+- uid: NivalisModKit.ReviewInfo.GameSeconds*
+  name: GameSeconds
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_GameSeconds_
+  commentId: Overload:NivalisModKit.ReviewInfo.GameSeconds
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.GameSeconds
+  nameWithType: ReviewInfo.GameSeconds
+- uid: NivalisModKit.ReviewInfo.Hour
+  name: Hour
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Hour
+  commentId: P:NivalisModKit.ReviewInfo.Hour
+  fullName: NivalisModKit.ReviewInfo.Hour
+  nameWithType: ReviewInfo.Hour
+- uid: NivalisModKit.ReviewInfo.Hour*
+  name: Hour
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Hour_
+  commentId: Overload:NivalisModKit.ReviewInfo.Hour
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.Hour
+  nameWithType: ReviewInfo.Hour
+- uid: NivalisModKit.ReviewInfo.OrderTaken
+  name: OrderTaken
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_OrderTaken
+  commentId: P:NivalisModKit.ReviewInfo.OrderTaken
+  fullName: NivalisModKit.ReviewInfo.OrderTaken
+  nameWithType: ReviewInfo.OrderTaken
+- uid: NivalisModKit.ReviewInfo.OrderTaken*
+  name: OrderTaken
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_OrderTaken_
+  commentId: Overload:NivalisModKit.ReviewInfo.OrderTaken
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.OrderTaken
+  nameWithType: ReviewInfo.OrderTaken
+- uid: NivalisModKit.ReviewInfo.RainDiscomfort
+  name: RainDiscomfort
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_RainDiscomfort
+  commentId: P:NivalisModKit.ReviewInfo.RainDiscomfort
+  fullName: NivalisModKit.ReviewInfo.RainDiscomfort
+  nameWithType: ReviewInfo.RainDiscomfort
+- uid: NivalisModKit.ReviewInfo.RainDiscomfort*
+  name: RainDiscomfort
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_RainDiscomfort_
+  commentId: Overload:NivalisModKit.ReviewInfo.RainDiscomfort
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.RainDiscomfort
+  nameWithType: ReviewInfo.RainDiscomfort
+- uid: NivalisModKit.ReviewInfo.Reaction
+  name: Reaction
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Reaction
+  commentId: P:NivalisModKit.ReviewInfo.Reaction
+  fullName: NivalisModKit.ReviewInfo.Reaction
+  nameWithType: ReviewInfo.Reaction
+- uid: NivalisModKit.ReviewInfo.Reaction*
+  name: Reaction
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Reaction_
+  commentId: Overload:NivalisModKit.ReviewInfo.Reaction
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.Reaction
+  nameWithType: ReviewInfo.Reaction
+- uid: NivalisModKit.ReviewInfo.Reviewer
+  name: Reviewer
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Reviewer
+  commentId: P:NivalisModKit.ReviewInfo.Reviewer
+  fullName: NivalisModKit.ReviewInfo.Reviewer
+  nameWithType: ReviewInfo.Reviewer
+- uid: NivalisModKit.ReviewInfo.Reviewer*
+  name: Reviewer
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Reviewer_
+  commentId: Overload:NivalisModKit.ReviewInfo.Reviewer
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.Reviewer
+  nameWithType: ReviewInfo.Reviewer
+- uid: NivalisModKit.ReviewInfo.Score
+  name: Score
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Score
+  commentId: P:NivalisModKit.ReviewInfo.Score
+  fullName: NivalisModKit.ReviewInfo.Score
+  nameWithType: ReviewInfo.Score
+- uid: NivalisModKit.ReviewInfo.Score*
+  name: Score
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_Score_
+  commentId: Overload:NivalisModKit.ReviewInfo.Score
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.Score
+  nameWithType: ReviewInfo.Score
+- uid: NivalisModKit.ReviewInfo.ServiceQuality
+  name: ServiceQuality
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_ServiceQuality
+  commentId: P:NivalisModKit.ReviewInfo.ServiceQuality
+  fullName: NivalisModKit.ReviewInfo.ServiceQuality
+  nameWithType: ReviewInfo.ServiceQuality
+- uid: NivalisModKit.ReviewInfo.ServiceQuality*
+  name: ServiceQuality
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_ServiceQuality_
+  commentId: Overload:NivalisModKit.ReviewInfo.ServiceQuality
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.ServiceQuality
+  nameWithType: ReviewInfo.ServiceQuality
+- uid: NivalisModKit.ReviewInfo.SnowDiscomfort
+  name: SnowDiscomfort
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_SnowDiscomfort
+  commentId: P:NivalisModKit.ReviewInfo.SnowDiscomfort
+  fullName: NivalisModKit.ReviewInfo.SnowDiscomfort
+  nameWithType: ReviewInfo.SnowDiscomfort
+- uid: NivalisModKit.ReviewInfo.SnowDiscomfort*
+  name: SnowDiscomfort
+  href: api/NivalisModKit.ReviewInfo.html#NivalisModKit_ReviewInfo_SnowDiscomfort_
+  commentId: Overload:NivalisModKit.ReviewInfo.SnowDiscomfort
+  isSpec: "True"
+  fullName: NivalisModKit.ReviewInfo.SnowDiscomfort
+  nameWithType: ReviewInfo.SnowDiscomfort
 - uid: NivalisModKit.SaleMadeArgs
   name: SaleMadeArgs
   href: api/NivalisModKit.SaleMadeArgs.html
@@ -5878,6 +6436,103 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.StaffHoursArgs.Venue
   nameWithType: StaffHoursArgs.Venue
+- uid: NivalisModKit.StaffMember
+  name: StaffMember
+  href: api/NivalisModKit.StaffMember.html
+  commentId: T:NivalisModKit.StaffMember
+  fullName: NivalisModKit.StaffMember
+  nameWithType: StaffMember
+- uid: NivalisModKit.StaffMember.HoursLeftToday
+  name: HoursLeftToday
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_HoursLeftToday
+  commentId: P:NivalisModKit.StaffMember.HoursLeftToday
+  fullName: NivalisModKit.StaffMember.HoursLeftToday
+  nameWithType: StaffMember.HoursLeftToday
+- uid: NivalisModKit.StaffMember.HoursLeftToday*
+  name: HoursLeftToday
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_HoursLeftToday_
+  commentId: Overload:NivalisModKit.StaffMember.HoursLeftToday
+  isSpec: "True"
+  fullName: NivalisModKit.StaffMember.HoursLeftToday
+  nameWithType: StaffMember.HoursLeftToday
+- uid: NivalisModKit.StaffMember.Name
+  name: Name
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_Name
+  commentId: P:NivalisModKit.StaffMember.Name
+  fullName: NivalisModKit.StaffMember.Name
+  nameWithType: StaffMember.Name
+- uid: NivalisModKit.StaffMember.Name*
+  name: Name
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_Name_
+  commentId: Overload:NivalisModKit.StaffMember.Name
+  isSpec: "True"
+  fullName: NivalisModKit.StaffMember.Name
+  nameWithType: StaffMember.Name
+- uid: NivalisModKit.StaffMember.Person
+  name: Person
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_Person
+  commentId: P:NivalisModKit.StaffMember.Person
+  fullName: NivalisModKit.StaffMember.Person
+  nameWithType: StaffMember.Person
+- uid: NivalisModKit.StaffMember.Person*
+  name: Person
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_Person_
+  commentId: Overload:NivalisModKit.StaffMember.Person
+  isSpec: "True"
+  fullName: NivalisModKit.StaffMember.Person
+  nameWithType: StaffMember.Person
+- uid: NivalisModKit.StaffMember.Roles
+  name: Roles
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_Roles
+  commentId: P:NivalisModKit.StaffMember.Roles
+  fullName: NivalisModKit.StaffMember.Roles
+  nameWithType: StaffMember.Roles
+- uid: NivalisModKit.StaffMember.Roles*
+  name: Roles
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_Roles_
+  commentId: Overload:NivalisModKit.StaffMember.Roles
+  isSpec: "True"
+  fullName: NivalisModKit.StaffMember.Roles
+  nameWithType: StaffMember.Roles
+- uid: NivalisModKit.StaffMember.ShiftEnd
+  name: ShiftEnd
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_ShiftEnd
+  commentId: P:NivalisModKit.StaffMember.ShiftEnd
+  fullName: NivalisModKit.StaffMember.ShiftEnd
+  nameWithType: StaffMember.ShiftEnd
+- uid: NivalisModKit.StaffMember.ShiftEnd*
+  name: ShiftEnd
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_ShiftEnd_
+  commentId: Overload:NivalisModKit.StaffMember.ShiftEnd
+  isSpec: "True"
+  fullName: NivalisModKit.StaffMember.ShiftEnd
+  nameWithType: StaffMember.ShiftEnd
+- uid: NivalisModKit.StaffMember.ShiftStart
+  name: ShiftStart
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_ShiftStart
+  commentId: P:NivalisModKit.StaffMember.ShiftStart
+  fullName: NivalisModKit.StaffMember.ShiftStart
+  nameWithType: StaffMember.ShiftStart
+- uid: NivalisModKit.StaffMember.ShiftStart*
+  name: ShiftStart
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_ShiftStart_
+  commentId: Overload:NivalisModKit.StaffMember.ShiftStart
+  isSpec: "True"
+  fullName: NivalisModKit.StaffMember.ShiftStart
+  nameWithType: StaffMember.ShiftStart
+- uid: NivalisModKit.StaffMember.Wage
+  name: Wage
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_Wage
+  commentId: P:NivalisModKit.StaffMember.Wage
+  fullName: NivalisModKit.StaffMember.Wage
+  nameWithType: StaffMember.Wage
+- uid: NivalisModKit.StaffMember.Wage*
+  name: Wage
+  href: api/NivalisModKit.StaffMember.html#NivalisModKit_StaffMember_Wage_
+  commentId: Overload:NivalisModKit.StaffMember.Wage
+  isSpec: "True"
+  fullName: NivalisModKit.StaffMember.Wage
+  nameWithType: StaffMember.Wage
 - uid: NivalisModKit.StaffPaidArgs
   name: StaffPaidArgs
   href: api/NivalisModKit.StaffPaidArgs.html
@@ -7434,6 +8089,32 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Venues.InDistrict
   nameWithType: Venues.InDistrict
+- uid: NivalisModKit.Venues.MealsServedOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  name: MealsServedOf(VenueAreaGhost)
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_MealsServedOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_
+  commentId: M:NivalisModKit.Venues.MealsServedOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  fullName: NivalisModKit.Venues.MealsServedOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  nameWithType: Venues.MealsServedOf(VenueAreaGhost)
+- uid: NivalisModKit.Venues.MealsServedOf*
+  name: MealsServedOf
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_MealsServedOf_
+  commentId: Overload:NivalisModKit.Venues.MealsServedOf
+  isSpec: "True"
+  fullName: NivalisModKit.Venues.MealsServedOf
+  nameWithType: Venues.MealsServedOf
+- uid: NivalisModKit.Venues.MenuOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  name: MenuOf(VenueAreaGhost)
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_MenuOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_
+  commentId: M:NivalisModKit.Venues.MenuOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  fullName: NivalisModKit.Venues.MenuOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  nameWithType: Venues.MenuOf(VenueAreaGhost)
+- uid: NivalisModKit.Venues.MenuOf*
+  name: MenuOf
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_MenuOf_
+  commentId: Overload:NivalisModKit.Venues.MenuOf
+  isSpec: "True"
+  fullName: NivalisModKit.Venues.MenuOf
+  nameWithType: Venues.MenuOf
 - uid: NivalisModKit.Venues.NameOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
   name: NameOf(VenueAreaGhost)
   href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_NameOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_
@@ -7447,6 +8128,19 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Venues.NameOf
   nameWithType: Venues.NameOf
+- uid: NivalisModKit.Venues.OrdersOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  name: OrdersOf(VenueAreaGhost)
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_OrdersOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_
+  commentId: M:NivalisModKit.Venues.OrdersOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  fullName: NivalisModKit.Venues.OrdersOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  nameWithType: Venues.OrdersOf(VenueAreaGhost)
+- uid: NivalisModKit.Venues.OrdersOf*
+  name: OrdersOf
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_OrdersOf_
+  commentId: Overload:NivalisModKit.Venues.OrdersOf
+  isSpec: "True"
+  fullName: NivalisModKit.Venues.OrdersOf
+  nameWithType: Venues.OrdersOf
 - uid: NivalisModKit.Venues.PlayerOwned
   name: PlayerOwned
   href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_PlayerOwned
@@ -7460,6 +8154,61 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Venues.PlayerOwned
   nameWithType: Venues.PlayerOwned
+- uid: NivalisModKit.Venues.PopularityOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  name: PopularityOf(VenueAreaGhost)
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_PopularityOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_
+  commentId: M:NivalisModKit.Venues.PopularityOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  fullName: NivalisModKit.Venues.PopularityOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  nameWithType: Venues.PopularityOf(VenueAreaGhost)
+- uid: NivalisModKit.Venues.PopularityOf*
+  name: PopularityOf
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_PopularityOf_
+  commentId: Overload:NivalisModKit.Venues.PopularityOf
+  isSpec: "True"
+  fullName: NivalisModKit.Venues.PopularityOf
+  nameWithType: Venues.PopularityOf
+- uid: NivalisModKit.Venues.ReceiptsOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost,System.Nullable{System.Int32})
+  name: ReceiptsOf(VenueAreaGhost, int?)
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_ReceiptsOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_System_Nullable_System_Int32__
+  commentId: M:NivalisModKit.Venues.ReceiptsOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost,System.Nullable{System.Int32})
+  name.vb: ReceiptsOf(VenueAreaGhost, Integer?)
+  fullName: NivalisModKit.Venues.ReceiptsOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost, int?)
+  fullName.vb: NivalisModKit.Venues.ReceiptsOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost, Integer?)
+  nameWithType: Venues.ReceiptsOf(VenueAreaGhost, int?)
+  nameWithType.vb: Venues.ReceiptsOf(VenueAreaGhost, Integer?)
+- uid: NivalisModKit.Venues.ReceiptsOf*
+  name: ReceiptsOf
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_ReceiptsOf_
+  commentId: Overload:NivalisModKit.Venues.ReceiptsOf
+  isSpec: "True"
+  fullName: NivalisModKit.Venues.ReceiptsOf
+  nameWithType: Venues.ReceiptsOf
+- uid: NivalisModKit.Venues.ReviewsOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  name: ReviewsOf(VenueAreaGhost)
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_ReviewsOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_
+  commentId: M:NivalisModKit.Venues.ReviewsOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  fullName: NivalisModKit.Venues.ReviewsOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  nameWithType: Venues.ReviewsOf(VenueAreaGhost)
+- uid: NivalisModKit.Venues.ReviewsOf*
+  name: ReviewsOf
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_ReviewsOf_
+  commentId: Overload:NivalisModKit.Venues.ReviewsOf
+  isSpec: "True"
+  fullName: NivalisModKit.Venues.ReviewsOf
+  nameWithType: Venues.ReviewsOf
+- uid: NivalisModKit.Venues.StaffOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  name: StaffOf(VenueAreaGhost)
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_StaffOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_
+  commentId: M:NivalisModKit.Venues.StaffOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  fullName: NivalisModKit.Venues.StaffOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  nameWithType: Venues.StaffOf(VenueAreaGhost)
+- uid: NivalisModKit.Venues.StaffOf*
+  name: StaffOf
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_StaffOf_
+  commentId: Overload:NivalisModKit.Venues.StaffOf
+  isSpec: "True"
+  fullName: NivalisModKit.Venues.StaffOf
+  nameWithType: Venues.StaffOf
 - uid: NivalisModKit.Venues.Stock(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost,Nivalis.InventorySystem.ItemType)
   name: Stock(VenueAreaGhost, ItemType)
   href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_Stock_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_Nivalis_InventorySystem_ItemType_
@@ -7473,6 +8222,19 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Venues.Stock
   nameWithType: Venues.Stock
+- uid: NivalisModKit.Venues.StockOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  name: StockOf(VenueAreaGhost)
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_StockOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_
+  commentId: M:NivalisModKit.Venues.StockOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  fullName: NivalisModKit.Venues.StockOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
+  nameWithType: Venues.StockOf(VenueAreaGhost)
+- uid: NivalisModKit.Venues.StockOf*
+  name: StockOf
+  href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_StockOf_
+  commentId: Overload:NivalisModKit.Venues.StockOf
+  isSpec: "True"
+  fullName: NivalisModKit.Venues.StockOf
+  nameWithType: Venues.StockOf
 - uid: NivalisModKit.Venues.StorageOf(Nivalis.GhostSystem.CustomerLoop.VenueAreaGhost)
   name: StorageOf(VenueAreaGhost)
   href: api/NivalisModKit.Venues.html#NivalisModKit_Venues_StorageOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_

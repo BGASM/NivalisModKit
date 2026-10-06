@@ -176,6 +176,18 @@ public static partial class GameEvents
     public static event Action<ItemArgs> CropPlanted;
     /// <summary>A crop was harvested.</summary>
     public static event Action<CropHarvestedArgs> CropHarvested;
+    /// <summary>
+    /// Produce harvested from a greenhouse went into a container (the player's inventory): which item and how many.
+    /// Raised alongside <see cref="CropHarvested"/>, which doesn't say how many.
+    /// </summary>
+    [Experimental("New in 0.5.")]
+    public static event Action<ProduceHarvestedArgs> ProduceHarvested;
+    /// <summary>
+    /// Food spoiled in a container (a venue's storage, the player's inventory): what was lost, by item. The game turns it
+    /// into Rotten Food. Raised by the game's daily spoilage pass (not for vendor stock).
+    /// </summary>
+    [Experimental("New in 0.5.")]
+    public static event Action<FoodSpoiledArgs> FoodSpoiled;
     /// <summary>Any property (venue, apartment, greenhouse) was bought, sold, rented or given up.</summary>
     public static event Action<PropertyArgs> PropertyOwnerChanged;
     /// <summary>A property started being rented.</summary>
@@ -202,6 +214,8 @@ public static partial class GameEvents
     internal static void RaiseFishDiscovered(ItemArgs a) => Raise(nameof(FishDiscovered), FishDiscovered, a);
     internal static void RaiseCropPlanted(ItemArgs a) => Raise(nameof(CropPlanted), CropPlanted, a);
     internal static void RaiseCropHarvested(CropHarvestedArgs a) => Raise(nameof(CropHarvested), CropHarvested, a);
+    internal static void RaiseProduceHarvested(ProduceHarvestedArgs a) => Raise(nameof(ProduceHarvested), ProduceHarvested, a);
+    internal static void RaiseFoodSpoiled(FoodSpoiledArgs a) => Raise(nameof(FoodSpoiled), FoodSpoiled, a);
     internal static void RaisePropertyOwnerChanged(PropertyArgs a) => Raise(nameof(PropertyOwnerChanged), PropertyOwnerChanged, a);
     internal static void RaiseRentStarted(PropertyArgs a) => Raise(nameof(RentStarted), RentStarted, a);
     internal static void RaiseRentStopped(PropertyArgs a) => Raise(nameof(RentStopped), RentStopped, a);

@@ -2,7 +2,10 @@
   <PropertyGroup>
     <AssemblyName>NivalisModKit</AssemblyName>
     <RootNamespace>NivalisModKit</RootNamespace>
-    <Version>0.4.0</Version>
+    <Version>0.5.0</Version>
+    <TsName>NivalisModKit</TsName>
+    <TsDescription>Shared library for Nivalis Nights mods: game events, settings in a pause-menu Mods browser, UI, custom items and recipes, world and venue data. Install it when a mod needs it.</TsDescription>
+    <TsWebsite>https://github.com/BGASM/NivalisModKit</TsWebsite>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Ships NivalisModKit.xml so dependents get IntelliSense. Missing docs warn (CS1591). -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -16,6 +19,7 @@
     <Reference Include="UnityEngine.PhysicsModule"><HintPath>$(GameDir)\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine.AIModule"><HintPath>$(GameDir)\BepInEx\interop\UnityEngine.AIModule.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine.ImageConversionModule"><HintPath>$(GameDir)\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Il2CppSystem"><HintPath>$(GameDir)\BepInEx\interop\Il2CppSystem.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="Il2CppSystem.Core"><HintPath>$(GameDir)\BepInEx\interop\Il2CppSystem.Core.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="SemanticVersioning"><HintPath>$(GameDir)\BepInEx\core\SemanticVersioning.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="MonoMod.RuntimeDetour">
