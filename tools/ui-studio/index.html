@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit UI Studio</title>
+<style>
+  :root { --bg: #0f1116; --panel: #171a21; --line: #2a2f3a; --text: #e6e8ee; --dim: #8b92a3; --accent: #f2c14e; --good: #4fd18b; --bad: #ff6b6b; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 13px/1.4 system-ui, sans-serif; }
+  body { display: grid; grid-template-rows: auto 1fr auto; }
+  header { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  header h1 { font-size: 15px; margin: 0 12px 0 0; color: var(--accent); }
+  button, select { background: #222734; color: var(--text); border: 1px solid var(--line); border-radius: 5px; padding: 5px 10px; font: inherit; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  label { color: var(--dim); display: flex; gap: 5px; align-items: center; }
+  main { display: grid; grid-template-columns: minmax(320px, 38%) 1fr; min-height: 0; }
+  #code { width: 100%; height: 100%; resize: none; border: 0; border-right: 1px solid var(--line); background: #12151b; color: #d7dae2;
+          font: 12.5px/1.5 ui-monospace, Consolas, monospace; padding: 10px; tab-size: 2; outline: none; }
+  #stage { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 12px; min-width: 0; }
+  #screen { position: absolute; width: 1920px; height: 1080px; transform-origin: 0 0; border: 1px solid var(--line);
+            background: linear-gradient(160deg, #3a4a5c 0%, #20283a 45%, #3b2d3f 100%); }
+  #frame { width: 1920px; height: 1080px; border: 0; background: transparent; display: block; }
+  footer { border-top: 1px solid var(--line); padding: 6px 12px; color: var(--dim); display: flex; gap: 16px; flex-wrap: wrap; }
+  #status.good { color: var(--good); } #status.bad { color: var(--bad); }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; grid-template-rows: 45% 1fr; } #code { border-right: 0; border-bottom: 1px solid var(--line); } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Kit UI Studio</h1>
+  <button id="open">Open HTML…</button>
+  <button id="save">Save HTML</button>
+  <button id="target">Export to…</button>
+  <button id="export">Export now</button>
+  <label><input type="checkbox" id="live" checked> live export</label>
+  <label>backdrop <select id="backdrop"><option value="grad">gradient</option><option value="dark">dark</option><option value="light">light</option></select></label>
+</header>
+<main>
+  <textarea id="code" spellcheck="false"></textarea>
+  <div id="stage"><div id="screen"><iframe id="frame" title="preview"></iframe></div></div>
+</main>
+<footer>
+  <span id="status">Write the panel; the preview updates as you type.</span>
+  <span id="target-name">no export file chosen</span>
+  <span>Rules: one element with <code>data-panel</code> (optional <code>data-anchor</code>, <code>data-offset="x y"</code>); <code>id</code> names an element for the mod; <code>data-repeat="N"</code> makes a row template; <code>data-hidden</code> starts hidden; <code>data-clip</code> cuts long text. Game fonts: Barlow-Medium, Barlow-ExtraBold, Montserrat-Regular, Montserrat-Medium, LiberationSans, Aquawax-Pro-DemiBold.</span>
+</footer>
+<script>
+// The panel is laid out by the browser, then each element's box and style are read back and exported as a
+// nivalis-layout/1 file that the kit's LayoutView builds in the game. Leaf elements with text become text; everything
+// else becomes a box (fill, border, radius). Positions are relative to the parent element, in 1920x1080 screen pixels.
+
+const EXAMPLE = `<style>
+  body { font-family: "Liberation Sans", Arial, sans-serif; }
+  .panel { width: 320px; padding: 14px; background: #12151bdd; border: 1px solid #f2c14e66; border-radius: 10px;
+           display: flex; flex-direction: column; gap: 8px; }
+  h2 { margin: 0; font-size: 16px; color: #f2c14e; text-transform: uppercase; letter-spacing: 1px; }
+  .row { display: flex; justify-content: space-between; height: 22px; align-items: center; }
+  .label { color: #8b92a3; font-size: 14px; }
+  .value { color: #e6e8ee; font-size: 14px; font-weight: 700; }
+</style>
+<div class="panel" data-panel data-anchor="top-right" data-offset="24 120">
+  <h2>Example</h2>
+  <div class="row" id="line" data-repeat="3"><span class="label" id="what">Revenue</span><span class="value" id="amount">1,909.00</span></div>
+</div>`;
+
+const $ = s => document.querySelector(s);
+const code = $("#code"), frame = $("#frame"), screen_ = $("#screen"), stage = $("#stage");
+let fileHandle = null, targetHandle = null, lastJson = "", timer = null, ready = Promise.resolve();
+
+try { code.value = localStorage.getItem("studio.code") || EXAMPLE; } catch { code.value = EXAMPLE; }
+
+function status(text, cls = "") { const s = $("#status"); s.textContent = text; s.className = cls; }
+
+// ---------- preview ----------
+
+function fit() {
+  const w = stage.clientWidth - 24, h = stage.clientHeight - 24;
+  const k = Math.min(w / 1920, h / 1080);
+  screen_.style.transform = `scale(${k})`;
+  screen_.style.left = `${(stage.clientWidth - 1920 * k) / 2}px`;
+  screen_.style.top = `${(stage.clientHeight - 1080 * k) / 2}px`;
+}
+addEventListener("resize", fit);
+
+$("#backdrop").onchange = e => {
+  screen_.style.background = { grad: "", dark: "#15171c", light: "#c9ced6" }[e.target.value];
+};
+
+function render() {
+  const doc = frame.contentDocument;
+  doc.open();
+  doc.write(`<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;width:1920px;height:1080px;background:transparent;overflow:hidden}[data-hidden]{opacity:.35}</style></head><body>${code.value}</body></html>`);
+  doc.close();
+  // A stylesheet @import (web fonts) can hold the parser: finish once the document is parsed.
+  ready = new Promise(resolve => {
+    const done = () => { repeatRows(doc); placePanel(doc); resolve(); };
+    if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", done, { once: true }); else done();
+  });
+  return ready;
+}
+
+// Rows: show data-repeat="N" as N copies, so the design shows real spacing (only the first is exported).
+function repeatRows(doc) {
+  for (const el of doc.querySelectorAll("[data-repeat]")) {
+    const n = Math.max(1, parseInt(el.dataset.repeat) || 1);
+    let after = el;
+    for (let i = 1; i < n; i++) { const c = el.cloneNode(true); c.dataset.clone = "1"; c.removeAttribute("id"); after.after(c); after = c; }
+  }
+}
+
+// Resolves when the preview is laid out with its fonts loaded (what an export must measure).
+async function settled() {
+  await ready;
+  try { await frame.contentDocument.fonts.ready; } catch { }
+}
+
+// Where the panel sits on screen, from data-anchor / data-offset (so the preview matches the game).
+function placePanel(doc) {
+  const p = doc.querySelector("[data-panel]");
+  if (!p) return;
+  const [ox, oy] = (p.dataset.offset || "0 0").split(/\s+/).map(Number);
+  const a = (p.dataset.anchor || "top-left").toLowerCase();
+  Object.assign(p.style, { position: "absolute", margin: "0", left: "", right: "", top: "", bottom: "", transform: "" });
+  const tx = [], cx = !a.includes("left") && !a.includes("right"), cy = !a.includes("top") && !a.includes("bottom");
+  if (a.includes("left")) p.style.left = `${ox || 0}px`; else if (a.includes("right")) p.style.right = `${ox || 0}px`; else { p.style.left = "50%"; tx.push(`translateX(calc(-50% + ${ox || 0}px))`); }
+  if (a.includes("top")) p.style.top = `${oy || 0}px`; else if (a.includes("bottom")) p.style.bottom = `${oy || 0}px`; else { p.style.top = "50%"; tx.push(`translateY(calc(-50% + ${oy || 0}px))`); }
+  if (cx || cy) p.style.transform = tx.join(" ");
+}
+
+// ---------- export ----------
+
+function hex(c) {
+  const m = c && c.match(/rgba?\(([^)]+)\)/);
+  if (!m) return null;
+  const [r, g, b, a = "1"] = m[1].split(/[,\s/]+/).filter(Boolean);
+  const alpha = Math.round(parseFloat(a) * 255);
+  if (alpha === 0) return null;
+  return "#" + [r, g, b].map(v => (+v).toString(16).padStart(2, "0")).join("") + alpha.toString(16).padStart(2, "0");
+}
+const px = v => Math.round(parseFloat(v) || 0);
+
+function directText(el) {
+  return [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join("").replace(/\s+/g, " ").trim();
+}
+
+function exportNode(el, parentBox, warnings) {
+  const cs = getComputedStyle(el);
+  if (cs.display === "none" || cs.visibility === "hidden" && el.dataset.hidden == null || el.dataset.clone) return null;
+  const box = el.getBoundingClientRect();
+  const kids = [...el.children];
+  const isText = kids.length === 0 && el.textContent.trim().length > 0;
+  if (!isText && kids.length > 0 && directText(el)) warnings.push(`text directly inside <${el.tagName.toLowerCase()}${el.id ? "#" + el.id : ""}> next to elements is dropped: wrap it in a <span>`);
+  const n = { type: isText ? "text" : "box", x: Math.round(box.left - parentBox.left), y: Math.round(box.top - parentBox.top), w: Math.round(box.width), h: Math.round(box.height) };
+  if (el.id) n.name = el.id;
+  const bg = hex(cs.backgroundColor); if (bg) n.bg = bg;
+  const bw = px(cs.borderTopWidth), bc = hex(cs.borderTopColor);
+  if (bw > 0 && bc && cs.borderTopStyle !== "none") { n.border = bw; n.borderColor = bc; }
+  const radius = px(cs.borderTopLeftRadius); if (radius > 0) n.radius = Math.min(radius, Math.floor(Math.min(n.w, n.h) / 2));
+  const op = parseFloat(cs.opacity); if (op < 1 && el.dataset.hidden == null) n.opacity = op;
+  if (el.dataset.hidden != null) n.hidden = true;   // exported, shown by the mod (faded in the preview)
+  if (el.dataset.clip != null) n.clip = true;       // cut with "…" instead of running past its box
+  if (isText) {
+    n.text = el.innerText.trim();
+    n.size = parseFloat(cs.fontSize);
+    n.color = hex(cs.color) || "#ffffffff";
+    n.font = cs.fontFamily;
+    if (parseInt(cs.fontWeight) >= 600) n.bold = true;
+    if (cs.fontStyle === "italic") n.italic = true;
+    if (cs.textTransform === "uppercase") n.upper = true;
+    const ls = parseFloat(cs.letterSpacing); if (ls) n.spacing = Math.round(ls * 10) / 10;
+    if (cs.whiteSpace !== "nowrap" && el.innerText.trim().includes(" ") && box.height > parseFloat(cs.fontSize) * 1.9) n.wrap = true;
+    const ta = cs.textAlign; n.align = ta === "center" ? "center" : ta === "right" || ta === "end" ? "right" : "left";
+    n.valign = el.dataset.valign || (n.wrap ? "top" : "middle");
+    const [pl, pt, pr, pb] = [cs.paddingLeft, cs.paddingTop, cs.paddingRight, cs.paddingBottom].map(px);
+    if (pl) n.padL = pl; if (pt) n.padT = pt; if (pr) n.padR = pr; if (pb) n.padB = pb;
+  }
+  if (el.dataset.repeat) {
+    if (!el.id) warnings.push("data-repeat needs an id (the mod fills rows by that name)");
+    n.repeat = Math.max(1, parseInt(el.dataset.repeat) || 1);
+    const next = el.nextElementSibling;
+    n.stride = next && next.dataset.clone ? Math.round(next.getBoundingClientRect().top - box.top) : Math.round(box.height + px(cs.marginBottom));
+  }
+  if (!isText) n.children = kids.map(k => exportNode(k, box, warnings)).filter(Boolean);
+  return n;
+}
+
+function buildLayout() {
+  const doc = frame.contentDocument;
+  const p = doc && doc.querySelector("[data-panel]");
+  if (!p) return { error: "no element with data-panel" };
+  const warnings = [], box = p.getBoundingClientRect(), cs = getComputedStyle(p);
+  const [ox, oy] = (p.dataset.offset || "0 0").split(/\s+/).map(Number);
+  const root = exportNode(p, box, warnings);
+  // The panel's own fill and border become the first child box, so the panel itself is just a frame.
+  const self = { type: "box", x: 0, y: 0, w: root.w, h: root.h };
+  for (const k of ["bg", "border", "borderColor", "radius", "opacity"]) if (root[k] != null) self[k] = root[k];
+  const layout = {
+    format: "nivalis-layout/1", name: p.id || p.dataset.name || "panel",
+    anchor: (p.dataset.anchor || "top-left").toLowerCase(), offsetX: ox || 0, offsetY: oy || 0,
+    w: root.w, h: root.h, children: [self, ...root.children],
+  };
+  if (p.dataset.order) layout.order = parseInt(p.dataset.order);
+  return { layout, warnings, count: JSON.stringify(layout).split('"type"').length - 1 };
+}
+
+async function writeTarget(text) {
+  if (!targetHandle) return false;
+  const w = await targetHandle.createWritable();
+  await w.write(text); await w.close();
+  return true;
+}
+
+async function exportNow(manual) {
+  await settled();
+  const r = buildLayout();
+  if (r.error) { status(r.error, "bad"); return; }
+  const json = JSON.stringify(r.layout, null, 1);
+  const note = r.warnings.length ? ` · ${r.warnings.join(" · ")}` : "";
+  if (targetHandle) {
+    if (json === lastJson && !manual) return;
+    try { await writeTarget(json); lastJson = json; status(`exported ${r.count} elements to ${targetHandle.name} at ${new Date().toLocaleTimeString()}${note}`, r.warnings.length ? "bad" : "good"); }
+    catch (e) { status(`export failed: ${e.message}`, "bad"); }
+  } else if (manual) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+    a.download = `${r.layout.name}.layout.json`; a.click();
+    status(`downloaded ${a.download} (${r.count} elements)${note}`, "good");
+  } else status(`${r.count} elements${note}`, r.warnings.length ? "bad" : "");
+}
+
+// ---------- files ----------
+
+const canPick = "showSaveFilePicker" in window;
+$("#target").onclick = async () => {
+  if (!canPick) { status("this browser can't write files: use Chrome or Edge, or Export now to download", "bad"); return; }
+  try {
+    targetHandle = await showSaveFilePicker({ suggestedName: "panel.layout.json", types: [{ description: "Kit layout", accept: { "application/json": [".json"] } }] });
+    $("#target-name").textContent = `exporting to ${targetHandle.name}`;
+    lastJson = ""; exportNow(true);
+  } catch { }
+};
+$("#export").onclick = () => exportNow(true);
+$("#open").onclick = async () => {
+  if (!("showOpenFilePicker" in window)) { status("use Chrome or Edge to open files (or paste the HTML)", "bad"); return; }
+  try {
+    [fileHandle] = await showOpenFilePicker({ types: [{ description: "HTML", accept: { "text/html": [".html", ".htm"] } }] });
+    code.value = await (await fileHandle.getFile()).text();
+    document.title = `${fileHandle.name} · Kit UI Studio`;
+    changed();
+  } catch { }
+};
+$("#save").onclick = async () => {
+  try {
+    if (!fileHandle) fileHandle = await showSaveFilePicker({ suggestedName: "panel.html", types: [{ description: "HTML", accept: { "text/html": [".html"] } }] });
+    const w = await fileHandle.createWritable(); await w.write(code.value); await w.close();
+    status(`saved ${fileHandle.name}`, "good");
+  } catch (e) { if (e.name !== "AbortError") status(`save failed: ${e.message}`, "bad"); }
+};
+
+function changed() {
+  try { localStorage.setItem("studio.code", code.value); } catch { }
+  clearTimeout(timer);
+  timer = setTimeout(() => { render(); if ($("#live").checked) setTimeout(() => exportNow(false), 50); }, 250);
+}
+code.addEventListener("input", changed);
+code.addEventListener("keydown", e => {
+  if (e.key === "Tab") { e.preventDefault(); document.execCommand("insertText", false, "  "); }
+  if ((e.ctrlKey || e.metaKey) && e.key === "s") { e.preventDefault(); $("#save").click(); }
+});
+
+fit(); render(); setTimeout(() => exportNow(false), 100);
+</script>
+</body>
+</html>
