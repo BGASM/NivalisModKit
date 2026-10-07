@@ -110,6 +110,8 @@ public static class DevCommands
     internal static void RegisterBuiltIns()
     {
         const string kit = ModKit.Guid;
+        Register(kit, "skills", "Every skill's per-level table (XP, ActionSpeed, quality values)", _ => StaffSkills.Tables());
+
         Register(kit, "help", "List the commands", _ =>
             All.Select(c => new { name = c.Name, help = c.Help, owner = c.Owner }).ToArray());
 

@@ -91,6 +91,8 @@ static partial class EventPatches
         Install(nameof(GameEvents.GameSaved),
             () => typeof(SerializationManager), nameof(SerializationManager.Save),
             postfix: nameof(SavePostfix));
+        Helper("SaveData.BeforeGameWrite", () => typeof(SerializationManager),
+            nameof(SerializationManager.Save), prefix: nameof(SavePrefix));
 
         Subscribe(nameof(GameEvents.DistrictEntered), ViaAreaArrival);
 
@@ -542,8 +544,16 @@ static partial class EventPatches
         KitLoop.Tick += retry;
     }
 
+    static void SavePrefix()
+    {
+        try { SaveData.OnBeforeGameWrite(); }
+        catch (Exception e) { KitPlugin.L.LogError($"SavePrefix: {e}"); }
+    }
+
     static void SavePostfix(string saveName, bool isAutoSave, bool __result)
     {
+        try { SaveData.OnAfterGameWrite(); }
+        catch (Exception e) { KitPlugin.L.LogError($"SavePostfix (after write): {e}"); }
         try
         {
             if (!__result) return;

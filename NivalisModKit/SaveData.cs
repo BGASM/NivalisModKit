@@ -22,6 +22,24 @@ public static class SaveData
     /// <summary>The game is saving: store any values you keep elsewhere now, before the file is written.</summary>
     public static event Action Saving;
 
+    /// <summary>
+    /// The game is about to write its save file. Change game state that should be saved differently (and undo
+    /// it in <see cref="AfterGameWrite"/>), e.g. give a worker a job the game knows so the save still works
+    /// without your mod. The game writes inside one call, so players never see the change.
+    /// </summary>
+    [Experimental("New in 0.6.")]
+    public static event Action BeforeGameWrite;
+
+    /// <summary>
+    /// The game finished writing its save file (also when it failed): undo what you changed in
+    /// <see cref="BeforeGameWrite"/>. Raised before <see cref="Saving"/>.
+    /// </summary>
+    [Experimental("New in 0.6.")]
+    public static event Action AfterGameWrite;
+
+    internal static void OnBeforeGameWrite() => GameEvents.Raise($"SaveData.{nameof(BeforeGameWrite)}", BeforeGameWrite);
+    internal static void OnAfterGameWrite() => GameEvents.Raise($"SaveData.{nameof(AfterGameWrite)}", AfterGameWrite);
+
     // mod id -> key -> value
     static Dictionary<string, Dictionary<string, JsonElement>> data = new();
     static readonly JsonSerializerOptions json = new() { WriteIndented = true };

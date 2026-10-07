@@ -18,6 +18,8 @@ internal static class ConfigBrowser
     static readonly HashSet<ConfigFile> dirty = new();
     static IDisposable saveTimer;
 
+    internal static bool IsOpen => window != null && window.Root != null && window.IsOpen;
+
     internal static void Install()
     {
         GameEvents.GameEnded += () => { SaveNow(); window = null; };
@@ -31,6 +33,7 @@ internal static class ConfigBrowser
             if (window == null) return;
             window.AddFooterButton("Close", window.Hide);
             window.Closed += SaveNow;
+            window.Closed += ModMenu.RaiseClosed;
         }
         ShowList();
         ModMenu.OpenAsChild(window);

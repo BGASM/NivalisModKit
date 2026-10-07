@@ -20,6 +20,25 @@ namespace NivalisModKit;
 /// </remarks>
 public static class Staff
 {
+    /// <summary>
+    /// Whether the person is working now, as the game decides it for staff jobs: has work and the clock is
+    /// within their working hours. The game's working day runs from 8:00; hours before that count as the
+    /// previous day's (a 22:00-02:00 shift is 22-26).
+    /// </summary>
+    [Experimental("New in 0.6.")]
+    public static bool IsOnShift(Person person)
+    {
+        try
+        {
+            var d = person?.RuntimeData;
+            if (d == null || !d.HasWork) return false;
+            float h = GameTime.Hour + GameTime.Minute / 60f;
+            if (h < 8f) h += 24f;
+            return h >= d.WorkingHours.x && h < d.WorkingHours.y;
+        }
+        catch { return false; }
+    }
+
     /// <summary>Every loaded priority list.</summary>
     public static IReadOnlyList<ActionPriorityList> PriorityLists
     {
