@@ -90,7 +90,10 @@ public sealed class StaffMember
     public float ShiftStart { get; internal set; }
     /// <summary>Shift end, hours; past 24 when the shift runs past midnight.</summary>
     public float ShiftEnd { get; internal set; }
-    /// <summary>Their roles: Serving, Cooking, Cleaning, Managing (the game's VenueTasks, as text).</summary>
+    /// <summary>
+    /// Their roles: Serving, Cooking, Cleaning, Managing (the game's VenueTasks, as text), then any mod jobs they have
+    /// on by name (see <see cref="StaffJobs"/>), e.g. "Cooking, Bartender". "None" if they have no job at all.
+    /// </summary>
     public string Roles { get; internal set; }
     /// <summary>Hours still to work (and be paid for) today, from now.</summary>
     public int HoursLeftToday { get; internal set; }
@@ -281,12 +284,21 @@ public static partial class Venues
                 list.Add(new StaffMember
                 {
                     Person = p, Name = name, Wage = data.Wage, ShiftStart = start % 24f, ShiftEnd = end,
-                    Roles = data.Tasks.ToString(), HoursLeftToday = left,
+                    Roles = RolesOf(p, data.Tasks), HoursLeftToday = left,
                 });
             }
         }
         catch (Exception e) { KitPlugin.L.LogError($"Venues.StaffOf: {e.Message}"); }
         return list;
+    }
+
+    // The game's jobs (without "None"), then mod jobs by name.
+    static string RolesOf(Person p, VenueTasks tasks)
+    {
+        var parts = new List<string>();
+        if (tasks != 0) parts.Add(tasks.ToString());
+        try { parts.AddRange(StaffJobs.JobsOf(p)); } catch { }
+        return parts.Count > 0 ? string.Join(", ", parts) : "None";
     }
 
     /// <summary>Everything in the venue's storage (fridges and cupboards), by item, with counts.</summary>
