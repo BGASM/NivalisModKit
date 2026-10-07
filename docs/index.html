@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/docfx/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/staff/docfx/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -98,7 +98,7 @@
 <li>Extract the release zip into the game folder. The file lands at <code>BepInEx\plugins\NivalisModKit.dll</code>.</li>
 </ol>
 <p>To confirm it loaded, open <code>BepInEx\LogOutput.log</code> and look for these lines:</p>
-<pre><code>Nivalis ModKit 0.5.0 loaded
+<pre><code>Nivalis ModKit 0.6.0 loaded
 Game build: 1.0 patch 3 hotfix, Steam build 25738165 (tested)
 Event BuyIngredientsStarting: live
 ...
@@ -533,6 +533,10 @@ using (GameClock.Pause(MyGuid)) { ... }     // clock stopped inside the block
 <td><code>SetOrder(list, names...)</code></td>
 <td>Reorder a list (experimental: it changes the game's shared list directly; see <a href="#versioning">Versioning</a>)</td>
 </tr>
+<tr>
+<td><code>IsOnShift(person)</code></td>
+<td>Working now, by the game's rule (0.6; see <a href="#staff-and-kitchen-experimental-kit-060">Staff and kitchen</a>)</td>
+</tr>
 </tbody>
 </table>
 <h3 id="queries">Queries</h3>
@@ -597,6 +601,7 @@ GameEvents.GameLoaded += _ =&gt;
 };
 SaveData.Saving += () =&gt; data.Set(&quot;snapshot&quot;, myState);   // store cached state before the file is written
 </code></pre>
+<p><code>SaveData.BeforeGameWrite</code> and <code>AfterGameWrite</code> (0.6) wrap the game writing its own save file: change game state that should be saved differently, and undo it after (the game writes inside one call, so players never see it). The kit uses them to keep mod jobs save-safe.</p>
 <p><code>SaveData.Loaded</code> fires just before <code>GameLoaded</code> / <code>NewGameStarted</code>, so the data is ready in those handlers. The file sits beside the game's <code>.sav</code>; it isn't known whether Steam Cloud syncs it. The game's own save-crash recovery (since patch 2) only covers <code>.sav</code> and <code>.png</code> files: if the game crashes mid-save and restores the previous <code>.sav</code>, the <code>.modkit.json</code> may be one save newer.</p>
 <h3 id="scheduler">Scheduler</h3>
 <p>Run code later on the main thread. Each call returns an <code>IDisposable</code>; dispose it to cancel.</p>
@@ -719,6 +724,7 @@ SaveData.Saving += () =&gt; data.Set(&quot;snapshot&quot;, myState);   // store 
     w.AddButton(&quot;Do the thing&quot;, DoTheThing);
 });
 </code></pre>
+<p>Settings apply live, at every click. If one of yours has a lasting effect (taking a job off staff, rebuilding something), note the change in <code>SettingChanged</code> and act in <code>ModMenu.Closed</code> (0.6), once, when the player leaves the browser; <code>ModMenu.IsOpen</code> tells you whether to wait. Changes made outside the browser (the <code>.cfg</code>, the <code>config</code> command) can apply at once.</p>
 <p><strong>Which settings show.</strong> Listing is opt-in, so nothing appears unless the mod asks:</p>
 <ul>
 <li><code>ModMenu.ListSettings(myGuid)</code> in <code>Load</code> lists all your settings.</li>
@@ -977,6 +983,94 @@ foreach (var q in Quests.Markers())                    // pinned quests: where t
 </tbody>
 </table>
 <p>Amounts are in hundredths, positive coming in and negative going out. The game merges similar receipts, so <code>Count</code> says how many transactions one covers. Rent receipts name the property they're for: check it's the player's (an NPC tenant's rent is a receipt too). These are queries, not events: call them when you need them (once a second is fine), and use <code>GameEvents.SaleMade</code>, <code>IngredientsPurchased</code>, <code>ProduceHarvested</code> and <code>FoodSpoiled</code> for things as they happen.</p>
+<h3 id="staff-and-kitchen-experimental-kit-060">Staff and kitchen (experimental, kit 0.6.0+)</h3>
+<p>Staff skills, mod jobs in the venue's Staff tab, and hooks into how the kitchen hands out work. Built for (and tested by) <a href="https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisBartender">Nivalis Bartender</a>, which adds a Bartender job in about 300 lines on top of them.</p>
+<p><strong>How the game's kitchen works.</strong> An order becomes prep jobs (chop, grill, blend: one per ingredient that needs processing) plus one plating job, which waits until its prep is done. A cook looking for work takes the first job of that kind in the venue's task queue, then a free station for it. Each step's time is scaled by the cook's cooking <code>ActionSpeed</code> and happiness. Plating sets the meal's quality (the plater's <code>PreparationQuality</code> × happiness influence, 0.7 to 1.2) and freshness (from the ingredients), and gives the plater 1 cooking XP. Prep gives no XP. A waiter's <code>ServiceQuality</code> × the same influence feeds the review's service score when taking the order and at each delivery.</p>
+<pre><code class="lang-csharp">// A job of your own in the Staff tab: the kit draws it, saves safely, and enforces &quot;at least one job&quot;.
+StaffJobs.Register(new StaffJob
+{
+    Id = MyGuid + &quot;.sommelier&quot;, Name = &quot;Sommelier&quot;, IconPng = iconBytes,   // white glyph; tinted like the game's
+    CanDo = p =&gt; StaffSkills.Has(p, StaffSkills.Serving),
+    IsOn = p =&gt; sommeliers.Contains(p.Guid),
+    Set = (p, on) =&gt; { if (on) sommeliers.Add(p.Guid); else sommeliers.Remove(p.Guid); },
+    Badge = p =&gt; StaffSkills.Level(p, StaffSkills.Serving).ToString(),
+});
+
+// Let them cook without the Cook job, and keep them to drinks.
+Kitchen.MayWork += c =&gt; { if (IsSommelier(c.Person)) c.Allow = true; };
+Kitchen.FilterJobs += c =&gt; { if (IsSommelier(c.Person)) c.RemoveWhere(j =&gt; !j.IsDrink); };
+
+// Their drinks: quality from serving, plating XP to serving.
+Kitchen.MealPlated += c =&gt;
+{
+    if (!c.IsDrink || !IsSommelier(c.Person)) return;
+    c.Quality = StaffSkills.HappinessInfluence(c.Person) * StaffSkills.ServingOf(c.Person).ServiceQuality;
+    c.ExperienceSkill = StaffSkills.Serving;
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Gives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StaffSkills.Cooking</code>, <code>Serving</code>, <code>Cleaning</code>, <code>Managing</code></td>
+<td>The skills the game's own staff jobs use.</td>
+</tr>
+<tr>
+<td><code>StaffSkills.Has</code>, <code>Level</code>, <code>Experience</code>, <code>NextLevelExperience</code></td>
+<td>Per person: has the skill, its level as the game shows it (1 = beginner, 0 = doesn't have it), XP, XP for the next level (levels need running totals).</td>
+</tr>
+<tr>
+<td><code>StaffSkills.LevelData</code>, <code>CookingOf</code>, <code>ServingOf</code></td>
+<td>A person's level values: <code>ActionSpeed</code>, <code>PreparationQuality</code>, <code>ServiceQuality</code>, <code>TakeOrderTime</code>. Cooking's <code>ActionSpeed</code> multiplies time (lower is faster); the others' is a speed (higher is faster).</td>
+</tr>
+<tr>
+<td><code>StaffSkills.HappinessInfluence</code>, <code>AddExperience</code>, <code>Describe</code></td>
+<td>The game's happiness factor; give XP (level-ups included); &quot;serving level 3, 85/150 XP&quot;.</td>
+</tr>
+<tr>
+<td><code>Staff.IsOnShift(person)</code></td>
+<td>Working now, by the game's rule (has work, within their hours; the day runs from 8:00).</td>
+</tr>
+<tr>
+<td><code>StaffJobs.Register(job)</code></td>
+<td>A mod job in every venue's Staff tab: a copy of the Cook job (frame, hover, sounds, badge) with your icon. Any number of mods can add jobs.</td>
+</tr>
+<tr>
+<td><code>StaffJobs.HasGameJob</code>, <code>HasModJob</code>, <code>CheckJobless</code>, <code>Refresh</code></td>
+<td>Job checks; give a game job to anyone left with none (after your <code>CanDo</code> changes); redraw the open tab.</td>
+</tr>
+<tr>
+<td><code>Kitchen.MayWork</code></td>
+<td>A worker without the Cook job is checked for a kitchen step: <code>Allow</code> lets them (the kit has checked free hands and shift).</td>
+</tr>
+<tr>
+<td><code>Kitchen.FilterJobs</code></td>
+<td>A worker is about to take a prep or plating job: remove the ones they shouldn't take. They take the first remaining job in queue order (none: no job now). If nobody removes anything, the game picks. Several mods combine: each removes what it objects to.</td>
+</tr>
+<tr>
+<td><code>Kitchen.StepStarting</code></td>
+<td>A prep or plating step started: multiply <code>TimeScale</code>.</td>
+</tr>
+<tr>
+<td><code>Kitchen.MealPlated</code></td>
+<td>A meal was plated: its final <code>Quality</code> (change it), <code>Freshness</code>, and the plater's <code>ExperienceSkill</code> and <code>Experience</code>. Read-only use is fine too.</td>
+</tr>
+<tr>
+<td><code>Kitchen.PrepCompleted</code></td>
+<td>A prep job finished: set <code>Experience</code> to reward it. <code>PrepSteps</code> says how many prep jobs the dish takes in all.</td>
+</tr>
+<tr>
+<td><code>Kitchen.IsDrink</code>, <code>PrepSteps</code></td>
+<td>Whether a dish is a drink; how many prep jobs one takes (0 for beer).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Save safety for mod jobs.</strong> A worker whose only jobs are mod jobs has none of the game's four, which the game doesn't allow. Just before the game writes its save, the kit gives such workers a stand-in game job (your <code>SaveAs</code>, or Cook if they can cook, else Waiter, Cleaner, Manager) and takes it off right after, so the save loads fine without your mod. After a load the kit takes the stand-in off anyone who still has their mod job.</p>
 <h3 id="helpers">Helpers</h3>
 <table>
 <thead>
@@ -1005,6 +1099,10 @@ foreach (var q in Quests.Markers())                    // pinned quests: where t
 <tr>
 <td><code>StructLayout.FieldOffset&lt;T&gt;(field)</code>, <code>Size&lt;T&gt;()</code></td>
 <td>IL2CPP field offsets and sizes from the running game. Value types have the object header subtracted.</td>
+</tr>
+<tr>
+<td><code>LogChanges.Info(log, key, line)</code></td>
+<td>Logs a line only when it differs from the last one under that key: status the game re-checks often (an idle cook looking for work) shows changes instead of thousands of copies.</td>
 </tr>
 </tbody>
 </table>
@@ -1039,6 +1137,10 @@ foreach (var q in Quests.Markers())                    // pinned quests: where t
 <tr>
 <td>Venue data (0.5)</td>
 <td><code>Venues.MenuOf</code> and the other queries, <code>Economy.PlayerStock</code> / <code>PlayerReceipts</code>, <code>ProduceHarvested</code>, <code>FoodSpoiled</code>: first version, shaped by one mod (the Ledger).</td>
+</tr>
+<tr>
+<td>Staff and kitchen (0.6)</td>
+<td><code>StaffSkills</code>, <code>StaffJobs</code>, <code>Kitchen</code>, <code>Staff.IsOnShift</code>, <code>SaveData.BeforeGameWrite</code> / <code>AfterGameWrite</code>, <code>ModMenu.Closed</code>, <code>LogChanges</code>: first version, shaped by one mod (the Bartender).</td>
 </tr>
 </tbody>
 </table>
@@ -1178,6 +1280,14 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <td><code>travel [to=District]</code></td>
 <td>Fast travels there as the game's map does (no taxi or train scene; doesn't check the district is unlocked); alone, lists the districts</td>
 </tr>
+<tr>
+<td><code>skills</code></td>
+<td>Every skill's level table: XP to reach each level, <code>ActionSpeed</code>, quality values</td>
+</tr>
+<tr>
+<td><code>staff-jobs-ui</code></td>
+<td>The first mod job's layout next to the Cook job's, in the open Staff tab (for layout problems)</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Without commands.</strong> Live reload works as a command channel too: saving a <code>.cfg</code> applies within a second, so a test mod can treat settings as triggers. <a href="https://github.com/BGASM/NivalisModKit/tree/main/samples/KitTester">KitTester</a> still accepts <code>[Ui] Demo = Panel</code> and <code>[Ui] Open = Map</code> in its <code>.cfg</code>.</p>
@@ -1279,6 +1389,19 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <p>Mods can check the build too: <code>GameBuild.IsTested</code>, <code>GameBuild.Describe()</code> and <code>GameBuild.SteamBuildId</code>.</p>
 <p>Other mods that detour <code>Vendor.BuyItem</code> directly will conflict with the purchasing pipeline. Build on <code>Purchasing</code> instead.</p>
 <h2 id="changes">Changes</h2>
+<p><strong>0.6.0</strong></p>
+<p>For players:</p>
+<ul>
+<li>Mods can now add staff jobs of their own to the venue's Staff tab, and change how the kitchen shares out work (see <a href="https://github.com/BGASM/NivalisMods/tree/main/mods/NivalisBartender">Nivalis Bartender</a>). Saves stay loadable if you remove such a mod: workers it gave only a mod job keep a game job in the save.</li>
+</ul>
+<p>For modders (all experimental):</p>
+<ul>
+<li><strong>Staff and kitchen:</strong> <code>StaffSkills</code> (skills, levels, XP and level values per person), <code>StaffJobs</code> (mod jobs in the Staff tab, with save safety), <code>Kitchen</code> (<code>MayWork</code>, <code>FilterJobs</code>, <code>StepStarting</code>, <code>MealPlated</code>, <code>PrepCompleted</code>, <code>PrepSteps</code>, <code>IsDrink</code>), <code>Staff.IsOnShift</code>.</li>
+<li><code>SaveData.BeforeGameWrite</code> / <code>AfterGameWrite</code>: change game state for the save file only.</li>
+<li><code>ModMenu.Closed</code> / <code>IsOpen</code>: apply a setting once, when the settings browser closes.</li>
+<li><code>LogChanges</code>: log only when a line changes.</li>
+<li>Dev commands <code>skills</code> and <code>staff-jobs-ui</code>.</li>
+</ul>
 <p><strong>0.5.0</strong></p>
 <p>For players:</p>
 <ul>

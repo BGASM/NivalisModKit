@@ -657,6 +657,90 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.Kitchen.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.Kitchen.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.Kitchen",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Kitchen.yml\" sourcestartlinenumber=\"1\">Venue kitchen work: who may take prep and plating jobs, which of the waiting jobs they take, how long a step\ntakes, and what a plated meal's quality and XP are. Patches install when the first handler is added; with\nno handlers the game runs untouched.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.KitchenJob.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.KitchenJob.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.KitchenJob",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.KitchenJob.yml\" sourcestartlinenumber=\"1\">A prep or plating job waiting in a venue's task queue.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.KitchenJobsContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.KitchenJobsContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.KitchenJobsContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.KitchenJobsContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Kitchen.FilterJobs\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.KitchenMayWorkContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.KitchenMayWorkContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.KitchenMayWorkContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.KitchenMayWorkContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Kitchen.MayWork\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.KitchenStep.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.KitchenStep.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.KitchenStep",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.KitchenStep.yml\" sourcestartlinenumber=\"1\">A step of making a meal: prep jobs (chop, grill, blend) first, then plating, which finishes the meal.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.KitchenStepContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.KitchenStepContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.KitchenStepContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.KitchenStepContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Kitchen.StepStarting\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.Layers.yml",
       "output": {
         ".html": {
@@ -668,6 +752,34 @@
       "IsMRef": true,
       "Title": "NivalisModKit.Layers",
       "Summary": "<p sourcefile=\"api/NivalisModKit.Layers.yml\" sourcestartlinenumber=\"1\">The game's rendering layers, by name. For cameras (cullingMask), raycasts and finding objects. Layers named CULL_n\nare props the game's own camera hides beyond n metres.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.LogChanges.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.LogChanges.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.LogChanges",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.LogChanges.yml\" sourcestartlinenumber=\"1\">Logging for things that repeat: a line is written only when it differs from the last one under the same\nkey. Use it for per-person or per-object status that the game re-checks often (an idle cook looking for\nwork every few seconds), so a verbose log shows changes instead of thousands of copies.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.MealPlatedContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.MealPlatedContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.MealPlatedContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.MealPlatedContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Kitchen.MealPlated\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -962,6 +1074,20 @@
       "IsMRef": true,
       "Title": "NivalisModKit.PlayerTradeArgs",
       "Summary": "<p sourcefile=\"api/NivalisModKit.PlayerTradeArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.PlayerBought\" data-throw-if-not-resolved=\"false\"></xref> and <xref href=\"NivalisModKit.GameEvents.PlayerSold\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.PrepCompletedContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.PrepCompletedContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.PrepCompletedContext",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.PrepCompletedContext.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.Kitchen.PrepCompleted\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1343,6 +1469,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StaffJob.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StaffJob.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StaffJob",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StaffJob.yml\" sourcestartlinenumber=\"1\">A mod's own staff job, shown in the venue's Staff tab next to Cook, Waiter, Cleaner and Manager. The kit\ndraws it as a copy of the game's Cook job (same frame, hover, sounds, level badge) with your icon, and\nhandles the rules that come with a fifth job: room in the row, the game's &quot;at least one job&quot; rule, and\nsaves that still work if your mod is removed. What the job does is up to you (see <xref href=\"NivalisModKit.Kitchen\" data-throw-if-not-resolved=\"false\"></xref>).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StaffJobs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StaffJobs.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StaffJobs",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StaffJobs.yml\" sourcestartlinenumber=\"1\">Registry of <xref href=\"NivalisModKit.StaffJob\" data-throw-if-not-resolved=\"false\"></xref>s.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.StaffMember.yml",
       "output": {
         ".html": {
@@ -1396,6 +1550,20 @@
       "IsMRef": true,
       "Title": "NivalisModKit.StaffSkillArgs",
       "Summary": "<p sourcefile=\"api/NivalisModKit.StaffSkillArgs.yml\" sourcestartlinenumber=\"1\">Arguments for <xref href=\"NivalisModKit.GameEvents.StaffSkillGained\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.StaffSkills.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.StaffSkills.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.StaffSkills",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.StaffSkills.yml\" sourcestartlinenumber=\"1\">Characters' work skills (cooking, serving, cleaning, managing): who has which, their level, XP and\nthe level's values. A person's skills are XP per skill (<code>RuntimePersonData.Skills</code>); the skill turns\nXP into a level and the level into its data (<code>CookingLevel.PreparationQuality</code>,\n<code>ServingLevel.ServiceQuality</code>, <code>ActionSpeed</code>...). The skill definitions are the ones the game's\nown staff actions use, so they always match what the game reads.</p>\n"
     },
     {
       "type": "ManagedReference",
