@@ -2,9 +2,9 @@
   <PropertyGroup>
     <AssemblyName>NivalisModKit</AssemblyName>
     <RootNamespace>NivalisModKit</RootNamespace>
-    <Version>0.5.0</Version>
+    <Version>0.6.0</Version>
     <TsName>NivalisModKit</TsName>
-    <TsDescription>Shared library for Nivalis Nights mods: game events, settings in a pause-menu Mods browser, UI, custom items and recipes, world and venue data. Install it when a mod needs it.</TsDescription>
+    <TsDescription>Shared library for Nivalis Nights mods: game events, settings in a pause-menu Mods browser, UI, custom items and recipes, world, venue and staff data, staff jobs and kitchen hooks. Install it when a mod needs it.</TsDescription>
     <TsWebsite>https://github.com/BGASM/NivalisModKit</TsWebsite>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- Ships NivalisModKit.xml so dependents get IntelliSense. Missing docs warn (CS1591). -->

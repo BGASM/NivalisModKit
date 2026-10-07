@@ -51,6 +51,20 @@ public static class ModMenu
         if (!string.IsNullOrEmpty(pluginGuid)) listed.Add(pluginGuid);
     }
 
+    /// <summary>
+    /// The kit's settings browser closed. Settings apply live while it's open (each click raises the entry's
+    /// <c>SettingChanged</c>); a mod whose setting has a lasting effect (e.g. taking a job off staff) can note the
+    /// change and act here, once, so a player trying values on the way doesn't trigger it at every click.
+    /// </summary>
+    [Experimental("New in 0.6.")]
+    public static event Action Closed;
+
+    /// <summary>Whether the kit's settings browser is open (see <see cref="Closed"/>).</summary>
+    [Experimental("New in 0.6.")]
+    public static bool IsOpen => ConfigBrowser.IsOpen;
+
+    internal static void RaiseClosed() => GameEvents.Raise($"ModMenu.{nameof(Closed)}", Closed);
+
     /// <summary>True if the mod called <see cref="ListSettings"/>.</summary>
     public static bool IsListed(string pluginGuid) => pluginGuid != null && listed.Contains(pluginGuid);
 

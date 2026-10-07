@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/venue-ledger/apiSpec/new?filename=NivalisModKit_Staff.md&amp;value=---%0Auid%3A%20NivalisModKit.Staff%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/staff/apiSpec/new?filename=NivalisModKit_Staff.md&amp;value=---%0Auid%3A%20NivalisModKit.Staff%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="NivalisModKit_Staff" data-uid="NivalisModKit.Staff" class="text-break">
-Class Staff  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Staff.cs/#L21"><i class="bi bi-code-slash"></i></a>
+Class Staff  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/Staff.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -164,7 +164,7 @@ Changes last until the game restarts. Use the dev bridge's <code>/priorities</co
 
   <h3 id="NivalisModKit_Staff_PriorityLists" data-uid="NivalisModKit.Staff.PriorityLists">
   PriorityLists
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Staff.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/Staff.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Every loaded priority list.</p>
@@ -196,11 +196,51 @@ Changes last until the game restarts. Use the dev bridge's <code>/priorities</co
 </h2>
 
 
+  <a id="NivalisModKit_Staff_IsOnShift_" data-uid="NivalisModKit.Staff.IsOnShift*"></a>
+
+  <h3 id="NivalisModKit_Staff_IsOnShift_Nivalis_GhostSystem_Ai_Person_" data-uid="NivalisModKit.Staff.IsOnShift(Nivalis.GhostSystem.Ai.Person)">
+  IsOnShift(Person)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/Staff.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether the person is working now, as the game decides it for staff jobs: has work and the clock is
+within their working hours. The game's working day runs from 8:00; hours before that count as the
+previous day's (a 22:00-02:00 shift is 22-26).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Experimental(&quot;New in 0.6.&quot;)]
+public static bool IsOnShift(Person person)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>person</code> <span class="xref">Person</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="NivalisModKit_Staff_NameOf_" data-uid="NivalisModKit.Staff.NameOf*"></a>
 
   <h3 id="NivalisModKit_Staff_NameOf_Nivalis_GhostSystem_Ai_AgentActionType_" data-uid="NivalisModKit.Staff.NameOf(Nivalis.GhostSystem.Ai.AgentActionType)">
   NameOf(AgentActionType)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Staff.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/Staff.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>An action's asset name, e.g. as listed by the bridge's <code>/priorities</code>.</p>
@@ -237,7 +277,7 @@ Changes last until the game restarts. Use the dev bridge's <code>/priorities</co
 
   <h3 id="NivalisModKit_Staff_Order_Nivalis_GhostSystem_Ai_ActionPriorityList_" data-uid="NivalisModKit.Staff.Order(Nivalis.GhostSystem.Ai.ActionPriorityList)">
   Order(ActionPriorityList)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Staff.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/Staff.cs/#L69"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The actions in a list, in priority order (first = most important).</p>
@@ -274,7 +314,7 @@ Changes last until the game restarts. Use the dev bridge's <code>/priorities</co
 
   <h3 id="NivalisModKit_Staff_PriorityListOf_Nivalis_GhostSystem_Ai_Person_" data-uid="NivalisModKit.Staff.PriorityListOf(Nivalis.GhostSystem.Ai.Person)">
   PriorityListOf(Person)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Staff.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/Staff.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The priority list a character uses, or null.</p>
@@ -311,7 +351,7 @@ Changes last until the game restarts. Use the dev bridge's <code>/priorities</co
 
   <h3 id="NivalisModKit_Staff_SetOrder_Nivalis_GhostSystem_Ai_ActionPriorityList_System_Collections_Generic_IEnumerable_Nivalis_GhostSystem_Ai_AgentActionType__" data-uid="NivalisModKit.Staff.SetOrder(Nivalis.GhostSystem.Ai.ActionPriorityList,System.Collections.Generic.IEnumerable{Nivalis.GhostSystem.Ai.AgentActionType})">
   SetOrder(ActionPriorityList, IEnumerable&lt;AgentActionType&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Staff.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/Staff.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets a list's order. <code class="paramref">order</code> must contain exactly the list's current actions,
@@ -352,7 +392,7 @@ public static bool SetOrder(ActionPriorityList list, IEnumerable&lt;AgentActionT
 
   <h3 id="NivalisModKit_Staff_SetOrder_Nivalis_GhostSystem_Ai_ActionPriorityList_System_String___" data-uid="NivalisModKit.Staff.SetOrder(Nivalis.GhostSystem.Ai.ActionPriorityList,System.String[])">
   SetOrder(ActionPriorityList, params string[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/venue-ledger/NivalisModKit/Staff.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/Staff.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reorders a list by action names (see <a class="xref" href="NivalisModKit.Staff.html#NivalisModKit_Staff_NameOf_Nivalis_GhostSystem_Ai_AgentActionType_">NameOf(AgentActionType)</a>), most important first. Names not

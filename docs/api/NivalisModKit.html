@@ -333,9 +333,48 @@ failed to install never fires; check <a class="xref" href="NivalisModKit.GameEve
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.Kitchen.html">Kitchen</a></dt>
+      <dd><p>Venue kitchen work: who may take prep and plating jobs, which of the waiting jobs they take, how long a step
+takes, and what a plated meal's quality and XP are. Patches install when the first handler is added; with
+no handlers the game runs untouched.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.KitchenJob.html">KitchenJob</a></dt>
+      <dd><p>A prep or plating job waiting in a venue's task queue.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.KitchenJobsContext.html">KitchenJobsContext</a></dt>
+      <dd><p>Arguments for <a class="xref" href="NivalisModKit.Kitchen.html#NivalisModKit_Kitchen_FilterJobs">FilterJobs</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.KitchenMayWorkContext.html">KitchenMayWorkContext</a></dt>
+      <dd><p>Arguments for <a class="xref" href="NivalisModKit.Kitchen.html#NivalisModKit_Kitchen_MayWork">MayWork</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.KitchenStepContext.html">KitchenStepContext</a></dt>
+      <dd><p>Arguments for <a class="xref" href="NivalisModKit.Kitchen.html#NivalisModKit_Kitchen_StepStarting">StepStarting</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.Layers.html">Layers</a></dt>
       <dd><p>The game's rendering layers, by name. For cameras (cullingMask), raycasts and finding objects. Layers named CULL_n
 are props the game's own camera hides beyond n metres.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.LogChanges.html">LogChanges</a></dt>
+      <dd><p>Logging for things that repeat: a line is written only when it differs from the last one under the same
+key. Use it for per-person or per-object status that the game re-checks often (an idle cook looking for
+work every few seconds), so a verbose log shows changes instead of thousands of copies.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.MealPlatedContext.html">MealPlatedContext</a></dt>
+      <dd><p>Arguments for <a class="xref" href="NivalisModKit.Kitchen.html#NivalisModKit_Kitchen_MealPlated">MealPlated</a>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -445,6 +484,11 @@ ShopTradeRequest or BasicTemp, where the IL2CPP trampoline passes garbage).</p>
     <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.PlayerTradeArgs.html">PlayerTradeArgs</a></dt>
       <dd><p>Arguments for <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_PlayerBought">PlayerBought</a> and <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_PlayerSold">PlayerSold</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.PrepCompletedContext.html">PrepCompletedContext</a></dt>
+      <dd><p>Arguments for <a class="xref" href="NivalisModKit.Kitchen.html#NivalisModKit_Kitchen_PrepCompleted">PrepCompleted</a>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -593,6 +637,19 @@ take order, deliver, buy, manage complaint, cleanup meal, cleanup trash, cleanup
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.StaffJob.html">StaffJob</a></dt>
+      <dd><p>A mod's own staff job, shown in the venue's Staff tab next to Cook, Waiter, Cleaner and Manager. The kit
+draws it as a copy of the game's Cook job (same frame, hover, sounds, level badge) with your icon, and
+handles the rules that come with a fifth job: room in the row, the game's &quot;at least one job&quot; rule, and
+saves that still work if your mod is removed. What the job does is up to you (see <a class="xref" href="NivalisModKit.Kitchen.html">Kitchen</a>).</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.StaffJobs.html">StaffJobs</a></dt>
+      <dd><p>Registry of <a class="xref" href="NivalisModKit.StaffJob.html">StaffJob</a>s.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.StaffMember.html">StaffMember</a></dt>
       <dd><p>A member of staff: see <a class="xref" href="NivalisModKit.Venues.html#NivalisModKit_Venues_StaffOf_Nivalis_GhostSystem_CustomerLoop_VenueAreaGhost_">StaffOf(VenueAreaGhost)</a>.</p>
 </dd>
@@ -610,6 +667,15 @@ take order, deliver, buy, manage complaint, cleanup meal, cleanup trash, cleanup
     <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.StaffSkillArgs.html">StaffSkillArgs</a></dt>
       <dd><p>Arguments for <a class="xref" href="NivalisModKit.GameEvents.html#NivalisModKit_GameEvents_StaffSkillGained">StaffSkillGained</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.StaffSkills.html">StaffSkills</a></dt>
+      <dd><p>Characters' work skills (cooking, serving, cleaning, managing): who has which, their level, XP and
+the level's values. A person's skills are XP per skill (<code>RuntimePersonData.Skills</code>); the skill turns
+XP into a level and the level into its data (<code>CookingLevel.PreparationQuality</code>,
+<code>ServingLevel.ServiceQuality</code>, <code>ActionSpeed</code>...). The skill definitions are the ones the game's
+own staff actions use, so they always match what the game reads.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -710,6 +776,11 @@ Enums
     <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.KitPlugin.UntestedBuildMode.html">KitPlugin.UntestedBuildMode</a></dt>
       <dd><p>What the kit does on a game build it wasn't tested on.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.KitchenStep.html">KitchenStep</a></dt>
+      <dd><p>A step of making a meal: prep jobs (chop, grill, blend) first, then plating, which finishes the meal.</p>
 </dd>
     </dl>
     <dl class="jumplist">
