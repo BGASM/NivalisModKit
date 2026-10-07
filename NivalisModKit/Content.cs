@@ -193,6 +193,7 @@ public static class Content
         harmony.Patch(AccessTools.Method(typeof(LocObjectsDB), nameof(LocObjectsDB.ForceUpdateCurrentLanguagePairs)),
             postfix: new HarmonyMethod(typeof(Content), nameof(RegisterTexts)));
         GameEvents.GameReady += LearnStartingRecipes;
+        GameEvents.GameReady += ApplyReplacementsToSavedRecipes;
         ContentModels.Install(harmony);
         ContentGuard.Install(harmony);
     }
@@ -403,6 +404,44 @@ public static class Content
         if (inputs != null) def.inputsNew = inputs;
         c.Recipe = def;
         return def;
+    }
+
+    // The game saves each known recipe's ingredients (MealRecipeSave) and puts them back on load, over the recipe the kit
+    // built. A save from before a pack's "replace" (or before 0.6.1, when replace didn't work) so keeps the old
+    // ingredient: swap it in the loaded recipe too. Only slots still holding a replaced ingredient change, so the
+    // player's other ingredient choices stay.
+    static void ApplyReplacementsToSavedRecipes()
+    {
+        try
+        {
+            var db = MealDatabase.Instance;
+            if (db == null) return;
+            foreach (var c in recipes)
+            {
+                if (c.Recipe == null || c.Spec.ReplaceIngredient.Count == 0) continue;
+                if (!db._allRecipes.ContainsKey(c.Recipe)) continue;
+                var runtime = db._allRecipes[c.Recipe]?.TryCast<MealRecipe>();
+                var have = runtime?.inputIngredients;
+                var want = c.Recipe.inputsNew;
+                if (have == null || want == null) continue;
+                int changed = 0;
+                for (int i = 0; i < have.Length && i < want.Length; i++)
+                {
+                    var slot = have[i];
+                    var old = slot?.DefaultItem;
+                    var now = want[i]?.DefaultItem;
+                    if (old == null || now == null || old.Pointer == now.Pointer) continue;
+                    if (!c.Spec.ReplaceIngredient.Keys.Any(k => Items.Squash(k) == Items.Squash(old.name))) continue;
+                    slot.DefaultItem = now;
+                    have[i] = slot;
+                    changed++;
+                }
+                if (changed == 0) continue;
+                runtime.inputIngredients = have;
+                KitPlugin.L.LogInfo($"Content: recipe '{c.Id}': {changed} replaced ingredient(s) applied to the saved recipe");
+            }
+        }
+        catch (Exception e) { KitPlugin.L.LogWarning($"Content: saved recipes: {e.Message}"); }
     }
 
     // Recipes marked KnownFromStart become known in each game (the game saves known recipes, so once is enough).

@@ -686,7 +686,7 @@ Other mods that detour `Vendor.BuyItem` directly will conflict with the purchasi
 
 For players:
 - Custom dishes and drinks are now cooked and served as themselves. A copied dish kept pointing at its template's recipe, so orders for it were cooked from the template's ingredients and served as the template (an Espresso Tonic came out as a Galaxy Lemonade).
-- A content pack's `replace` now changes the recipe's ingredient (it had no effect).
+- A content pack's `replace` now changes the recipe's ingredient (it had no effect). Saves that already know the recipe get the new ingredient too when they load (the game saves each known recipe's ingredients); other ingredient choices stay.
 
 For modders:
 - `StaffJobs.JobsOf(person)`: the names of a worker's mod jobs. `Venues.StaffOf` includes them in `Roles` (e.g. "Cooking, Bartender").
