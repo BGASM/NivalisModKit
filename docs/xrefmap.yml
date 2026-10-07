@@ -7299,6 +7299,19 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.StaffJobs.HasModJob
   nameWithType: StaffJobs.HasModJob
+- uid: NivalisModKit.StaffJobs.JobsOf(Nivalis.GhostSystem.Ai.Person)
+  name: JobsOf(Person)
+  href: api/NivalisModKit.StaffJobs.html#NivalisModKit_StaffJobs_JobsOf_Nivalis_GhostSystem_Ai_Person_
+  commentId: M:NivalisModKit.StaffJobs.JobsOf(Nivalis.GhostSystem.Ai.Person)
+  fullName: NivalisModKit.StaffJobs.JobsOf(Nivalis.GhostSystem.Ai.Person)
+  nameWithType: StaffJobs.JobsOf(Person)
+- uid: NivalisModKit.StaffJobs.JobsOf*
+  name: JobsOf
+  href: api/NivalisModKit.StaffJobs.html#NivalisModKit_StaffJobs_JobsOf_
+  commentId: Overload:NivalisModKit.StaffJobs.JobsOf
+  isSpec: "True"
+  fullName: NivalisModKit.StaffJobs.JobsOf
+  nameWithType: StaffJobs.JobsOf
 - uid: NivalisModKit.StaffJobs.Refresh
   name: Refresh()
   href: api/NivalisModKit.StaffJobs.html#NivalisModKit_StaffJobs_Refresh

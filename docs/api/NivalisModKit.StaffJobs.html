@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/staff/apiSpec/new?filename=NivalisModKit_StaffJobs.md&amp;value=---%0Auid%3A%20NivalisModKit.StaffJobs%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/new/main/apiSpec/new?filename=NivalisModKit_StaffJobs.md&amp;value=---%0Auid%3A%20NivalisModKit.StaffJobs%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -89,7 +89,7 @@
 
 
   <h1 id="NivalisModKit_StaffJobs" data-uid="NivalisModKit.StaffJobs" class="text-break">
-Class StaffJobs  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/StaffJobs.cs/#L53"><i class="bi bi-code-slash"></i></a>
+Class StaffJobs  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffJobs.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -158,7 +158,7 @@ public static class StaffJobs</code></pre>
 
   <h3 id="NivalisModKit_StaffJobs_CheckJobless" data-uid="NivalisModKit.StaffJobs.CheckJobless">
   CheckJobless()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/StaffJobs.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffJobs.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gives a game job to staff left with none (e.g. your job's <a class="xref" href="NivalisModKit.StaffJob.html#NivalisModKit_StaffJob_CanDo">CanDo</a> changed with a
@@ -187,7 +187,7 @@ after changing who may do your job.</p>
 
   <h3 id="NivalisModKit_StaffJobs_HasGameJob_Nivalis_GhostSystem_Ai_Person_" data-uid="NivalisModKit.StaffJobs.HasGameJob(Nivalis.GhostSystem.Ai.Person)">
   HasGameJob(Person)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/StaffJobs.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffJobs.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether the person has one of the game's four jobs on.</p>
@@ -224,7 +224,7 @@ after changing who may do your job.</p>
 
   <h3 id="NivalisModKit_StaffJobs_HasModJob_Nivalis_GhostSystem_Ai_Person_" data-uid="NivalisModKit.StaffJobs.HasModJob(Nivalis.GhostSystem.Ai.Person)">
   HasModJob(Person)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/StaffJobs.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffJobs.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether the person has a mod job on (one they may do).</p>
@@ -257,11 +257,49 @@ after changing who may do your job.</p>
 
 
 
+  <a id="NivalisModKit_StaffJobs_JobsOf_" data-uid="NivalisModKit.StaffJobs.JobsOf*"></a>
+
+  <h3 id="NivalisModKit_StaffJobs_JobsOf_Nivalis_GhostSystem_Ai_Person_" data-uid="NivalisModKit.StaffJobs.JobsOf(Nivalis.GhostSystem.Ai.Person)">
+  JobsOf(Person)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffJobs.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The names of the mod jobs the person has on (empty if none), e.g. for a staff list.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Experimental(&quot;New in 0.6.1.&quot;)]
+public static IReadOnlyList&lt;string&gt; JobsOf(Person person)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>person</code> <span class="xref">Person</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="NivalisModKit_StaffJobs_Refresh_" data-uid="NivalisModKit.StaffJobs.Refresh*"></a>
 
   <h3 id="NivalisModKit_StaffJobs_Refresh" data-uid="NivalisModKit.StaffJobs.Refresh">
   Refresh()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/StaffJobs.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffJobs.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Redraws the open Staff tab's mod jobs (after a state change made elsewhere).</p>
@@ -288,7 +326,7 @@ after changing who may do your job.</p>
 
   <h3 id="NivalisModKit_StaffJobs_Register_NivalisModKit_StaffJob_" data-uid="NivalisModKit.StaffJobs.Register(NivalisModKit.StaffJob)">
   Register(StaffJob)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/staff/NivalisModKit/StaffJobs.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffJobs.cs/#L65"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a job to every venue's Staff tab. Returns false (and logs why) if it can't.</p>

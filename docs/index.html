@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="">
       
       
-      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/staff/docfx/index.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/BGASM/NivalisModKit/blob/main/docfx/index.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -98,7 +98,7 @@
 <li>Extract the release zip into the game folder. The file lands at <code>BepInEx\plugins\NivalisModKit.dll</code>.</li>
 </ol>
 <p>To confirm it loaded, open <code>BepInEx\LogOutput.log</code> and look for these lines:</p>
-<pre><code>Nivalis ModKit 0.6.0 loaded
+<pre><code>Nivalis ModKit 0.6.1 loaded
 Game build: 1.0 patch 3 hotfix, Steam build 25738165 (tested)
 Event BuyIngredientsStarting: live
 ...
@@ -1389,6 +1389,16 @@ curl &quot;http://127.0.0.1:5710/ui?panel=SettingsPanel&amp;rects&quot;
 <p>Mods can check the build too: <code>GameBuild.IsTested</code>, <code>GameBuild.Describe()</code> and <code>GameBuild.SteamBuildId</code>.</p>
 <p>Other mods that detour <code>Vendor.BuyItem</code> directly will conflict with the purchasing pipeline. Build on <code>Purchasing</code> instead.</p>
 <h2 id="changes">Changes</h2>
+<p><strong>0.6.1</strong></p>
+<p>For players:</p>
+<ul>
+<li>Custom dishes and drinks are now cooked and served as themselves. A copied dish kept pointing at its template's recipe, so orders for it were cooked from the template's ingredients and served as the template (an Espresso Tonic came out as a Galaxy Lemonade).</li>
+<li>A content pack's <code>replace</code> now changes the recipe's ingredient (it had no effect). Saves that already know the recipe get the new ingredient too when they load (the game saves each known recipe's ingredients); other ingredient choices stay.</li>
+</ul>
+<p>For modders:</p>
+<ul>
+<li><code>StaffJobs.JobsOf(person)</code>: the names of a worker's mod jobs. <code>Venues.StaffOf</code> includes them in <code>Roles</code> (e.g. &quot;Cooking, Bartender&quot;).</li>
+</ul>
 <p><strong>0.6.0</strong></p>
 <p>For players:</p>
 <ul>
