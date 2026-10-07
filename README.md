@@ -31,7 +31,7 @@ See [Building from source](#building-from-source) to get set up.
 To confirm it loaded, open `BepInEx\LogOutput.log` and look for these lines:
 
 ```
-Nivalis ModKit 0.6.0 loaded
+Nivalis ModKit 0.6.1 loaded
 Game build: 1.0 patch 3 hotfix, Steam build 25738165 (tested)
 Event BuyIngredientsStarting: live
 ...
@@ -681,6 +681,15 @@ Mods can check the build too: `GameBuild.IsTested`, `GameBuild.Describe()` and `
 Other mods that detour `Vendor.BuyItem` directly will conflict with the purchasing pipeline. Build on `Purchasing` instead.
 
 ## Changes
+
+**0.6.1**
+
+For players:
+- Custom dishes and drinks are now cooked and served as themselves. A copied dish kept pointing at its template's recipe, so orders for it were cooked from the template's ingredients and served as the template (an Espresso Tonic came out as a Galaxy Lemonade).
+- A content pack's `replace` now changes the recipe's ingredient (it had no effect).
+
+For modders:
+- `StaffJobs.JobsOf(person)`: the names of a worker's mod jobs. `Venues.StaffOf` includes them in `Roles` (e.g. "Cooking, Bartender").
 
 **0.6.0**
 

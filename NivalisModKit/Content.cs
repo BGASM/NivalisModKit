@@ -335,6 +335,11 @@ public static class Content
                 __instance._allRecipes[def] = new IRecipe(runtime.Pointer);
                 __instance._guidMealRecipeMap[c.Guid] = def;
                 if (def.output?.type != null) __instance._mealRecipeMap[def.output.type] = def;
+                // A dish item points at its recipe (FoodItemType.recipe), and the kitchen cooks from that link. A copied
+                // dish still points at its template's recipe, so orders for it were cooked (and served) as the template.
+                var dish = def.output?.type?.TryCast<FoodItemType>();
+                // Only for the kit's own items: a recipe for an existing dish leaves that dish's recipe alone.
+                if (dish != null && items.Any(i => i.Item != null && i.Item.Pointer == dish.Pointer)) dish.recipe = def;
                 added++;
             }
             if (added > 0) KitPlugin.L.LogInfo($"Content: added {added} recipe(s): {string.Join(", ", recipes.Where(r => r.Recipe != null).Select(r => r.Id))}");
@@ -378,14 +383,24 @@ public static class Content
             def.output = new ItemTypeAmount(output, s.OutputAmount ?? def.output?.amount ?? 1);
         }
 
+        // InputDefinition is a struct: edit a copy and write it back into the array, or the recipe never sees it.
+        var inputs = def.inputsNew;
         foreach (var swap in s.ReplaceIngredient)
         {
             var with = FindItem(swap.Value);
-            var slot = def.inputsNew?.FirstOrDefault(i => i?.DefaultItem != null && Items.Squash(i.DefaultItem.name) == Items.Squash(swap.Key));
-            if (slot == null) { KitPlugin.L.LogWarning($"Content: recipe '{c.Id}': the template has no ingredient '{swap.Key}'"); continue; }
+            int index = -1;
+            for (int i = 0; inputs != null && i < inputs.Length; i++)
+            {
+                var item = inputs[i]?.DefaultItem;
+                if (item != null && Items.Squash(item.name) == Items.Squash(swap.Key)) { index = i; break; }
+            }
+            if (index < 0) { KitPlugin.L.LogWarning($"Content: recipe '{c.Id}': the template has no ingredient '{swap.Key}'"); continue; }
             if (with == null) { KitPlugin.L.LogWarning($"Content: recipe '{c.Id}': no item named '{swap.Value}'"); continue; }
-            slot.DefaultItem = with;
+            var input = inputs[index];
+            input.DefaultItem = with;
+            inputs[index] = input;
         }
+        if (inputs != null) def.inputsNew = inputs;
         c.Recipe = def;
         return def;
     }

@@ -90,6 +90,15 @@ public static class StaffJobs
     /// <summary>Whether the person has a mod job on (one they may do).</summary>
     public static bool HasModJob(Person person) => jobs.Exists(j => j.On(person));
 
+    /// <summary>The names of the mod jobs the person has on (empty if none), e.g. for a staff list.</summary>
+    [Experimental("New in 0.6.1.")]
+    public static IReadOnlyList<string> JobsOf(Person person)
+    {
+        var names = new List<string>();
+        foreach (var j in jobs) if (j.On(person)) names.Add(j.Name ?? j.Id);
+        return names;
+    }
+
     /// <summary>
     /// Gives a game job to staff left with none (e.g. your job's <see cref="StaffJob.CanDo"/> changed with a
     /// setting): Cook if they can cook, else Waiter, Cleaner, Manager. Done by the kit after each load; call it
