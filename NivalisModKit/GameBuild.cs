@@ -15,7 +15,8 @@ public static class GameBuild
     // Builds the kit knows, newest first. Tested = this kit release was checked on it.
     static readonly (string fingerprint, string label, bool tested)[] Known =
     {
-        ("6bfae1c6445a755b", "1.0 patch 3 hotfix", true),
+        ("f67d5c384a12b67e", "1.0 patch 4", true),
+        ("6bfae1c6445a755b", "1.0 patch 3 hotfix", false),
         ("ddca5904a3e8be80", "1.0 patch 3", false),
         ("0da6aac5209f504d", "1.0 patch 2", false),
         ("d7d7fef8b76699ae", "1.0 patch 1", false),

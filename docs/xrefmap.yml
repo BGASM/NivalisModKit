@@ -381,6 +381,96 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.CommandArgs.Values
   nameWithType: CommandArgs.Values
+- uid: NivalisModKit.ConfigurationManagerAttributes
+  name: ConfigurationManagerAttributes
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html
+  commentId: T:NivalisModKit.ConfigurationManagerAttributes
+  fullName: NivalisModKit.ConfigurationManagerAttributes
+  nameWithType: ConfigurationManagerAttributes
+- uid: NivalisModKit.ConfigurationManagerAttributes.Browsable
+  name: Browsable
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_Browsable
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.Browsable
+  fullName: NivalisModKit.ConfigurationManagerAttributes.Browsable
+  nameWithType: ConfigurationManagerAttributes.Browsable
+- uid: NivalisModKit.ConfigurationManagerAttributes.Category
+  name: Category
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_Category
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.Category
+  fullName: NivalisModKit.ConfigurationManagerAttributes.Category
+  nameWithType: ConfigurationManagerAttributes.Category
+- uid: NivalisModKit.ConfigurationManagerAttributes.DefaultValue
+  name: DefaultValue
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_DefaultValue
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.DefaultValue
+  fullName: NivalisModKit.ConfigurationManagerAttributes.DefaultValue
+  nameWithType: ConfigurationManagerAttributes.DefaultValue
+- uid: NivalisModKit.ConfigurationManagerAttributes.Description
+  name: Description
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_Description
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.Description
+  fullName: NivalisModKit.ConfigurationManagerAttributes.Description
+  nameWithType: ConfigurationManagerAttributes.Description
+- uid: NivalisModKit.ConfigurationManagerAttributes.DispName
+  name: DispName
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_DispName
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.DispName
+  fullName: NivalisModKit.ConfigurationManagerAttributes.DispName
+  nameWithType: ConfigurationManagerAttributes.DispName
+- uid: NivalisModKit.ConfigurationManagerAttributes.HideDefaultButton
+  name: HideDefaultButton
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_HideDefaultButton
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.HideDefaultButton
+  fullName: NivalisModKit.ConfigurationManagerAttributes.HideDefaultButton
+  nameWithType: ConfigurationManagerAttributes.HideDefaultButton
+- uid: NivalisModKit.ConfigurationManagerAttributes.HideSettingName
+  name: HideSettingName
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_HideSettingName
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.HideSettingName
+  fullName: NivalisModKit.ConfigurationManagerAttributes.HideSettingName
+  nameWithType: ConfigurationManagerAttributes.HideSettingName
+- uid: NivalisModKit.ConfigurationManagerAttributes.IsAdvanced
+  name: IsAdvanced
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_IsAdvanced
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.IsAdvanced
+  fullName: NivalisModKit.ConfigurationManagerAttributes.IsAdvanced
+  nameWithType: ConfigurationManagerAttributes.IsAdvanced
+- uid: NivalisModKit.ConfigurationManagerAttributes.ObjToStr
+  name: ObjToStr
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_ObjToStr
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.ObjToStr
+  fullName: NivalisModKit.ConfigurationManagerAttributes.ObjToStr
+  nameWithType: ConfigurationManagerAttributes.ObjToStr
+- uid: NivalisModKit.ConfigurationManagerAttributes.Order
+  name: Order
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_Order
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.Order
+  fullName: NivalisModKit.ConfigurationManagerAttributes.Order
+  nameWithType: ConfigurationManagerAttributes.Order
+- uid: NivalisModKit.ConfigurationManagerAttributes.ReadOnly
+  name: ReadOnly
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_ReadOnly
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.ReadOnly
+  fullName: NivalisModKit.ConfigurationManagerAttributes.ReadOnly
+  nameWithType: ConfigurationManagerAttributes.ReadOnly
+- uid: NivalisModKit.ConfigurationManagerAttributes.RequiresRestart
+  name: RequiresRestart
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_RequiresRestart
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.RequiresRestart
+  fullName: NivalisModKit.ConfigurationManagerAttributes.RequiresRestart
+  nameWithType: ConfigurationManagerAttributes.RequiresRestart
+- uid: NivalisModKit.ConfigurationManagerAttributes.ShowRangeAsPercent
+  name: ShowRangeAsPercent
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_ShowRangeAsPercent
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.ShowRangeAsPercent
+  fullName: NivalisModKit.ConfigurationManagerAttributes.ShowRangeAsPercent
+  nameWithType: ConfigurationManagerAttributes.ShowRangeAsPercent
+- uid: NivalisModKit.ConfigurationManagerAttributes.StrToObj
+  name: StrToObj
+  href: api/NivalisModKit.ConfigurationManagerAttributes.html#NivalisModKit_ConfigurationManagerAttributes_StrToObj
+  commentId: F:NivalisModKit.ConfigurationManagerAttributes.StrToObj
+  fullName: NivalisModKit.ConfigurationManagerAttributes.StrToObj
+  nameWithType: ConfigurationManagerAttributes.StrToObj
 - uid: NivalisModKit.Content
   name: Content
   href: api/NivalisModKit.Content.html
@@ -4161,6 +4251,19 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.ModMenu.SetBrowser
   nameWithType: ModMenu.SetBrowser
+- uid: NivalisModKit.ModMenu.SettingsMenu
+  name: SettingsMenu
+  href: api/NivalisModKit.ModMenu.html#NivalisModKit_ModMenu_SettingsMenu
+  commentId: P:NivalisModKit.ModMenu.SettingsMenu
+  fullName: NivalisModKit.ModMenu.SettingsMenu
+  nameWithType: ModMenu.SettingsMenu
+- uid: NivalisModKit.ModMenu.SettingsMenu*
+  name: SettingsMenu
+  href: api/NivalisModKit.ModMenu.html#NivalisModKit_ModMenu_SettingsMenu_
+  commentId: Overload:NivalisModKit.ModMenu.SettingsMenu
+  isSpec: "True"
+  fullName: NivalisModKit.ModMenu.SettingsMenu
+  nameWithType: ModMenu.SettingsMenu
 - uid: NivalisModKit.ModSaveData
   name: ModSaveData
   href: api/NivalisModKit.ModSaveData.html
@@ -6219,6 +6322,19 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.Quests.Pinned
   nameWithType: Quests.Pinned
+- uid: NivalisModKit.Quests.ShowOnlyPinned
+  name: ShowOnlyPinned
+  href: api/NivalisModKit.Quests.html#NivalisModKit_Quests_ShowOnlyPinned
+  commentId: P:NivalisModKit.Quests.ShowOnlyPinned
+  fullName: NivalisModKit.Quests.ShowOnlyPinned
+  nameWithType: Quests.ShowOnlyPinned
+- uid: NivalisModKit.Quests.ShowOnlyPinned*
+  name: ShowOnlyPinned
+  href: api/NivalisModKit.Quests.html#NivalisModKit_Quests_ShowOnlyPinned_
+  commentId: Overload:NivalisModKit.Quests.ShowOnlyPinned
+  isSpec: "True"
+  fullName: NivalisModKit.Quests.ShowOnlyPinned
+  nameWithType: Quests.ShowOnlyPinned
 - uid: NivalisModKit.ReceiptInfo
   name: ReceiptInfo
   href: api/NivalisModKit.ReceiptInfo.html
@@ -7644,6 +7760,19 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.StaffSkills.CookingOf
   nameWithType: StaffSkills.CookingOf
+- uid: NivalisModKit.StaffSkills.CookingTime(Nivalis.GhostSystem.Ai.Person)
+  name: CookingTime(Person)
+  href: api/NivalisModKit.StaffSkills.html#NivalisModKit_StaffSkills_CookingTime_Nivalis_GhostSystem_Ai_Person_
+  commentId: M:NivalisModKit.StaffSkills.CookingTime(Nivalis.GhostSystem.Ai.Person)
+  fullName: NivalisModKit.StaffSkills.CookingTime(Nivalis.GhostSystem.Ai.Person)
+  nameWithType: StaffSkills.CookingTime(Person)
+- uid: NivalisModKit.StaffSkills.CookingTime*
+  name: CookingTime
+  href: api/NivalisModKit.StaffSkills.html#NivalisModKit_StaffSkills_CookingTime_
+  commentId: Overload:NivalisModKit.StaffSkills.CookingTime
+  isSpec: "True"
+  fullName: NivalisModKit.StaffSkills.CookingTime
+  nameWithType: StaffSkills.CookingTime
 - uid: NivalisModKit.StaffSkills.Describe(Nivalis.GhostSystem.Ai.Person,Nivalis.SkillSystem.SkillDefinition)
   name: Describe(Person, SkillDefinition)
   href: api/NivalisModKit.StaffSkills.html#NivalisModKit_StaffSkills_Describe_Nivalis_GhostSystem_Ai_Person_Nivalis_SkillSystem_SkillDefinition_
@@ -7770,6 +7899,12 @@ references:
   isSpec: "True"
   fullName: NivalisModKit.StaffSkills.NextLevelExperience
   nameWithType: StaffSkills.NextLevelExperience
+- uid: NivalisModKit.StaffSkills.NoSkillTime
+  name: NoSkillTime
+  href: api/NivalisModKit.StaffSkills.html#NivalisModKit_StaffSkills_NoSkillTime
+  commentId: F:NivalisModKit.StaffSkills.NoSkillTime
+  fullName: NivalisModKit.StaffSkills.NoSkillTime
+  nameWithType: StaffSkills.NoSkillTime
 - uid: NivalisModKit.StaffSkills.Same(Nivalis.SkillSystem.SkillDefinition,Nivalis.SkillSystem.SkillDefinition)
   name: Same(SkillDefinition, SkillDefinition)
   href: api/NivalisModKit.StaffSkills.html#NivalisModKit_StaffSkills_Same_Nivalis_SkillSystem_SkillDefinition_Nivalis_SkillSystem_SkillDefinition_

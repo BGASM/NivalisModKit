@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using BepInEx.Unity.IL2CPP;
 using Nivalis;
 using UnityEngine;
 
@@ -43,7 +45,8 @@ public static class ModMenu
 
     /// <summary>
     /// Lists all of your mod's settings in the kit's browser (by default only settings tagged with
-    /// <see cref="ModSetting"/> appear). Tag settings to hide them or mark them read-only, advanced or restart-only.
+    /// <see cref="ConfigurationManagerAttributes"/> or <see cref="ModSetting"/> appear). Tag settings to hide them or
+    /// mark them read-only, advanced or restart-only.
     /// Call in your plugin's Load with your plugin GUID.
     /// </summary>
     public static void ListSettings(string pluginGuid)
@@ -55,6 +58,8 @@ public static class ModMenu
     /// The kit's settings browser closed. Settings apply live while it's open (each click raises the entry's
     /// <c>SettingChanged</c>); a mod whose setting has a lasting effect (e.g. taking a job off staff) can note the
     /// change and act here, once, so a player trying values on the way doesn't trigger it at every click.
+    /// Other settings menus don't raise it: act on <c>SettingChanged</c> when <see cref="IsOpen"/> is false
+    /// (Mod Settings Menu, for one, applies pending changes together).
     /// </summary>
     [Experimental("New in 0.6.")]
     public static event Action Closed;
@@ -173,6 +178,44 @@ public static class ModMenu
         window.Show();
     }
 
+    // ---------- other settings menus ----------
+
+    static bool settingsMenuChecked;
+    static string settingsMenu;
+
+    /// <summary>
+    /// The name of the settings menu the kit leaves mod settings to (Mod Settings Menu, when installed and the kit's
+    /// <c>[ModMenu] LeaveSettingsToModSettingsMenu</c> is on), or null when the kit's browser lists them. New in 0.6.2.
+    /// </summary>
+    public static string SettingsMenu
+    {
+        get
+        {
+            if (KitPlugin.LeaveSettingsToModSettingsMenu != null && !KitPlugin.LeaveSettingsToModSettingsMenu.Value) return null;
+            if (!settingsMenuChecked)
+            {
+                settingsMenuChecked = true;
+                try
+                {
+                    foreach (var info in IL2CPPChainloader.Instance.Plugins.Values)
+                    {
+                        string file = null;
+                        try { file = Path.GetFileNameWithoutExtension(info.Location); } catch { }
+                        if (string.Equals(info.Metadata.Name, "Mod Settings Menu", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(file, "ModSettingsMenu", StringComparison.OrdinalIgnoreCase))
+                        {
+                            settingsMenu = info.Metadata.Name;
+                            KitPlugin.L.LogInfo($"ModMenu: {settingsMenu} is installed; leaving mod settings to it");
+                            break;
+                        }
+                    }
+                }
+                catch (Exception e) { KitPlugin.L.LogWarning($"ModMenu: looking for other settings menus: {e.Message}"); }
+            }
+            return settingsMenu;
+        }
+    }
+
     // ---------- the button ----------
 
     internal const string ButtonName = "Kit_ModsButton";
@@ -193,6 +236,8 @@ public static class ModMenu
             var menu = a.Panel.TryCast<MainMenuUI>();
             if (menu == null) return;
             pauseMenu = menu;
+            // Settings are elsewhere: a button only for mods' pages.
+            if (SettingsMenu != null && pages.Count == 0 && BrowserOwner == KitBrowser) return;
             AddButton(menu);
         };
     }

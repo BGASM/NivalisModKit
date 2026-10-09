@@ -9,44 +9,49 @@ using Nivalis.CraftingSystem;
 using Nivalis.Economy;
 using Nivalis.GhostSystem.CustomerLoop;
 using Nivalis.InventorySystem;
-using UnityEngine;
-using IL2List = Il2CppSystem.Collections.Generic.List<Nivalis.InventorySystem.ItemInstanceData>;
+using Il2CppInterop.Runtime;
 
 namespace NivalisModKit;
 
-// Moved from Manager Order Fix 1.1. The game's TryPurchaseIngredients calls Vendor.BuyItem once
-// per vendor per ingredient. The detour collects those calls instead of running them; when the
-// recipe's purchasing ends, FlushAll replays them in the chosen order, only up to the quantity.
+// The game's TryPurchaseIngredients (patch 4 on): for each ingredient below the dish's supply target
+// it asks EconomyManager.GetVendorsByItem for (vendor, stock, price) sorted cheapest first, then buys
+// min(stock, need) from each in turn until the need is met, within the money and the venue's
+// restock budget. The pipeline sits on three of those calls: GetSupplyTarget (OrderQuantity),
+// GetVendorsByItem (VendorOrdering, by reordering the game's list in place) and Vendor.BuyItem
+// (Decision). The game still does all the buying.
 static unsafe class PurchasePipeline
 {
     internal static bool Installed;
     static bool attempted;
 
-    // BuyItem(in ShopTradeRequest, float, ref BasicTemp). By-ref structs, so a native hook, not Harmony.
-    const string BuyItemField =
-        "NativeMethodInfoPtr_BuyItem_Public_Void_byref_ShopTradeRequest_Single_byref_BasicTemp_0";
+    // GetVendorsByItem returns a ListPool.Handle struct (by hidden pointer, first) and fills an out
+    // list; BuyItem takes by-ref structs. Native hooks, not Harmony.
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    delegate IntPtr VendorsFn(IntPtr ret, IntPtr self, IntPtr item, IntPtr* results, IntPtr method);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    delegate void BuyItemFn(IntPtr self, IntPtr request, float discount, IntPtr tempItem, IntPtr method);
+    delegate byte BuyItemFn(IntPtr self, IntPtr request, float discount, IntPtr tempItem, IntPtr method);
 
-    static BuyItemFn Original;
-    static INativeDetour Detour;
+    const string BuyItemField = "NativeMethodInfoPtr_BuyItem_Public_Boolean_byref_ShopTradeRequest_Single_byref_BasicTemp_0";
+
+    static VendorsFn OriginalVendors;
+    static BuyItemFn OriginalBuy;
+    static INativeDetour VendorsDetour, BuyDetour;
     static Harmony harmony;
 
-    static int OffCustomer, OffItemType, OffFreshness, OffAmount, OffStackCount;
-    static int ReqSize, TempSize;
+    static int OffCustomer, OffItemType, OffAmount;
 
     // ---------- per-recipe context ----------
     static IntPtr CurrentArea = IntPtr.Zero;
     static VenueAreaGhost CurrentAreaObj;
     static IRecipe CurrentRecipe;
     static WorldLocation CurrentVenueLoc;
-    static float CurrentLimit;
-    static readonly Dictionary<IntPtr, int> ToBuy = new();     // item -> game quantity
-    static readonly Dictionary<IntPtr, int> Bought = new();    // item -> bought so far
-    static readonly Dictionary<IntPtr, List<VendorOffer>> PendingByItem = new();
-    static readonly List<IntPtr> PendingOrder = new();
-    static int Seq;
+    static int CurrentTarget = -1;      // the supply target, after OrderQuantity; -1 until asked
+    static bool targetRaised;
+
+    // The ingredient being bought: its offers in buying order, and which have been reported.
+    static List<VendorOffer> offers;
+    static readonly HashSet<VendorOffer> reported = new();
 
     // ---------- session cache ----------
     static readonly Dictionary<IntPtr, WorldLocation> VendorLoc = new();
@@ -57,33 +62,29 @@ static unsafe class PurchasePipeline
         attempted = true;
         try
         {
-            OffCustomer   = StructLayout.FieldOffset<ShopTradeRequest>("customer");
-            OffItemType   = StructLayout.FieldOffset<ShopTradeRequest>("itemType");
-            OffFreshness  = StructLayout.FieldOffset<ShopTradeRequest>("freshness");
-            OffAmount     = StructLayout.FieldOffset<ShopTradeRequest>("amount");
-            OffStackCount = StructLayout.FieldOffset<ItemStack.BasicTemp>("StackCount");
-            ReqSize       = StructLayout.Size<ShopTradeRequest>();
-            TempSize      = StructLayout.Size<ItemStack.BasicTemp>();
+            OffCustomer = StructLayout.FieldOffset<ShopTradeRequest>("customer");
+            OffItemType = StructLayout.FieldOffset<ShopTradeRequest>("itemType");
+            OffAmount   = StructLayout.FieldOffset<ShopTradeRequest>("amount");
+            IntPtr vendors = NativeHook.MethodPointer<EconomyManager>(nameof(EconomyManager.GetVendorsByItem));
+            // BuyItem has overloads (the player's purchases use others); this is the managers' one.
             IntPtr buyItem = NativeHook.MethodPointer<Vendor>(BuyItemField);
 
             var recipe = AccessTools.Method(typeof(VenueAreaGhost), nameof(VenueAreaGhost.TryPurchaseIngredients))
                 ?? throw new Exception("VenueAreaGhost.TryPurchaseIngredients not found");
-            var purchase = AccessTools.Method(typeof(VenueAreaGhost), nameof(VenueAreaGhost.TryMakePurchase))
-                ?? throw new Exception("VenueAreaGhost.TryMakePurchase not found");
+            var target = AccessTools.Method(typeof(VenueAreaGhost), nameof(VenueAreaGhost.GetSupplyTarget))
+                ?? throw new Exception("VenueAreaGhost.GetSupplyTarget not found");
 
             harmony = new Harmony(ModKit.Guid + ".purchasing");
             harmony.Patch(recipe, prefix: Hm(nameof(RecipePrefix)),
                                   postfix: Hm(nameof(RecipePostfix), Priority.First));
-            harmony.Patch(purchase, postfix: Hm(nameof(PurchasePostfix)));
+            harmony.Patch(target, postfix: Hm(nameof(TargetPostfix)));
 
             // Last, so a failure here leaves Installed false and the patches above inert.
-            Detour = NativeHook.Install<BuyItemFn>(buyItem, BuyItemHook, out Original);
+            VendorsDetour = NativeHook.Install<VendorsFn>(vendors, VendorsHook, out OriginalVendors);
+            BuyDetour = NativeHook.Install<BuyItemFn>(buyItem, BuyItemHook, out OriginalBuy);
             Installed = true;
 
             KitPlugin.L.LogInfo("Purchasing pipeline: live");
-            KitPlugin.L.LogInfo($"Hooked BuyItem at 0x{buyItem.ToInt64():X}; customer={OffCustomer} " +
-                                $"itemType={OffItemType} freshness={OffFreshness} amount={OffAmount} " +
-                                $"stackCount={OffStackCount} reqSize={ReqSize} tempSize={TempSize}");
         }
         catch (Exception e)
         {
@@ -96,98 +97,58 @@ static unsafe class PurchasePipeline
 
     // ---------- helpers ----------
 
-    static int BoughtOf(IntPtr item) => Bought.TryGetValue(item, out int b) ? b : 0;
-
-    static int HopsTo(IntPtr vendor)
+    static int HopsTo(Vendor vendor)
     {
         if (CurrentVenueLoc == null) return World.Unreachable;
-        if (!VendorLoc.TryGetValue(vendor, out WorldLocation loc))
+        if (!VendorLoc.TryGetValue(vendor.Pointer, out WorldLocation loc))
         {
-            try { loc = new Vendor(vendor).Location?.Location; }
+            try { loc = vendor.Location?.Location; }
             catch { loc = null; }
-            VendorLoc[vendor] = loc;
+            VendorLoc[vendor.Pointer] = loc;
         }
         return loc == null ? World.Unreachable : World.Hops(CurrentVenueLoc, loc);
     }
 
-    // The game's own cap from TryPurchaseIngredients: FloorToInt(limit / RoundToInt(cost * barter)).
-    static int LimitCap(int price, float discount, int stock)
+    static void Decide(VendorOffer offer, PurchaseResult result, int amount)
     {
-        if (price <= 0 || price == int.MaxValue) return stock;
-        int barterPrice = Mathf.RoundToInt(price * discount);
-        return barterPrice <= 0 ? stock : Math.Min(stock, Mathf.FloorToInt(CurrentLimit / barterPrice));
+        reported.Add(offer);
+        Purchasing.RaiseDecision(new PurchaseDecisionArgs(CurrentAreaObj, CurrentRecipe, offer, result, amount,
+            offers?.Count ?? 0));
     }
 
-    // ---------- the hook: collect ----------
+    // The previous ingredient's offers the game never bought from: the need was met, or it stopped
+    // (out of money or restock budget).
+    static void FlushSkipped()
+    {
+        if (offers == null) return;
+        foreach (var o in offers)
+            if (!reported.Contains(o)) Decide(o, PurchaseResult.Skipped, 0);
+        offers = null;
+        reported.Clear();
+    }
 
-    static void BuyItemHook(IntPtr self, IntPtr request, float discount, IntPtr tempItem, IntPtr method)
+    // ---------- OrderQuantity: the supply target ----------
+
+    static void TargetPostfix(VenueAreaGhost __instance, ItemType item, ref int __result)
     {
         try
         {
-            if (CurrentArea == IntPtr.Zero || request == IntPtr.Zero || tempItem == IntPtr.Zero ||
-                *(IntPtr*)(request + OffCustomer) != CurrentArea)
+            if (CurrentArea == IntPtr.Zero || __instance == null || __instance.Pointer != CurrentArea) return;
+            if (!targetRaised)
             {
-                Original(self, request, discount, tempItem, method);
-                return;
+                targetRaised = true;
+                CurrentTarget = RaiseQuantity(item, __result);
             }
-
-            // The game's quantity for this item: 1.0 put the full need in every call's temp stack;
-            // patch 1 sizes it to this vendor's amount, min(stock, need, budget cap). Nothing is
-            // bought while calls are deferred, so each call asks for the full need capped by that
-            // vendor; the largest across the round is the need (works for both builds).
-            IntPtr item = *(IntPtr*)(request + OffItemType);
-            int asked = Math.Max(*(int*)(tempItem + OffStackCount), *(int*)(request + OffAmount));
-            if (!ToBuy.TryGetValue(item, out int known) || asked > known) ToBuy[item] = asked;
-
-            Defer(self, request, discount, tempItem, method, item);
-            // the purchase happens in FlushAll, in the chosen order
+            __result = CurrentTarget;
         }
-        catch (Exception e)
-        {
-            KitPlugin.L.LogError($"Purchasing BuyItemHook: {e.Message}");
-            try { Original(self, request, discount, tempItem, method); } catch { }
-        }
+        catch (Exception e) { KitPlugin.L.LogError($"Purchasing TargetPostfix: {e.Message}"); }
     }
 
-    static void Defer(IntPtr vendor, IntPtr request, float discount, IntPtr tempItem, IntPtr method, IntPtr item)
-    {
-        if (!PendingByItem.TryGetValue(item, out var list))
-        {
-            list = new List<VendorOffer>();
-            PendingByItem[item] = list;
-            PendingOrder.Add(item);
-        }
-
-        var v = new Vendor(vendor);
-        var it = list.Count > 0 ? list[0].Item : new ItemType(item);
-
-        int price;
-        try { price = v.GetItemBuyCost(it, *(FoodFreshness*)(request + OffFreshness)); }
-        catch { price = int.MaxValue; }
-
-        int stock;
-        try { stock = v.container?.GetItemCount(it) ?? 0; }
-        catch { stock = 0; }
-
-        var offer = new VendorOffer(v, it, price, stock, HopsTo(vendor),
-            *(int*)(request + OffAmount), LimitCap(price, discount, stock), Seq++)
-        {
-            VendorPtr = vendor, Method = method, Discount = discount,
-            Req = Marshal.AllocHGlobal(ReqSize),
-            Temp = Marshal.AllocHGlobal(TempSize),
-        };
-        Buffer.MemoryCopy((void*)request, (void*)offer.Req, ReqSize, ReqSize);
-        Buffer.MemoryCopy((void*)tempItem, (void*)offer.Temp, TempSize, TempSize);
-        list.Add(offer);
-    }
-
-    // ---------- extension points ----------
-
-    static int RaiseQuantity(ItemType item, int gameQuantity)
+    static int RaiseQuantity(ItemType dish, int gameTarget)
     {
         var handlers = Purchasing.QuantityHandlers;
-        var ctx = new OrderQuantityContext(CurrentAreaObj, CurrentRecipe, item, CurrentVenueLoc, gameQuantity);
-        if (handlers == null) return gameQuantity;
+        if (handlers == null) return gameTarget;
+        var ctx = new OrderQuantityContext(CurrentAreaObj, CurrentRecipe, dish, CurrentVenueLoc, gameTarget);
 
         foreach (Delegate d in handlers.GetInvocationList())
         {
@@ -203,13 +164,115 @@ static unsafe class PurchasePipeline
         return ctx.Quantity;
     }
 
-    static List<VendorOffer> RaiseOrdering(ItemType item, List<VendorOffer> offers, int quantity)
+    // ---------- VendorOrdering: the game's vendor list ----------
+
+    static IntPtr VendorsHook(IntPtr ret, IntPtr self, IntPtr item, IntPtr* results, IntPtr method)
+    {
+        IntPtr r = OriginalVendors(ret, self, item, results, method);
+        try
+        {
+            if (CurrentArea != IntPtr.Zero && item != IntPtr.Zero && results != null && *results != IntPtr.Zero)
+                Reorder(new ItemType(item), *results);
+        }
+        catch (Exception e) { KitPlugin.L.LogError($"Purchasing VendorsHook: {e.Message}"); }
+        return r;
+    }
+
+    // List<ValueTuple<Vendor, int, int>>, read and written in place: Il2CppInterop's wrappers misread this struct
+    // (ints come back as garbage) and List.Add through them writes null vendors. Layout from the runtime, once.
+    static bool layoutKnown;
+    static int OffItems, OffSize, OffVersion = -1, ElemSize, OffVendor, OffStock, OffPrice;
+    static readonly int ArrayData = 4 * IntPtr.Size;   // Il2CppArray: klass, monitor, bounds, max_length
+
+    static int FieldOffset(IntPtr klass, string name)
+    {
+        IntPtr f = IL2CPP.il2cpp_class_get_field_from_name(klass, name);
+        if (f == IntPtr.Zero) throw new Exception($"field {name} not found");
+        return (int)IL2CPP.il2cpp_field_get_offset(f);
+    }
+
+    static void LearnLayout(IntPtr list, IntPtr items)
+    {
+        IntPtr listClass = IL2CPP.il2cpp_object_get_class(list);
+        OffItems = FieldOffset(listClass, "_items");
+        OffSize = FieldOffset(listClass, "_size");
+        try { OffVersion = FieldOffset(listClass, "_version"); } catch { OffVersion = -1; }
+        IntPtr arrayClass = IL2CPP.il2cpp_object_get_class(items);
+        ElemSize = IL2CPP.il2cpp_array_element_size(arrayClass);
+        IntPtr elemClass = IL2CPP.il2cpp_class_get_element_class(arrayClass);
+        // A value type's field offsets include the object header; array elements don't have one.
+        OffVendor = FieldOffset(elemClass, "Item1") - 2 * IntPtr.Size;
+        OffStock = FieldOffset(elemClass, "Item2") - 2 * IntPtr.Size;
+        OffPrice = FieldOffset(elemClass, "Item3") - 2 * IntPtr.Size;
+        layoutKnown = true;
+    }
+
+    struct Entry { public IntPtr Vendor; public int Stock, Price; }
+
+    static void Reorder(ItemType item, IntPtr list)
+    {
+        FlushSkipped();
+
+        int need = 0;
+        try { need = Math.Max(0, CurrentTarget - CurrentAreaObj.JointInventory.GetItemCount(item)); } catch { }
+
+        if (!layoutKnown)
+        {
+            IntPtr first = *(IntPtr*)(list + FieldOffset(IL2CPP.il2cpp_object_get_class(list), "_items"));
+            if (first == IntPtr.Zero) return;
+            LearnLayout(list, first);
+        }
+        int count = *(int*)(list + OffSize);
+        IntPtr items = *(IntPtr*)(list + OffItems);
+        if (count <= 0 || items == IntPtr.Zero) return;
+        byte* data = (byte*)items + ArrayData;
+
+        var entries = new List<Entry>(count);
+        var game = new List<VendorOffer>(count);
+        for (int i = 0; i < count; i++)
+        {
+            byte* e = data + i * ElemSize;
+            var en = new Entry { Vendor = *(IntPtr*)(e + OffVendor), Stock = *(int*)(e + OffStock), Price = *(int*)(e + OffPrice) };
+            entries.Add(en);
+            if (en.Vendor == IntPtr.Zero) continue;   // never: the game adds only vendors
+            var v = new Vendor(en.Vendor);
+            game.Add(new VendorOffer(v, item, en.Price, en.Stock, HopsTo(v), Math.Min(en.Stock, need), i));
+        }
+
+        var chosen = RaiseOrdering(item, game, need);
+        offers = chosen;
+        if (ReferenceEquals(chosen, game) || SameOrder(chosen, game)) return;
+
+        // Write the chosen entries back in order (Sequence is the entry's index), vendor references through the
+        // GC write barrier; removed offers shorten the list, and the slots past the end are cleared.
+        var order = chosen.Select(o => entries[o.Sequence]).ToList();
+        for (int i = 0; i < count; i++)
+        {
+            byte* e = data + i * ElemSize;
+            var en = i < order.Count ? order[i] : default;
+            IL2CPP.il2cpp_gc_wbarrier_set_field(items, (IntPtr)(e + OffVendor), en.Vendor);
+            *(int*)(e + OffStock) = en.Stock;
+            *(int*)(e + OffPrice) = en.Price;
+        }
+        *(int*)(list + OffSize) = order.Count;
+        if (OffVersion >= 0) (*(int*)(list + OffVersion))++;
+    }
+
+    static bool SameOrder(List<VendorOffer> a, List<VendorOffer> b)
+    {
+        if (a.Count != b.Count) return false;
+        for (int i = 0; i < a.Count; i++) if (a[i] != b[i]) return false;
+        return true;
+    }
+
+    static List<VendorOffer> RaiseOrdering(ItemType item, List<VendorOffer> game, int need)
     {
         var handlers = Purchasing.OrderingHandlers;
-        if (handlers == null) return offers;
+        if (handlers == null) return game;
 
-        var allowed = new HashSet<VendorOffer>(offers);
-        var ctx = new VendorOrderingContext(CurrentAreaObj, CurrentRecipe, item, CurrentVenueLoc, quantity, offers);
+        var allowed = new HashSet<VendorOffer>(game);
+        var ctx = new VendorOrderingContext(CurrentAreaObj, CurrentRecipe, item, CurrentVenueLoc, need,
+            new List<VendorOffer>(game));
 
         foreach (Delegate d in handlers.GetInvocationList())
         {
@@ -243,84 +306,40 @@ static unsafe class PurchasePipeline
         return true;
     }
 
-    static void Decide(VendorOffer offer, PurchaseResult result, int amount, int count) =>
-        Purchasing.RaiseDecision(new PurchaseDecisionArgs(CurrentAreaObj, CurrentRecipe, offer, result, amount, count));
+    // ---------- Decision: each purchase ----------
 
-    // ---------- the flush: order and buy ----------
-
-    static bool FlushAll()
+    static byte BuyItemHook(IntPtr self, IntPtr request, float discount, IntPtr tempItem, IntPtr method)
     {
-        bool boughtAny = false;
+        byte ok = OriginalBuy(self, request, discount, tempItem, method);
         try
         {
-            foreach (IntPtr item in PendingOrder)
-            {
-                var pending = PendingByItem[item];
-                int gameQuantity = ToBuy[item];
-                int target = RaiseQuantity(pending[0].Item, gameQuantity);
-                var offers = RaiseOrdering(pending[0].Item, new List<VendorOffer>(pending), target);
-
-                foreach (var o in offers)
-                {
-                    int remaining = target - BoughtOf(item);
-                    int n = Math.Min(target > gameQuantity ? o.MaxAmount : o.Amount, remaining);
-                    if (n <= 0)
-                    {
-                        Decide(o, PurchaseResult.Skipped, 0, offers.Count);
-                        continue;
-                    }
-
-                    *(int*)(o.Req + OffAmount) = n;
-                    *(int*)(o.Temp + OffStackCount) = remaining;
-
-                    Original(o.VendorPtr, o.Req, o.Discount, o.Temp, o.Method);
-
-                    if (target - BoughtOf(item) < remaining)
-                    {
-                        boughtAny = true;
-                        Decide(o, PurchaseResult.Bought, n, offers.Count);
-                    }
-                    else
-                    {
-                        // TryMakePurchase refused, almost always because the venue is out of money.
-                        // A failed BuyItem puts newly created items into the vendor's stock, so stop
-                        // here, the same point where the game's own loop breaks on low cash.
-                        Decide(o, PurchaseResult.Failed, n, offers.Count);
-                        return boughtAny;
-                    }
-                }
-            }
+            if (CurrentArea == IntPtr.Zero || offers == null || request == IntPtr.Zero ||
+                *(IntPtr*)(request + OffCustomer) != CurrentArea)
+                return ok;
+            IntPtr item = *(IntPtr*)(request + OffItemType);
+            var offer = offers.Find(o => o.Vendor.Pointer == self && o.Item.Pointer == item);
+            if (offer != null)
+                Decide(offer, ok != 0 ? PurchaseResult.Bought : PurchaseResult.Failed, *(int*)(request + OffAmount));
         }
-        catch (Exception e)
-        {
-            KitPlugin.L.LogError($"Purchasing FlushAll: {e.Message}");
-        }
-        return boughtAny;
-    }
-
-    static void Reset()
-    {
-        foreach (var list in PendingByItem.Values)
-            foreach (var o in list)
-            {
-                if (o.Req != IntPtr.Zero) Marshal.FreeHGlobal(o.Req);
-                if (o.Temp != IntPtr.Zero) Marshal.FreeHGlobal(o.Temp);
-                o.Req = o.Temp = IntPtr.Zero;
-            }
-        PendingByItem.Clear();
-        PendingOrder.Clear();
-        Seq = 0;
-        CurrentArea = IntPtr.Zero;
-        CurrentAreaObj = null;
-        CurrentRecipe = null;
-        CurrentVenueLoc = null;
-        ToBuy.Clear();
-        Bought.Clear();
+        catch (Exception e) { KitPlugin.L.LogError($"Purchasing BuyItemHook: {e.Message}"); }
+        return ok;
     }
 
     // ---------- recipe context (Harmony, safe signatures) ----------
 
-    static void RecipePrefix(VenueAreaGhost __instance, IRecipe recipe, float limit)
+    static void Reset()
+    {
+        offers = null;
+        reported.Clear();
+        CurrentArea = IntPtr.Zero;
+        CurrentAreaObj = null;
+        CurrentRecipe = null;
+        CurrentVenueLoc = null;
+        CurrentTarget = -1;
+        targetRaised = false;
+    }
+
+    static void RecipePrefix(VenueAreaGhost __instance, IRecipe recipe)
     {
         try
         {
@@ -329,34 +348,16 @@ static unsafe class PurchasePipeline
             CurrentArea = __instance.Pointer;
             CurrentAreaObj = __instance;
             CurrentRecipe = recipe;
-            CurrentLimit = limit;
             try { CurrentVenueLoc = __instance.Venue?.Location; }
             catch { CurrentVenueLoc = null; }
         }
         catch (Exception e) { KitPlugin.L.LogError($"Purchasing RecipePrefix: {e.Message}"); }
     }
 
-    static void RecipePostfix(ref bool __result)
+    static void RecipePostfix()
     {
-        try
-        {
-            if (CurrentArea != IntPtr.Zero && PendingOrder.Count > 0 && FlushAll())
-                __result = true;
-        }
+        try { if (CurrentArea != IntPtr.Zero) FlushSkipped(); }
         catch (Exception e) { KitPlugin.L.LogError($"Purchasing RecipePostfix: {e.Message}"); }
         finally { Reset(); }
-    }
-
-    static void PurchasePostfix(VenueAreaGhost __instance, ItemType stackType, IL2List boughtInstances, bool __result)
-    {
-        try
-        {
-            if (!__result || CurrentArea == IntPtr.Zero || stackType == null) return;
-            if (__instance == null || __instance.Pointer != CurrentArea) return;
-
-            IntPtr key = stackType.Pointer;
-            Bought[key] = BoughtOf(key) + (boughtInstances?.Count ?? 0);
-        }
-        catch (Exception e) { KitPlugin.L.LogError($"Purchasing PurchasePostfix: {e.Message}"); }
     }
 }

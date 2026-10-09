@@ -145,6 +145,17 @@ Classes
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="NivalisModKit.ConfigurationManagerAttributes.html">ConfigurationManagerAttributes</a></dt>
+      <dd><p>The standard BepInEx settings tag, read by settings menus such as Mod Settings Menu and Configuration
+Manager as well as the kit's own Mods browser. Pass one as a tag when you bind a setting:</p>
+<pre><code class="lang-csharp">Config.Bind("Debug", "Verbose", false,
+    new ConfigDescription("Log every decision.", null, new ConfigurationManagerAttributes { IsAdvanced = true }));</code></pre>
+<p>Menus find it by its class name and read its fields, so this is the same tag mods usually copy into
+themselves; with the kit you don't need a copy. In the kit's browser it also opts the setting in, like
+<a class="xref" href="NivalisModKit.ModSetting.html">ModSetting</a>. New in 0.6.2.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.Content.html">Content</a></dt>
       <dd><p>Adds new things to the game: items and recipes, each made by copying an existing one and changing what you list.
 A copied item keeps its template's model, tags, decay and cooking use, so vendors that sell by tag stock it like
@@ -406,13 +417,15 @@ replace the browser with its own (<a class="xref" href="NivalisModKit.ModMenu.ht
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.ModSetting.html">ModSetting</a></dt>
-      <dd><p>How a setting appears in the in-game mod browser. Pass one as a tag when you bind the setting:</p>
+      <dd><p>How a setting appears in the kit's in-game mod browser. Since 0.6.2, prefer
+<a class="xref" href="NivalisModKit.ConfigurationManagerAttributes.html">ConfigurationManagerAttributes</a>: it does the same here and other settings menus (Mod Settings Menu,
+Configuration Manager) read it too. This tag is read only by the kit. Pass one as a tag when you bind the setting:</p>
 <pre><code class="lang-csharp">Config.Bind("General", "Verbose", false,
     new ConfigDescription("Log every decision.", null, new ModSetting { IsAdvanced = true }));</code></pre>
 <p>Listing is opt-in: a setting appears when it has this tag, or when its mod called
 <a class="xref" href="NivalisModKit.ModMenu.html#NivalisModKit_ModMenu_ListSettings_System_String_">ListSettings(string)</a> (then all of its settings appear, and these flags adjust them). The browser
-also reads BepInEx ConfigurationManager's <code>ConfigurationManagerAttributes</code> tag to adjust listed settings,
-but that tag alone doesn't list a setting.</p>
+also reads a mod's own copy of the <code>ConfigurationManagerAttributes</code> tag to adjust listed settings, but that
+alone doesn't list a setting (the kit's <a class="xref" href="NivalisModKit.ConfigurationManagerAttributes.html">ConfigurationManagerAttributes</a> does).</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -526,11 +539,12 @@ handler can change its rules at any time (for example from a live-reloaded setti
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.Purchasing.html">Purchasing</a></dt>
-      <dd><p>Manager ingredient purchasing. Once any mod subscribes to <a class="xref" href="NivalisModKit.Purchasing.html#NivalisModKit_Purchasing_VendorOrdering">VendorOrdering</a> or
-<a class="xref" href="NivalisModKit.Purchasing.html#NivalisModKit_Purchasing_OrderQuantity">OrderQuantity</a>, the kit takes over each recipe's purchases: it collects the vendor
-offers the game makes, lets handlers set the quantity and the vendor order, then buys only up to
-that quantity, stopping at the first failed purchase (almost always the venue out of money).
-With no subscribers the kit leaves purchasing to the game.</p>
+      <dd><p>Manager ingredient purchasing. The game restocks each dish's ingredients up to the venue's supply
+target, buying from vendors cheapest first (then most stock) until each ingredient's need is met,
+within the venue's money and daily restock budget. Once any mod subscribes to
+<a class="xref" href="NivalisModKit.Purchasing.html#NivalisModKit_Purchasing_VendorOrdering">VendorOrdering</a> or <a class="xref" href="NivalisModKit.Purchasing.html#NivalisModKit_Purchasing_OrderQuantity">OrderQuantity</a>, the kit lets handlers change the
+supply target and the vendor order; the game still does the buying. With no subscribers the kit
+leaves purchasing alone.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -717,7 +731,7 @@ Call these from the main thread (event handlers, Update, the Scheduler).</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="NivalisModKit.VendorOffer.html">VendorOffer</a></dt>
-      <dd><p>One vendor's offer for an ingredient, as the game made it.</p>
+      <dd><p>One vendor's offer for an ingredient, from the game's vendor list.</p>
 </dd>
     </dl>
     <dl class="jumplist">

@@ -24,7 +24,10 @@ static class KitchenPatches
         {
             try
             {
-                var target = AccessTools.Method(type, method) ?? throw new Exception($"{type.Name}.{method} not found");
+                // The class's own method first: since build 25828494 the sub-actions' base class has its own Enter/Tick,
+                // which makes a lookup that includes inherited methods ambiguous.
+                var target = AccessTools.DeclaredMethod(type, method) ?? AccessTools.Method(type, method)
+                             ?? throw new Exception($"{type.Name}.{method} not found");
                 harmony.Patch(target,
                     prefix: prefix == null ? null : new HarmonyMethod(typeof(KitchenPatches), prefix),
                     postfix: postfix == null ? null : new HarmonyMethod(typeof(KitchenPatches), postfix));

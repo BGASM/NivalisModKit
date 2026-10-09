@@ -17,7 +17,7 @@ public class KitPlugin : BasePlugin
     internal static ConfigEntry<int> BridgePort;
     internal static ConfigEntry<bool> BridgeCommands, ConsoleEnabled;
     internal static ConfigEntry<string> ConsoleKey, ConsoleFont;
-    internal static ConfigEntry<bool> ModMenuEnabled, ShowOtherMods, WarnMissingContent;
+    internal static ConfigEntry<bool> ModMenuEnabled, ShowOtherMods, WarnMissingContent, LeaveSettingsToModSettingsMenu;
     internal static ConfigEntry<UntestedBuildMode> UntestedBuild;
 
     /// <summary>What the kit does on a game build it wasn't tested on.</summary>
@@ -30,18 +30,18 @@ public class KitPlugin : BasePlugin
     }
     internal static ConfigEntry<string> ModMenuLabel, PreferredBrowser;
 
-    static ConfigDescription Desc(string text, ModSetting flags) => new(text, null, flags);
+    static ConfigDescription Desc(string text, ConfigurationManagerAttributes flags) => new(text, null, flags);
 
     /// <summary>Called by BepInEx.</summary>
     public override void Load()
     {
         L = Log;
-        var advanced = new ModSetting { IsAdvanced = true };
-        var restart = new ModSetting { RequiresRestart = true };
-        var advancedRestart = new ModSetting { IsAdvanced = true, RequiresRestart = true };
+        var advanced = new ConfigurationManagerAttributes { IsAdvanced = true };
+        var restart = new ConfigurationManagerAttributes { RequiresRestart = true };
+        var advancedRestart = new ConfigurationManagerAttributes { IsAdvanced = true, RequiresRestart = true };
         SimulateMissing = Config.Bind("Debug", "SimulateMissing", "", Desc(
             "Comma-separated event names to install against a method that doesn't exist, " +
-            "to test the missing-event fallback. Leave empty.", new ModSetting { Browsable = false }));
+            "to test the missing-event fallback. Leave empty.", new ConfigurationManagerAttributes { Browsable = false }));
         var liveReload = Config.Bind("General", "LiveConfigReload", true, Desc(
             "Reload a mod's settings when its .cfg file in BepInEx\\config is saved, while the game runs.", restart));
         UntestedBuild = Config.Bind("General", "UntestedBuild", UntestedBuildMode.Warn, Desc(
@@ -50,9 +50,12 @@ public class KitPlugin : BasePlugin
             "inactive and the game runs unmodded until the kit is updated.", restart));
         WarnMissingContent = Config.Bind("Content", "WarnMissingContent", true, Desc(
             "When a save uses items, recipes or placed objects from mods that are no longer installed, say so after it loads: " +
-            "saving would remove them from that save for good.", new ModSetting()));
+            "saving would remove them from that save for good.", new ConfigurationManagerAttributes()));
         ModMenuEnabled = Config.Bind("ModMenu", "Enabled", true,
             "Add a Mods button to the pause menu, for mods' settings and pages.");
+        LeaveSettingsToModSettingsMenu = Config.Bind("ModMenu", "LeaveSettingsToModSettingsMenu", true,
+            "When Mod Settings Menu is installed, leave mod settings to it (F1 by default): the Mods button then shows " +
+            "only mods' pages, and isn't added when there are none.");
         ShowOtherMods = Config.Bind("ModMenu", "ShowOtherMods", false,
             "Also list mods that don't offer their settings for in-game changes, read-only. Change those in their .cfg file and restart.");
         ModMenuLabel = Config.Bind("ModMenu", "ButtonLabel", "Mods", Desc("Text on the pause menu button.", restart));

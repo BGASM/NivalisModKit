@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -8,8 +9,8 @@ using SCG = System.Collections.Generic;
 
 namespace QuantityTester;
 
-// Example of Purchasing.OrderQuantity: multiplies how much managers buy, using only kit events.
-// Test harness for the pipeline running alongside Order Fix. Off by default.
+// Example of Purchasing.OrderQuantity: multiplies the supply target managers restock to, using only kit
+// events. Test harness for the pipeline running alongside Better Supplier Choice. Off by default.
 [BepInPlugin("bgasm.nivalis.quantitytester", "Quantity Tester", "0.1.0")]
 [BepInDependency(ModKit.Guid)]
 public class Plugin : BasePlugin
@@ -18,15 +19,17 @@ public class Plugin : BasePlugin
     static ConfigEntry<float> Multiplier;
     static ConfigEntry<bool> PlayerOnly;
 
-    // Per recipe: item name -> (game quantity, target, bought)
-    static readonly SCG.Dictionary<string, (int game, int target, int bought)> Changed = new();
+    // Per recipe: the dish's supply target (game's, changed) and what was bought, by ingredient.
+    static string dish;
+    static int gameTarget, target;
+    static readonly SCG.Dictionary<string, int> Bought = new();
 
     public override void Load()
     {
         L = Log;
         var enabled = Config.Bind("General", "Enabled", false,
-            "Multiply manager ingredient orders. Subscribing turns on the kit's purchasing pipeline.");
-        Multiplier = Config.Bind("General", "Multiplier", 2.0f, "Order quantity multiplier.");
+            "Multiply the supply target managers restock to. Subscribing turns on the kit's purchasing pipeline.");
+        Multiplier = Config.Bind("General", "Multiplier", 2.0f, "Supply target multiplier.");
         PlayerOnly = Config.Bind("General", "PlayerOnly", true, "Only change orders for the player's venues.");
 
         if (!enabled.Value)
@@ -37,7 +40,7 @@ public class Plugin : BasePlugin
 
         Purchasing.OrderQuantity += OnQuantity;
         Purchasing.Decision += OnDecision;
-        GameEvents.BuyIngredientsStarting += _ => Changed.Clear();
+        GameEvents.BuyIngredientsStarting += _ => { dish = null; Bought.Clear(); };
         GameEvents.BuyIngredientsFinished += OnFinished;
         L.LogInfo($"Quantity Tester loaded, Multiplier = {Multiplier.Value}, PlayerOnly = {PlayerOnly.Value}");
     }
@@ -46,23 +49,25 @@ public class Plugin : BasePlugin
     {
         if (PlayerOnly.Value && (ctx.Area == null || !ctx.Area.PlayerOwned)) return;
         ctx.Quantity = (int)Math.Ceiling(ctx.Quantity * Multiplier.Value);
-        Changed[NameOf(ctx.Item)] = (ctx.GameQuantity, ctx.Quantity, 0);
+        dish = NameOf(ctx.Item);
+        gameTarget = ctx.GameQuantity;
+        target = ctx.Quantity;
     }
 
     static void OnDecision(PurchaseDecisionArgs d)
     {
-        if (d.Result != PurchaseResult.Bought) return;
+        if (dish == null || d.Result != PurchaseResult.Bought) return;
         string item = NameOf(d.Offer.Item);
-        if (Changed.TryGetValue(item, out var c))
-            Changed[item] = (c.game, c.target, c.bought + d.Amount);
+        Bought[item] = (Bought.TryGetValue(item, out int n) ? n : 0) + d.Amount;
     }
 
     static void OnFinished(BuyIngredientsArgs a)
     {
-        foreach (var kv in Changed)
-            L.LogInfo($"Quantity {NameOf(a.Area?.Venue)} / {kv.Key}: game {kv.Value.game}, " +
-                      $"target {kv.Value.target}, bought {kv.Value.bought}");
-        Changed.Clear();
+        if (dish == null) return;
+        L.LogInfo($"Quantity {NameOf(a.Area?.Venue)} / {dish}: target {gameTarget} -> {target}; bought " +
+                  (Bought.Count == 0 ? "nothing" : string.Join(", ", Bought.Select(kv => $"{kv.Key} x{kv.Value}"))));
+        dish = null;
+        Bought.Clear();
     }
 
     static string NameOf(Il2CppSystem.Object o)

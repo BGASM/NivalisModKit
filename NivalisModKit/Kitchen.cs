@@ -26,8 +26,8 @@ public enum KitchenStep
 /// <remarks>
 /// How the game hands out kitchen work: an order becomes prep jobs plus one plating job, which waits until its
 /// prep is done. A cook looking for work takes the first job of that kind in the venue's task queue, then a free
-/// station for it (or retries in 3 s). Each step's time is scaled by the cook's cooking <c>ActionSpeed</c> and
-/// happiness. Plating sets the meal's quality (plater's <c>PreparationQuality</c> × happiness influence) and
+/// station for it (or retries in 3 s). A prep step's time is scaled by the cook's <see cref="StaffSkills.CookingTime"/>
+/// and happiness; plating takes a flat 6 seconds (since the game's patch 4). Plating sets the meal's quality (plater's <c>PreparationQuality</c> × happiness influence) and
 /// freshness (the ingredients'), and gives the plater 1 cooking XP. Several mods can use each hook: handlers
 /// run in the order added and each sees the previous one's result.
 /// </remarks>

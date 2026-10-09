@@ -334,6 +334,9 @@ public static class Content
                 if (def == null) continue;
                 var runtime = new MealRecipe(def);
                 __instance._allRecipes[def] = new IRecipe(runtime.Pointer);
+                // Since build 25828494 the game keeps the original recipes apart (venues the player doesn't own cook
+                // those): the copy goes there too, as its own object so the player's customizing doesn't change it.
+                try { AddDefaultRecipe(__instance, def); } catch (MissingFieldException) { }   // an older game build
                 __instance._guidMealRecipeMap[c.Guid] = def;
                 if (def.output?.type != null) __instance._mealRecipeMap[def.output.type] = def;
                 // A dish item points at its recipe (FoodItemType.recipe), and the kitchen cooks from that link. A copied
@@ -443,6 +446,10 @@ public static class Content
         }
         catch (Exception e) { KitPlugin.L.LogWarning($"Content: saved recipes: {e.Message}"); }
     }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    static void AddDefaultRecipe(MealDatabase db, MealRecipeDefinition def) =>
+        db._defaultRecipes[def] = new IRecipe(new MealRecipe(def).Pointer);
 
     // Recipes marked KnownFromStart become known in each game (the game saves known recipes, so once is enough).
     static void LearnStartingRecipes()

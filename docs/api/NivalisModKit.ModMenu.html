@@ -89,7 +89,7 @@
 
 
   <h1 id="NivalisModKit_ModMenu" data-uid="NivalisModKit.ModMenu" class="text-break">
-Class ModMenu  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L22"><i class="bi bi-code-slash"></i></a>
+Class ModMenu  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -166,7 +166,7 @@ ModMenu.AddPage(MyPluginInfo.Guid, "My Mod", w =&gt;
 
   <h3 id="NivalisModKit_ModMenu_KitBrowser" data-uid="NivalisModKit.ModMenu.KitBrowser">
   KitBrowser
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The owner name of the kit's built-in browser.</p>
@@ -202,7 +202,7 @@ ModMenu.AddPage(MyPluginInfo.Guid, "My Mod", w =&gt;
 
   <h3 id="NivalisModKit_ModMenu_BrowserOwner" data-uid="NivalisModKit.ModMenu.BrowserOwner">
   BrowserOwner
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Who provides the browser now (<a class="xref" href="NivalisModKit.ModMenu.html#NivalisModKit_ModMenu_KitBrowser">KitBrowser</a> when no mod replaced it).</p>
@@ -234,7 +234,7 @@ ModMenu.AddPage(MyPluginInfo.Guid, "My Mod", w =&gt;
 
   <h3 id="NivalisModKit_ModMenu_IsOpen" data-uid="NivalisModKit.ModMenu.IsOpen">
   IsOpen
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether the kit's settings browser is open (see <a class="xref" href="NivalisModKit.ModMenu.html#NivalisModKit_ModMenu_Closed">Closed</a>).</p>
@@ -267,7 +267,7 @@ public static bool IsOpen { get; }</code></pre>
 
   <h3 id="NivalisModKit_ModMenu_Pages" data-uid="NivalisModKit.ModMenu.Pages">
   Pages
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L77"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Pages added by mods, in the order they were added.</p>
@@ -295,6 +295,39 @@ public static bool IsOpen { get; }</code></pre>
 
 
 
+  <a id="NivalisModKit_ModMenu_SettingsMenu_" data-uid="NivalisModKit.ModMenu.SettingsMenu*"></a>
+
+  <h3 id="NivalisModKit_ModMenu_SettingsMenu" data-uid="NivalisModKit.ModMenu.SettingsMenu">
+  SettingsMenu
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L190"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The name of the settings menu the kit leaves mod settings to (Mod Settings Menu, when installed and the kit's
+<code>[ModMenu] LeaveSettingsToModSettingsMenu</code> is on), or null when the kit's browser lists them. New in 0.6.2.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string SettingsMenu { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -303,7 +336,7 @@ public static bool IsOpen { get; }</code></pre>
 
   <h3 id="NivalisModKit_ModMenu_AddPage_System_String_System_String_System_Action_NivalisModKit_KitWindow__" data-uid="NivalisModKit.ModMenu.AddPage(System.String,System.String,System.Action{NivalisModKit.KitWindow})">
   AddPage(string, string, Action&lt;KitWindow&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds (or replaces) your page in the browser. <code class="paramref">build</code> fills a cleared window each time the
@@ -340,7 +373,7 @@ player opens the page; a Back button to the list is added for you.</p>
 
   <h3 id="NivalisModKit_ModMenu_ClearBrowser_System_String_" data-uid="NivalisModKit.ModMenu.ClearBrowser(System.String)">
   ClearBrowser(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L115"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes your browser; the next one (or the kit's) takes over.</p>
@@ -372,7 +405,7 @@ player opens the page; a Back button to the list is added for you.</p>
 
   <h3 id="NivalisModKit_ModMenu_IsListed_System_String_" data-uid="NivalisModKit.ModMenu.IsListed(System.String)">
   IsListed(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>True if the mod called <a class="xref" href="NivalisModKit.ModMenu.html#NivalisModKit_ModMenu_ListSettings_System_String_">ListSettings(string)</a>.</p>
@@ -409,11 +442,12 @@ player opens the page; a Back button to the list is added for you.</p>
 
   <h3 id="NivalisModKit_ModMenu_ListSettings_System_String_" data-uid="NivalisModKit.ModMenu.ListSettings(System.String)">
   ListSettings(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Lists all of your mod's settings in the kit's browser (by default only settings tagged with
-<a class="xref" href="NivalisModKit.ModSetting.html">ModSetting</a> appear). Tag settings to hide them or mark them read-only, advanced or restart-only.
+<a class="xref" href="NivalisModKit.ConfigurationManagerAttributes.html">ConfigurationManagerAttributes</a> or <a class="xref" href="NivalisModKit.ModSetting.html">ModSetting</a> appear). Tag settings to hide them or
+mark them read-only, advanced or restart-only.
 Call in your plugin's Load with your plugin GUID.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -443,7 +477,7 @@ Call in your plugin's Load with your plugin GUID.</p>
 
   <h3 id="NivalisModKit_ModMenu_Open" data-uid="NivalisModKit.ModMenu.Open">
   Open()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L133"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Opens the current browser, as the Mods button does.</p>
@@ -470,7 +504,7 @@ Call in your plugin's Load with your plugin GUID.</p>
 
   <h3 id="NivalisModKit_ModMenu_OpenAsChild_NivalisModKit_KitWindow_" data-uid="NivalisModKit.ModMenu.OpenAsChild(NivalisModKit.KitWindow)">
   OpenAsChild(KitWindow)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L153"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Shows <code class="paramref">window</code> as a sub-screen of the open pause menu, the way the game opens Settings:
@@ -504,7 +538,7 @@ back when it hides. Without an open pause menu it just shows the window.</p>
 
   <h3 id="NivalisModKit_ModMenu_RemovePage_System_String_" data-uid="NivalisModKit.ModMenu.RemovePage(System.String)">
   RemovePage(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L88"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes your page.</p>
@@ -536,7 +570,7 @@ back when it hides. Without an open pause menu it just shows the window.</p>
 
   <h3 id="NivalisModKit_ModMenu_SetBrowser_System_String_System_Action_" data-uid="NivalisModKit.ModMenu.SetBrowser(System.String,System.Action)">
   SetBrowser(string, Action)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L95"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Replaces the kit's browser: the Mods button calls <code class="paramref">open</code> instead. Show your window with
@@ -575,12 +609,14 @@ one named in the kit's <code>[ModMenu] Browser</code> setting wins, otherwise th
 
   <h3 id="NivalisModKit_ModMenu_Closed" data-uid="NivalisModKit.ModMenu.Closed">
   Closed
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModMenu.cs/#L65"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The kit's settings browser closed. Settings apply live while it's open (each click raises the entry's
 <code>SettingChanged</code>); a mod whose setting has a lasting effect (e.g. taking a job off staff) can note the
-change and act here, once, so a player trying values on the way doesn't trigger it at every click.</p>
+change and act here, once, so a player trying values on the way doesn't trigger it at every click.
+Other settings menus don't raise it: act on <code>SettingChanged</code> when <a class="xref" href="NivalisModKit.ModMenu.html#NivalisModKit_ModMenu_IsOpen">IsOpen</a> is false
+(Mod Settings Menu, for one, applies pending changes together).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

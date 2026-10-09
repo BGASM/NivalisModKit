@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class VendorOffer | Nivalis ModKit ">
       
-      <meta name="description" content="One vendor&#39;s offer for an ingredient, as the game made it.">
+      <meta name="description" content="One vendor&#39;s offer for an ingredient, from the game&#39;s vendor list.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="NivalisModKit_VendorOffer" data-uid="NivalisModKit.VendorOffer" class="text-break">
-Class VendorOffer  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L78"><i class="bi bi-code-slash"></i></a>
+Class VendorOffer  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Class VendorOffer  <a class="header-action link-secondary" title="View source" h
   <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>One vendor's offer for an ingredient, as the game made it.</p>
+  <div class="markdown summary"><p>One vendor's offer for an ingredient, from the game's vendor list.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -154,10 +154,11 @@ Class VendorOffer  <a class="header-action link-secondary" title="View source" h
 
   <h3 id="NivalisModKit_VendorOffer_Amount" data-uid="NivalisModKit.VendorOffer.Amount">
   Amount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L108"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>What the game asked this vendor for: min(stock, game quantity, money limit / price).</p>
+  <div class="markdown level1 summary"><p>The most the game would buy here if this vendor came first: min(stock, the ingredient's need).
+The game also limits it by storage space, money and the restock budget.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -186,7 +187,7 @@ Class VendorOffer  <a class="header-action link-secondary" title="View source" h
 
   <h3 id="NivalisModKit_VendorOffer_Hops" data-uid="NivalisModKit.VendorOffer.Hops">
   Hops
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L102"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>District hops from the buying venue, or <a class="xref" href="NivalisModKit.World.html#NivalisModKit_World_Unreachable">Unreachable</a>.</p>
@@ -218,7 +219,7 @@ Class VendorOffer  <a class="header-action link-secondary" title="View source" h
 
   <h3 id="NivalisModKit_VendorOffer_Item" data-uid="NivalisModKit.VendorOffer.Item">
   Item
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The ingredient.</p>
@@ -250,11 +251,10 @@ Class VendorOffer  <a class="header-action link-secondary" title="View source" h
 
   <h3 id="NivalisModKit_VendorOffer_MaxAmount" data-uid="NivalisModKit.VendorOffer.MaxAmount">
   MaxAmount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L111"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The most this vendor can supply within the venue's per-recipe money limit: min(stock,
-limit / price). Used instead of <a class="xref" href="NivalisModKit.VendorOffer.html#NivalisModKit_VendorOffer_Amount">Amount</a> when OrderQuantity raises the quantity.</p>
+  <div class="markdown level1 summary"><p>Same as <a class="xref" href="NivalisModKit.VendorOffer.html#NivalisModKit_VendorOffer_Amount">Amount</a> since 0.6.2 (the game no longer has a per-recipe money limit).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -283,10 +283,10 @@ limit / price). Used instead of <a class="xref" href="NivalisModKit.VendorOffer.
 
   <h3 id="NivalisModKit_VendorOffer_Price" data-uid="NivalisModKit.VendorOffer.Price">
   Price
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L96"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Price per item, before the venue's barter discount. int.MaxValue if unknown.</p>
+  <div class="markdown level1 summary"><p>Price per item (fresh), before the venue's barter discount.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -315,10 +315,10 @@ limit / price). Used instead of <a class="xref" href="NivalisModKit.VendorOffer.
 
   <h3 id="NivalisModKit_VendorOffer_Sequence" data-uid="NivalisModKit.VendorOffer.Sequence">
   Sequence
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The order the game offered vendors in, 0 first.</p>
+  <div class="markdown level1 summary"><p>The game's order (cheapest first, then most stock), 0 first.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -347,7 +347,7 @@ limit / price). Used instead of <a class="xref" href="NivalisModKit.VendorOffer.
 
   <h3 id="NivalisModKit_VendorOffer_Stock" data-uid="NivalisModKit.VendorOffer.Stock">
   Stock
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L99"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The vendor's stock of the item.</p>
@@ -379,7 +379,7 @@ limit / price). Used instead of <a class="xref" href="NivalisModKit.VendorOffer.
 
   <h3 id="NivalisModKit_VendorOffer_Vendor" data-uid="NivalisModKit.VendorOffer.Vendor">
   Vendor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L90"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The vendor.</p>

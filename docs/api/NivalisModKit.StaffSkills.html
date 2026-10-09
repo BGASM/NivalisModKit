@@ -89,7 +89,7 @@
 
 
   <h1 id="NivalisModKit_StaffSkills" data-uid="NivalisModKit.StaffSkills" class="text-break">
-Class StaffSkills  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L25"><i class="bi bi-code-slash"></i></a>
+Class StaffSkills  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -153,12 +153,49 @@ public static class StaffSkills</code></pre>
 
 
   <h2 id="NivalisModKit_StaffSkills_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>How the game uses them: <code>CookingLevel.ActionSpeed</code> multiplies a kitchen step's time (lower is faster);
-the other skills' <code>ActionSpeed</code> is a speed (higher is faster). A plated meal's quality is the plater's
+  <div class="markdown level0 remarks"><p>How the game uses them: a prep step's time is multiplied by the cook's <a class="xref" href="NivalisModKit.StaffSkills.html#NivalisModKit_StaffSkills_CookingTime_Nivalis_GhostSystem_Ai_Person_">CookingTime(Person)</a> (lower is
+faster; <code>CookingLevel.CookingTime</code> since the game's patch 4, <code>ActionSpeed</code> before) and divided by
+<a class="xref" href="NivalisModKit.StaffSkills.html#NivalisModKit_StaffSkills_HappinessInfluence_Nivalis_GhostSystem_Ai_Person_">HappinessInfluence(Person)</a>. Plating takes a flat 6 seconds since patch 4. Since patch 4 every skill's
+<code>ActionSpeed</code> is a speed (higher is faster), cooking's included. A plated meal's quality is the plater's
 <code>PreparationQuality</code> × <a class="xref" href="NivalisModKit.StaffSkills.html#NivalisModKit_StaffSkills_HappinessInfluence_Nivalis_GhostSystem_Ai_Person_">HappinessInfluence(Person)</a>; a waiter adds <code>ServiceQuality</code> × the same
 influence to the order's service score when taking it and at each delivery. Someone without the skill gets
 0.8 quality and a 1.2 time multiplier (in the game only the player can be in that position).</p>
 </div>
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="NivalisModKit_StaffSkills_NoSkillTime" data-uid="NivalisModKit.StaffSkills.NoSkillTime">
+  NoSkillTime
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L129"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The game's time multiplier for someone without the skill.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const float NoSkillTime = 1.2</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
 
 
   <h2 class="section" id="properties">Properties
@@ -169,7 +206,7 @@ influence to the order's service score when taking it and at each delivery. Some
 
   <h3 id="NivalisModKit_StaffSkills_Cleaning" data-uid="NivalisModKit.StaffSkills.Cleaning">
   Cleaning
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L40"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The cleaning skill (the game's meal cleanup job), or null before the game's data loads.</p>
@@ -201,7 +238,7 @@ influence to the order's service score when taking it and at each delivery. Some
 
   <h3 id="NivalisModKit_StaffSkills_Cooking" data-uid="NivalisModKit.StaffSkills.Cooking">
   Cooking
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The cooking skill (the game's meal and prep jobs), or null before the game's data loads.</p>
@@ -233,7 +270,7 @@ influence to the order's service score when taking it and at each delivery. Some
 
   <h3 id="NivalisModKit_StaffSkills_Managing" data-uid="NivalisModKit.StaffSkills.Managing">
   Managing
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The staff managing skill (the game's manage job), or null before the game's data loads.</p>
@@ -265,7 +302,7 @@ influence to the order's service score when taking it and at each delivery. Some
 
   <h3 id="NivalisModKit_StaffSkills_Serving" data-uid="NivalisModKit.StaffSkills.Serving">
   Serving
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The serving skill (the game's serve job), or null before the game's data loads.</p>
@@ -301,7 +338,7 @@ influence to the order's service score when taking it and at each delivery. Some
 
   <h3 id="NivalisModKit_StaffSkills_AddExperience_Nivalis_GhostSystem_Ai_Person_Nivalis_SkillSystem_SkillDefinition_System_Single_" data-uid="NivalisModKit.StaffSkills.AddExperience(Nivalis.GhostSystem.Ai.Person,Nivalis.SkillSystem.SkillDefinition,System.Single)">
   AddExperience(Person, SkillDefinition, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L148"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gives the person XP in a skill, as the game does when they finish work (level-ups included).</p>
@@ -337,7 +374,7 @@ influence to the order's service score when taking it and at each delivery. Some
 
   <h3 id="NivalisModKit_StaffSkills_CookingOf_Nivalis_GhostSystem_Ai_Person_" data-uid="NivalisModKit.StaffSkills.CookingOf(Nivalis.GhostSystem.Ai.Person)">
   CookingOf(Person)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The person's cooking level data, or null without the skill.</p>
@@ -370,11 +407,50 @@ influence to the order's service score when taking it and at each delivery. Some
 
 
 
+  <a id="NivalisModKit_StaffSkills_CookingTime_" data-uid="NivalisModKit.StaffSkills.CookingTime*"></a>
+
+  <h3 id="NivalisModKit_StaffSkills_CookingTime_Nivalis_GhostSystem_Ai_Person_" data-uid="NivalisModKit.StaffSkills.CookingTime(Nivalis.GhostSystem.Ai.Person)">
+  CookingTime(Person)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The cook's prep time multiplier (lower is faster), as the game applies it to each prep step:
+<code>CookingLevel.CookingTime</code> on the game's patch 4 and later, <code>ActionSpeed</code> on earlier builds.
+1.2 without the cooking skill. New in 0.6.2.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static float CookingTime(Person person)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>person</code> <span class="xref">Person</span></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="NivalisModKit_StaffSkills_Describe_" data-uid="NivalisModKit.StaffSkills.Describe*"></a>
 
   <h3 id="NivalisModKit_StaffSkills_Describe_Nivalis_GhostSystem_Ai_Person_Nivalis_SkillSystem_SkillDefinition_" data-uid="NivalisModKit.StaffSkills.Describe(Nivalis.GhostSystem.Ai.Person,Nivalis.SkillSystem.SkillDefinition)">
   Describe(Person, SkillDefinition)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L167"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>&quot;serving level 3, 81/100 XP&quot; (the game shows only levels), or &quot;no serving&quot;.</p>
@@ -413,7 +489,7 @@ influence to the order's service score when taking it and at each delivery. Some
 
   <h3 id="NivalisModKit_StaffSkills_Experience_Nivalis_GhostSystem_Ai_Person_Nivalis_SkillSystem_SkillDefinition_" data-uid="NivalisModKit.StaffSkills.Experience(Nivalis.GhostSystem.Ai.Person,Nivalis.SkillSystem.SkillDefinition)">
   Experience(Person, SkillDefinition)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The person's XP in the skill, or 0 without it.</p>
@@ -452,7 +528,7 @@ influence to the order's service score when taking it and at each delivery. Some
 
   <h3 id="NivalisModKit_StaffSkills_HappinessInfluence_Nivalis_GhostSystem_Ai_Person_" data-uid="NivalisModKit.StaffSkills.HappinessInfluence(Nivalis.GhostSystem.Ai.Person)">
   HappinessInfluence(Person)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L141"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The game's happiness factor for skill results: 0.7 + 0.5 × work satisfaction (0 to 1), so 0.7 to 1.2.
@@ -490,7 +566,7 @@ Plated meal quality and a waiter's service both use it. 1 when the person has no
 
   <h3 id="NivalisModKit_StaffSkills_Has_Nivalis_GhostSystem_Ai_Person_Nivalis_SkillSystem_SkillDefinition_" data-uid="NivalisModKit.StaffSkills.Has(Nivalis.GhostSystem.Ai.Person,Nivalis.SkillSystem.SkillDefinition)">
   Has(Person, SkillDefinition)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether the person has the skill at all (any XP, level 0 included).</p>
@@ -529,7 +605,7 @@ Plated meal quality and a waiter's service both use it. 1 when the person has no
 
   <h3 id="NivalisModKit_StaffSkills_Level_Nivalis_GhostSystem_Ai_Person_Nivalis_SkillSystem_SkillDefinition_" data-uid="NivalisModKit.StaffSkills.Level(Nivalis.GhostSystem.Ai.Person,Nivalis.SkillSystem.SkillDefinition)">
   Level(Person, SkillDefinition)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The person's level in the skill as the game shows it (1 = beginner), or 0 without the skill. (The game's
@@ -569,7 +645,7 @@ Plated meal quality and a waiter's service both use it. 1 when the person has no
 
   <h3 id="NivalisModKit_StaffSkills_LevelData_Nivalis_GhostSystem_Ai_Person_Nivalis_SkillSystem_SkillDefinition_" data-uid="NivalisModKit.StaffSkills.LevelData(Nivalis.GhostSystem.Ai.Person,Nivalis.SkillSystem.SkillDefinition)">
   LevelData(Person, SkillDefinition)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L88"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The person's level data for the skill (cast it: <code>TryCast&lt;CookingLevel&gt;()</code>, <code>ServingLevel</code>,
@@ -609,7 +685,7 @@ Plated meal quality and a waiter's service both use it. 1 when the person has no
 
   <h3 id="NivalisModKit_StaffSkills_LevelData_Nivalis_SkillSystem_SkillDefinition_System_Int32_" data-uid="NivalisModKit.StaffSkills.LevelData(Nivalis.SkillSystem.SkillDefinition,System.Int32)">
   LevelData(SkillDefinition, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A skill's level data by shown level (1 for a beginner's values), or null.</p>
@@ -648,7 +724,7 @@ Plated meal quality and a waiter's service both use it. 1 when the person has no
 
   <h3 id="NivalisModKit_StaffSkills_NameOf_Nivalis_SkillSystem_SkillDefinition_" data-uid="NivalisModKit.StaffSkills.NameOf(Nivalis.SkillSystem.SkillDefinition)">
   NameOf(SkillDefinition)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L156"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A short name for one of the work skills (&quot;cooking&quot;, &quot;serving&quot;...), else the asset's name.</p>
@@ -685,7 +761,7 @@ Plated meal quality and a waiter's service both use it. 1 when the person has no
 
   <h3 id="NivalisModKit_StaffSkills_NextLevelExperience_Nivalis_GhostSystem_Ai_Person_Nivalis_SkillSystem_SkillDefinition_" data-uid="NivalisModKit.StaffSkills.NextLevelExperience(Nivalis.GhostSystem.Ai.Person,Nivalis.SkillSystem.SkillDefinition)">
   NextLevelExperience(Person, SkillDefinition)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Total XP needed for the person's next level in the skill, or -1 at the top level or without it.</p>
@@ -724,7 +800,7 @@ Plated meal quality and a waiter's service both use it. 1 when the person has no
 
   <h3 id="NivalisModKit_StaffSkills_Same_Nivalis_SkillSystem_SkillDefinition_Nivalis_SkillSystem_SkillDefinition_" data-uid="NivalisModKit.StaffSkills.Same(Nivalis.SkillSystem.SkillDefinition,Nivalis.SkillSystem.SkillDefinition)">
   Same(SkillDefinition, SkillDefinition)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L150"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L176"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Whether two skill references are the same asset (Il2Cpp wrappers aren't reference-equal).</p>
@@ -763,7 +839,7 @@ Plated meal quality and a waiter's service both use it. 1 when the person has no
 
   <h3 id="NivalisModKit_StaffSkills_ServingOf_Nivalis_GhostSystem_Ai_Person_" data-uid="NivalisModKit.StaffSkills.ServingOf(Nivalis.GhostSystem.Ai.Person)">
   ServingOf(Person)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/StaffSkills.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The person's serving level data, or null without the skill.</p>

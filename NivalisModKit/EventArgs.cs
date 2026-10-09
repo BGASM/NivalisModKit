@@ -214,7 +214,7 @@ public sealed class DeliveryCompletedArgs
     /// <summary>The venue area receiving the delivery.</summary>
     public VenueAreaGhost Area { get; }
 
-    /// <summary>The staff member who delivered it.</summary>
+    /// <summary>The staff member who delivered it, or null if the game stored it some other way.</summary>
     public AgentGhost Staff { get; }
 
     /// <summary>Items that went into storage, by type.</summary>

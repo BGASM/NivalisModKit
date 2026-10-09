@@ -3,15 +3,17 @@ using BepInEx.Configuration;
 namespace NivalisModKit;
 
 /// <summary>
-/// How a setting appears in the in-game mod browser. Pass one as a tag when you bind the setting:
+/// How a setting appears in the kit's in-game mod browser. Since 0.6.2, prefer
+/// <see cref="ConfigurationManagerAttributes"/>: it does the same here and other settings menus (Mod Settings Menu,
+/// Configuration Manager) read it too. This tag is read only by the kit. Pass one as a tag when you bind the setting:
 /// <code>
 /// Config.Bind("General", "Verbose", false,
 ///     new ConfigDescription("Log every decision.", null, new ModSetting { IsAdvanced = true }));
 /// </code>
 /// Listing is opt-in: a setting appears when it has this tag, or when its mod called
 /// <see cref="ModMenu.ListSettings"/> (then all of its settings appear, and these flags adjust them). The browser
-/// also reads BepInEx ConfigurationManager's <c>ConfigurationManagerAttributes</c> tag to adjust listed settings,
-/// but that tag alone doesn't list a setting.
+/// also reads a mod's own copy of the <c>ConfigurationManagerAttributes</c> tag to adjust listed settings, but that
+/// alone doesn't list a setting (the kit's <see cref="ConfigurationManagerAttributes"/> does).
 /// </summary>
 public sealed class ModSetting
 {
@@ -48,6 +50,7 @@ public sealed class ModSetting
         foreach (var tag in tags)
         {
             if (tag is ModSetting m) { Merge(result, m); result.Tagged = true; continue; }
+            if (tag is ConfigurationManagerAttributes) result.Tagged = true;   // the kit's: opts in like ModSetting
             if (tag == null || tag.GetType().Name != "ConfigurationManagerAttributes") continue;
             // ConfigurationManager's tag: a class each mod copies into itself, so read it by member name.
             Merge(result, new ModSetting
@@ -57,6 +60,7 @@ public sealed class ModSetting
                 IsAdvanced = Read<bool?>(tag, "IsAdvanced"),
                 Order = Read<int?>(tag, "Order"),
                 DisplayName = Read<string>(tag, "DispName"),
+                RequiresRestart = Read<bool?>(tag, "RequiresRestart"),
             });
         }
         return result;

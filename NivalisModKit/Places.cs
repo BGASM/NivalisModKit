@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using Nivalis;
@@ -372,7 +373,8 @@ public static partial class Quests
     /// <summary>
     /// Where the game's compass points for quests now: each objective's target, or, when it's in another district, the
     /// portal towards it (the game routes markers onto portals). Pinned quests only unless <paramref name="pinnedOnly"/>
-    /// is false. Cheap (reads the compass's list); fine once a second.
+    /// is false. Quests the game hides are always left out (its "show only pinned quests" option, patch 4 on). Cheap
+    /// (reads the compass's list); fine once a second.
     /// </summary>
     [Experimental("New in 0.4.")]
     public static List<QuestMarker> Markers(bool pinnedOnly = true)
@@ -391,6 +393,7 @@ public static partial class Quests
                 bool pinned = false;
                 try { pinned = rq.Pinned; } catch { }
                 if (pinnedOnly && !pinned) continue;
+                if (!Displayed(rq)) continue;
                 string title = null;
                 int number = 0;
                 try { title = rq.Quest.Title; number = rq.QuestNumber; } catch { }
@@ -403,4 +406,31 @@ public static partial class Quests
         catch (Exception e) { KitPlugin.L.LogError($"Quests.Markers: {e.Message}"); }
         return list;
     }
+
+    /// <summary>
+    /// The game's "show only pinned quests" option (patch 4 on; false on earlier builds, which have no such option).
+    /// </summary>
+    public static bool ShowOnlyPinned
+    {
+        get
+        {
+            try { return GameShowOnlyPinned(); }
+            catch (MissingMethodException) { return false; }
+            catch (Exception) { return false; }
+        }
+    }
+
+    // Whether the game shows this quest (its pinned-only option); always on builds without the option.
+    static bool Displayed(RuntimeQuest rq)
+    {
+        try { return GameDisplays(rq); }
+        catch (MissingMethodException) { return true; }
+        catch (Exception) { return true; }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static bool GameDisplays(RuntimeQuest rq) => QuestManager.IsQuestDisplayed(rq);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static bool GameShowOnlyPinned() => QuestManager.ShowOnlyPinnedQuests;
 }

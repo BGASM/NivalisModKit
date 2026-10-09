@@ -110,12 +110,14 @@ static partial class EventPatches
             postfix: nameof(ReceiptPostfix),
             args: () => new[] { typeof(ItemType), typeof(int), typeof(Person) });
 
-        // The staff action's last step puts the delivery into storage. Items that don't fit are
-        // queued as a new delivery, so count what actually arrived: storage before and after.
+        // HandleDeliveryCleanup puts a delivery into storage; the staff action's last step (Finally)
+        // calls it, and the helper records who delivered. Items that don't fit stay queued, so count
+        // what actually arrived: storage before and after.
+        Helper("staff for DeliveryCompleted", () => typeof(DeliverIngredientsActionType.Finally), "Enter",
+            prefix: nameof(DeliverStepPrefix), postfix: nameof(DeliverStepPostfix));
         Install(nameof(GameEvents.DeliveryCompleted),
-            () => typeof(DeliverIngredientsActionType.DeliverIngredients), "Enter",
-            prefix: nameof(DeliverPrefix), postfix: nameof(DeliverPostfix),
-            args: () => new[] { typeof(AgentGhost), typeof(DeliverIngredientsActionType.State) });
+            () => typeof(DeliverIngredientsActionType), nameof(DeliverIngredientsActionType.HandleDeliveryCleanup),
+            prefix: nameof(DeliverPrefix), postfix: nameof(DeliverPostfix));
 
         // Player shopping. VendorInteraction.DoInteraction can refuse (e.g. skill too low), so the
         // shop window opening is the reliable signal; it also remembers the vendor for trades.
@@ -183,7 +185,9 @@ static partial class EventPatches
         try
         {
             Type t = type() ?? throw new Exception("target type not found");
-            MethodBase target = AccessTools.Method(t, method) ?? throw new Exception($"{t.Name}.{method} not found");
+            // Declared first: sub-actions' base class has its own Enter/Tick.
+            MethodBase target = AccessTools.DeclaredMethod(t, method) ?? AccessTools.Method(t, method)
+                ?? throw new Exception($"{t.Name}.{method} not found");
             harmony.Patch(target, prefix: Hm(prefix, Priority.Normal), postfix: Hm(postfix, Priority.Normal));
         }
         catch (Exception e) { KitPlugin.L.LogWarning($"Patch for {what}: missing ({e.Message})"); }
@@ -606,19 +610,22 @@ static partial class EventPatches
         catch (Exception e) { KitPlugin.L.LogError($"ReceiptPostfix: {e}"); }
     }
 
-    // Storage counts per delivered item type, taken just before the delivery step runs.
+    // Storage counts per delivered item type, taken just before the delivery goes into storage.
     static VenueAreaGhost deliverArea;
+    static AgentGhost deliverStaff;
     static readonly Dictionary<IntPtr, (ItemType item, int before)> deliverBefore = new();
 
-    static void DeliverPrefix(DeliverIngredientsActionType.State state)
+    static void DeliverStepPrefix(AgentGhost agent) => deliverStaff = agent;
+    static void DeliverStepPostfix() => deliverStaff = null;
+
+    static void DeliverPrefix(StaffTaskQueue.DeliverIngredientsTask task, VenueAreaGhost venueRuntimeData)
     {
         deliverArea = null;
         deliverBefore.Clear();
         try
         {
-            var task = state?.Task;
-            if (task == null || !task.IsCompleted || task.Items == null) return;
-            var area = task.venue?.RuntimeData;
+            if (task?.Items == null || task.Items.Count == 0) return;
+            var area = venueRuntimeData;
             var storage = area?.JointInventory;
             if (storage == null) return;
 
@@ -630,8 +637,9 @@ static partial class EventPatches
         catch (Exception e) { KitPlugin.L.LogError($"DeliverPrefix: {e}"); }
     }
 
-    static void DeliverPostfix(AgentGhost agent)
+    static void DeliverPostfix()
     {
+        var agent = deliverStaff;
         try
         {
             if (deliverArea == null || deliverBefore.Count == 0) return;

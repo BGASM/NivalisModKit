@@ -9,12 +9,18 @@ using Nivalis.InventorySystem;
 namespace NivalisModKit;
 
 /// <summary>
-/// Manager ingredient purchasing. Once any mod subscribes to <see cref="VendorOrdering"/> or
-/// <see cref="OrderQuantity"/>, the kit takes over each recipe's purchases: it collects the vendor
-/// offers the game makes, lets handlers set the quantity and the vendor order, then buys only up to
-/// that quantity, stopping at the first failed purchase (almost always the venue out of money).
-/// With no subscribers the kit leaves purchasing to the game.
+/// Manager ingredient purchasing. The game restocks each dish's ingredients up to the venue's supply
+/// target, buying from vendors cheapest first (then most stock) until each ingredient's need is met,
+/// within the venue's money and daily restock budget. Once any mod subscribes to
+/// <see cref="VendorOrdering"/> or <see cref="OrderQuantity"/>, the kit lets handlers change the
+/// supply target and the vendor order; the game still does the buying. With no subscribers the kit
+/// leaves purchasing alone.
 /// </summary>
+/// <remarks>
+/// Changed in 0.6.2 for the game's patch 4 restock: <see cref="OrderQuantity"/> now sets the dish's
+/// supply target rather than an ingredient's quantity, offers are in the game's new order (cheapest
+/// first), and a failed purchase no longer stops the recipe (the game moves to the next vendor).
+/// </remarks>
 public static class Purchasing
 {
     static Action<VendorOrderingContext> ordering;
@@ -22,7 +28,8 @@ public static class Purchasing
 
     /// <summary>
     /// Reorder, or remove from, the vendors offered for one ingredient. Raised once per ingredient
-    /// per recipe, after <see cref="OrderQuantity"/>. Handlers run in the order added, each seeing the
+    /// the venue is short of, per recipe, after <see cref="OrderQuantity"/>. The game buys from the
+    /// offers in this order until the need is met. Handlers run in the order added, each seeing the
     /// previous one's result. Adding offers isn't allowed; an invalid list is discarded and logged.
     /// </summary>
     public static event Action<VendorOrderingContext> VendorOrdering
@@ -32,8 +39,10 @@ public static class Purchasing
     }
 
     /// <summary>
-    /// Change how many of one ingredient to buy for a recipe. Raised once per ingredient per recipe.
-    /// Handlers run in the order added, each seeing the previous one's <c>Quantity</c>.
+    /// Change a dish's supply target for this restock: the venue tops each of the recipe's
+    /// ingredients up to this many (limited by storage space, money and the restock budget). Raised
+    /// once per recipe, before any vendor is asked. Handlers run in the order added, each seeing the
+    /// previous one's <c>Quantity</c>. Experimental.
     /// </summary>
     public static event Action<OrderQuantityContext> OrderQuantity
     {
@@ -42,8 +51,8 @@ public static class Purchasing
     }
 
     /// <summary>
-    /// Raised for each vendor offer as the pipeline buys, skips it, or a purchase fails. Read-only;
-    /// subscribing doesn't turn the pipeline on.
+    /// Raised for each vendor offer: once the game buys from it, a purchase fails, or (when the
+    /// ingredient is done) it was skipped. Read-only; subscribing doesn't turn the pipeline on.
     /// </summary>
     public static event Action<PurchaseDecisionArgs> Decision;
 
@@ -74,7 +83,7 @@ public static class Purchasing
     }
 }
 
-/// <summary>One vendor's offer for an ingredient, as the game made it.</summary>
+/// <summary>One vendor's offer for an ingredient, from the game's vendor list.</summary>
 public sealed class VendorOffer
 {
     /// <summary>The vendor.</summary>
@@ -83,7 +92,7 @@ public sealed class VendorOffer
     /// <summary>The ingredient.</summary>
     public ItemType Item { get; }
 
-    /// <summary>Price per item, before the venue's barter discount. int.MaxValue if unknown.</summary>
+    /// <summary>Price per item (fresh), before the venue's barter discount.</summary>
     public int Price { get; }
 
     /// <summary>The vendor's stock of the item.</summary>
@@ -92,24 +101,19 @@ public sealed class VendorOffer
     /// <summary>District hops from the buying venue, or <see cref="World.Unreachable"/>.</summary>
     public int Hops { get; }
 
-    /// <summary>What the game asked this vendor for: min(stock, game quantity, money limit / price).</summary>
+    /// <summary>
+    /// The most the game would buy here if this vendor came first: min(stock, the ingredient's need).
+    /// The game also limits it by storage space, money and the restock budget.
+    /// </summary>
     public int Amount { get; }
 
-    /// <summary>
-    /// The most this vendor can supply within the venue's per-recipe money limit: min(stock,
-    /// limit / price). Used instead of <see cref="Amount"/> when OrderQuantity raises the quantity.
-    /// </summary>
-    public int MaxAmount { get; }
+    /// <summary>Same as <see cref="Amount"/> since 0.6.2 (the game no longer has a per-recipe money limit).</summary>
+    public int MaxAmount => Amount;
 
-    /// <summary>The order the game offered vendors in, 0 first.</summary>
+    /// <summary>The game's order (cheapest first, then most stock), 0 first.</summary>
     public int Sequence { get; }
 
-    // Raw copies of the game's call, replayed when the pipeline buys. Freed after each recipe.
-    internal IntPtr VendorPtr, Req, Temp, Method;
-    internal float Discount;
-
-    internal VendorOffer(Vendor vendor, ItemType item, int price, int stock, int hops,
-        int amount, int maxAmount, int sequence)
+    internal VendorOffer(Vendor vendor, ItemType item, int price, int stock, int hops, int amount, int sequence)
     {
         Vendor = vendor;
         Item = item;
@@ -117,7 +121,6 @@ public sealed class VendorOffer
         Stock = stock;
         Hops = hops;
         Amount = amount;
-        MaxAmount = maxAmount;
         Sequence = sequence;
     }
 }
@@ -131,16 +134,22 @@ public sealed class OrderQuantityContext
     /// <summary>The recipe being bought for.</summary>
     public IRecipe Recipe { get; }
 
-    /// <summary>The ingredient.</summary>
+    /// <summary>The dish the recipe makes (since 0.6.2; it was the ingredient).</summary>
     public ItemType Item { get; }
 
     /// <summary>The venue's district, or null.</summary>
     public WorldLocation VenueLocation { get; }
 
-    /// <summary>How many the game wanted.</summary>
+    /// <summary>
+    /// The game's supply target for the dish: the venue's setting (Low 2, Medium 5, High 10), or for
+    /// Auto its recent sales of the dish (at least 2).
+    /// </summary>
     public int GameQuantity { get; }
 
-    /// <summary>How many to buy. Starts at <see cref="GameQuantity"/>; negative values count as 0.</summary>
+    /// <summary>
+    /// The supply target to use: each ingredient is topped up to this many. Starts at
+    /// <see cref="GameQuantity"/>; negative values count as 0.
+    /// </summary>
     public int Quantity { get; set; }
 
     internal OrderQuantityContext(VenueAreaGhost area, IRecipe recipe, ItemType item,
@@ -170,12 +179,12 @@ public sealed class VendorOrderingContext
     /// <summary>The venue's district, or null.</summary>
     public WorldLocation VenueLocation { get; }
 
-    /// <summary>How many will be bought, after OrderQuantity.</summary>
+    /// <summary>The ingredient's need: the supply target (after OrderQuantity) minus what the venue has.</summary>
     public int Quantity { get; }
 
     /// <summary>
-    /// The offers, in buying order. Starts in the game's order. Reorder in place, remove offers,
-    /// or assign a new list of the same offers.
+    /// The offers, in buying order. Starts in the game's order (cheapest first, then most stock).
+    /// Reorder in place, remove offers, or assign a new list of the same offers.
     /// </summary>
     public List<VendorOffer> Offers { get; set; }
 
@@ -196,9 +205,12 @@ public enum PurchaseResult
 {
     /// <summary>Bought <see cref="PurchaseDecisionArgs.Amount"/> items.</summary>
     Bought,
-    /// <summary>Not needed: the quantity was already filled, or the vendor can supply none.</summary>
+    /// <summary>
+    /// Not bought from: the need was already met, or the game stopped buying the ingredient (the
+    /// venue couldn't afford this vendor's price, or the restock budget ran out).
+    /// </summary>
     Skipped,
-    /// <summary>The game refused the purchase, usually for lack of money. The recipe's buying stops.</summary>
+    /// <summary>The game refused the purchase. It moves on to the next vendor.</summary>
     Failed,
 }
 

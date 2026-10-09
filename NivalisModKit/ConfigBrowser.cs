@@ -50,6 +50,12 @@ internal static class ConfigBrowser
             var p = page;
             window.AddButton(p.Title, () => ShowPage(p));
         }
+        if (ModMenu.SettingsMenu != null)
+        {
+            window.AddHeader("Settings");
+            window.AddText($"Mod settings are in {ModMenu.SettingsMenu} (F1 by default).");
+            return;
+        }
         var mods = Plugins().ToList();
         var editable = mods.Where(m => m.editable).ToList();
         var others = mods.Where(m => !m.editable).ToList();

@@ -342,11 +342,11 @@ ModMenu.AddPage(MyGuid, "My Mod", w =>
 });
 ```
 
-Settings apply live, at every click. If one of yours has a lasting effect (taking a job off staff, rebuilding something), note the change in `SettingChanged` and act in `ModMenu.Closed` (0.6), once, when the player leaves the browser; `ModMenu.IsOpen` tells you whether to wait. Changes made outside the browser (the `.cfg`, the `config` command) can apply at once.
+Settings apply live, at every click. If one of yours has a lasting effect (taking a job off staff, rebuilding something), note the change in `SettingChanged` and act in `ModMenu.Closed` (0.6), once, when the player leaves the browser; `ModMenu.IsOpen` tells you whether to wait. Changes made outside the browser (the `.cfg`, the `config` command, another settings menu) can apply at once.
 
 **Which settings show.** Listing is opt-in, so nothing appears unless the mod asks:
 - `ModMenu.ListSettings(myGuid)` in `Load` lists all your settings.
-- A `ModSetting` tag lists one setting.
+- A `ConfigurationManagerAttributes` tag (the kit's, 0.6.2) or a `ModSetting` tag lists one setting.
 
 Players can also turn on the kit's `[ModMenu] ShowOtherMods` (in the browser, under Nivalis ModKit). The browser then lists all other mods' settings too, **read-only**, with a note to edit the `.cfg` and restart. The kit can't tell whether a mod that never heard of it reads a changed value live, so it doesn't offer to change them.
 
@@ -355,8 +355,10 @@ Either way, the flags below adjust how settings appear:
 ```csharp
 ModMenu.ListSettings(MyGuid);
 Config.Bind("Debug", "Trace", false, new ConfigDescription("Log everything.", null,
-    new ModSetting { IsAdvanced = true }));
+    new ConfigurationManagerAttributes { IsAdvanced = true }));
 ```
+
+Use the kit's `ConfigurationManagerAttributes` (0.6.2): it's the standard BepInEx tag, so other settings menus (Mod Settings Menu, Configuration Manager) read the same flags, and you don't need to copy the class into your mod. `ModSetting` still works, but only the kit reads it.
 
 | Flag | Effect |
 |---|---|
@@ -364,9 +366,11 @@ Config.Bind("Debug", "Trace", false, new ConfigDescription("Log everything.", nu
 | `ReadOnly = true` | Shown, not editable. |
 | `IsAdvanced = true` | Shown only with "Show advanced" ticked. |
 | `RequiresRestart = true` | Marked "(restart)": the mod reads it once at startup. |
-| `Order`, `DisplayName` | Order within the section (higher first), and the name shown. |
+| `Order`, `DispName` | Order within the section (higher first), and the name shown (`DisplayName` on `ModSetting`). |
 
-The browser also reads BepInEx ConfigurationManager's `ConfigurationManagerAttributes` tag (`Browsable`, `ReadOnly`, `IsAdvanced`, `Order`, `DispName`) for listed settings. That tag alone doesn't list a setting.
+`RequiresRestart` is a kit extension; other menus ignore it. A mod's own copy of `ConfigurationManagerAttributes` is read too (`Browsable`, `ReadOnly`, `IsAdvanced`, `Order`, `DispName`, `RequiresRestart`) for listed settings, but that alone doesn't list a setting.
+
+**Mod Settings Menu.** When [Mod Settings Menu](https://www.nexusmods.com/nivalisnights/mods/80) is installed, the kit leaves mod settings to it (F1): the Mods button shows only mods' pages (`ModMenu.AddPage`), and isn't added when there are none. `ModMenu.SettingsMenu` names it. Players can turn that off with the kit's `[ModMenu] LeaveSettingsToModSettingsMenu`. That menu applies pending changes together and doesn't raise `ModMenu.Closed`, so act on `SettingChanged` when `ModMenu.IsOpen` is false.
 
 **How each setting is edited:**
 
@@ -682,6 +686,26 @@ Other mods that detour `Vendor.BuyItem` directly will conflict with the purchasi
 
 ## Changes
 
+**0.6.2**
+
+For the game's October 9 patch (1.0 patch 4, Steam build 25828494). Earlier builds are no longer tested.
+
+For players:
+- Works with the patch: manager restocking, ingredient deliveries, the kitchen hooks and venue menus were all updated to the game's changes.
+- When [Mod Settings Menu](https://www.nexusmods.com/nivalisnights/mods/80) is installed, the kit leaves mod settings to it (F1). The Mods button then shows only mods' pages, and isn't added when there are none. Turn this off with `[ModMenu] LeaveSettingsToModSettingsMenu`.
+- Quest markers from `Quests.Markers` (the minimap's) follow the game's new "show only pinned quests" option.
+
+For modders:
+- `Purchasing` follows the game's new restock: the game tops each ingredient up to the dish's supply target, buying from vendors cheapest first (then most stock) within the venue's money and daily restock budget. The kit reorders the game's vendor list and reports each purchase; the game does the buying.
+  - `OrderQuantity` now sets the dish's supply target (`ctx.Item` is the dish), once per recipe. Experimental.
+  - `VendorOrdering`: offers start in the game's new order; `ctx.Quantity` is the ingredient's need.
+  - `Decision`: a failed purchase no longer stops the recipe (the game moves to the next vendor). `VendorOffer.MaxAmount` equals `Amount`.
+- `ConfigurationManagerAttributes`: the standard BepInEx settings tag, in the kit. Other settings menus read it; in the kit's browser it lists a setting like `ModSetting`, plus `RequiresRestart`. `ModMenu.SettingsMenu` names the menu the kit leaves settings to.
+- `StaffSkills.CookingTime(person)`: the prep time multiplier as the game applies it (`CookingLevel.CookingTime` on patch 4, `ActionSpeed` before). Plating is a flat 6 seconds since patch 4, and every skill's `ActionSpeed` is now a speed.
+- `Quests.ShowOnlyPinned`: the game's pinned-only option.
+- `GameEvents.DeliveryCompleted` hooks the game's new storage step; `Staff` can be null.
+- `Venues.MenuOf` uses each venue's own recipe (the game now keeps recipes per venue).
+
 **0.6.1**
 
 For players:
@@ -751,7 +775,7 @@ For players:
 For modders:
 - Lifecycle: `GameEvents.GameReady`, `GameEnded`, `IsInGame`, `WhenInGame`.
 - New events: `PanelShown`, `PanelHidden`, `VenueStorageChanged`, `GameClock.TimeSpeedChanged`.
-- `ModMenu`: `ListSettings`, `AddPage`, `SetBrowser`, `OpenAsChild`. `ModSetting` tags (hidden, read-only, advanced, needs restart, order, display name); ConfigurationManager tags are read too.
+- `ModMenu`: `ListSettings`, `AddPage`, `SetBrowser`, `OpenAsChild`. `ConfigurationManagerAttributes` and `ModSetting` tags (hidden, read-only, advanced, needs restart, order, display name); steps aside for Mod Settings Menu (0.6.2).
 - `Ui.CreateWindow` (Popup and Panel) with rows: `AddHeader`, `AddText`, `AddButton`, `AddToggle`, `AddSlider`, `AddChoice`, `AddTextField`, `AddValue`, `AddFooterButton`, `Clear`.
 - `Ui.RequestMenuMode`: shared menu mode (cursor on, movement off) for UI you build yourself.
 - More `Ui`: `Find("Type:Object")`, `Clone`, `CloneText`, `CloneButton`, `Tooltip`, `MakeLive`, `Relayout`, `OpenMenu`, `OpenJournal`, `OpenMap`, `OpenVenue`, `RadialMenu`, `AddRadialAction`.

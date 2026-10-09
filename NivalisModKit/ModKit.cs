@@ -10,7 +10,7 @@ public static class ModKit
     public const string Name = "Nivalis ModKit";
 
     /// <summary>Kit version. Keep in step with the csproj Version.</summary>
-    public const string Version = "0.6.1";
+    public const string Version = "0.6.2";
 
     /// <summary>
     /// Game version (Unity <c>Application.version</c>) this kit build was tested on. The game keeps "1.0"

@@ -153,8 +153,8 @@ public static class Kitchen</code></pre>
   <h2 id="NivalisModKit_Kitchen_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>How the game hands out kitchen work: an order becomes prep jobs plus one plating job, which waits until its
 prep is done. A cook looking for work takes the first job of that kind in the venue's task queue, then a free
-station for it (or retries in 3 s). Each step's time is scaled by the cook's cooking <code>ActionSpeed</code> and
-happiness. Plating sets the meal's quality (plater's <code>PreparationQuality</code> × happiness influence) and
+station for it (or retries in 3 s). A prep step's time is scaled by the cook's <a class="xref" href="NivalisModKit.StaffSkills.html#NivalisModKit_StaffSkills_CookingTime_Nivalis_GhostSystem_Ai_Person_">CookingTime(Person)</a>
+and happiness; plating takes a flat 6 seconds (since the game's patch 4). Plating sets the meal's quality (plater's <code>PreparationQuality</code> × happiness influence) and
 freshness (the ingredients'), and gives the plater 1 cooking XP. Several mods can use each hook: handlers
 run in the order added and each sees the previous one's result.</p>
 </div>

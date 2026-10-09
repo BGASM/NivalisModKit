@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ModSetting | Nivalis ModKit ">
       
-      <meta name="description" content="How a setting appears in the in-game mod browser. Pass one as a tag when you bind the setting: Config.Bind(&quot;General&quot;, &quot;Verbose&quot;, false,     new ConfigDescription(&quot;Log every decision.&quot;, null, new ModSetting { IsAdvanced = true })); Listing is opt-in: a setting appears when it has this tag, or when its mod called  (then all of its settings appear, and these flags adjust them). The browser also reads BepInEx ConfigurationManager&#39;s ConfigurationManagerAttributes tag to adjust listed settings, but that tag alone doesn&#39;t list a setting.">
+      <meta name="description" content="How a setting appears in the kit&#39;s in-game mod browser. Since 0.6.2, prefer : it does the same here and other settings menus (Mod Settings Menu, Configuration Manager) read it too. This tag is read only by the kit. Pass one as a tag when you bind the setting: Config.Bind(&quot;General&quot;, &quot;Verbose&quot;, false,     new ConfigDescription(&quot;Log every decision.&quot;, null, new ModSetting { IsAdvanced = true })); Listing is opt-in: a setting appears when it has this tag, or when its mod called  (then all of its settings appear, and these flags adjust them). The browser also reads a mod&#39;s own copy of the ConfigurationManagerAttributes tag to adjust listed settings, but that alone doesn&#39;t list a setting (the kit&#39;s  does).">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="NivalisModKit_ModSetting" data-uid="NivalisModKit.ModSetting" class="text-break">
-Class ModSetting  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L16"><i class="bi bi-code-slash"></i></a>
+Class ModSetting  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,13 +97,15 @@ Class ModSetting  <a class="header-action link-secondary" title="View source" hr
   <dl><dt>Assembly</dt><dd>NivalisModKit.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>How a setting appears in the in-game mod browser. Pass one as a tag when you bind the setting:</p>
+  <div class="markdown summary"><p>How a setting appears in the kit's in-game mod browser. Since 0.6.2, prefer
+<a class="xref" href="NivalisModKit.ConfigurationManagerAttributes.html">ConfigurationManagerAttributes</a>: it does the same here and other settings menus (Mod Settings Menu,
+Configuration Manager) read it too. This tag is read only by the kit. Pass one as a tag when you bind the setting:</p>
 <pre><code class="lang-csharp">Config.Bind("General", "Verbose", false,
     new ConfigDescription("Log every decision.", null, new ModSetting { IsAdvanced = true }));</code></pre>
 <p>Listing is opt-in: a setting appears when it has this tag, or when its mod called
 <a class="xref" href="NivalisModKit.ModMenu.html#NivalisModKit_ModMenu_ListSettings_System_String_">ListSettings(string)</a> (then all of its settings appear, and these flags adjust them). The browser
-also reads BepInEx ConfigurationManager's <code>ConfigurationManagerAttributes</code> tag to adjust listed settings,
-but that tag alone doesn't list a setting.</p>
+also reads a mod's own copy of the <code>ConfigurationManagerAttributes</code> tag to adjust listed settings, but that
+alone doesn't list a setting (the kit's <a class="xref" href="NivalisModKit.ConfigurationManagerAttributes.html">ConfigurationManagerAttributes</a> does).</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -160,7 +162,7 @@ but that tag alone doesn't list a setting.</p>
 
   <h3 id="NivalisModKit_ModSetting_Browsable" data-uid="NivalisModKit.ModSetting.Browsable">
   Browsable
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L19"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>False hides the setting from the browser entirely.</p>
@@ -192,7 +194,7 @@ but that tag alone doesn't list a setting.</p>
 
   <h3 id="NivalisModKit_ModSetting_DisplayName" data-uid="NivalisModKit.ModSetting.DisplayName">
   DisplayName
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Name to show instead of the key.</p>
@@ -224,7 +226,7 @@ but that tag alone doesn't list a setting.</p>
 
   <h3 id="NivalisModKit_ModSetting_IsAdvanced" data-uid="NivalisModKit.ModSetting.IsAdvanced">
   IsAdvanced
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>True shows it only when the player ticks &quot;Show advanced&quot;.</p>
@@ -256,7 +258,7 @@ but that tag alone doesn't list a setting.</p>
 
   <h3 id="NivalisModKit_ModSetting_Order" data-uid="NivalisModKit.ModSetting.Order">
   Order
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Position within its section; higher comes first. Settings without one keep file order.</p>
@@ -288,7 +290,7 @@ but that tag alone doesn't list a setting.</p>
 
   <h3 id="NivalisModKit_ModSetting_ReadOnly" data-uid="NivalisModKit.ModSetting.ReadOnly">
   ReadOnly
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>True shows the value but doesn't let the player change it.</p>
@@ -320,7 +322,7 @@ but that tag alone doesn't list a setting.</p>
 
   <h3 id="NivalisModKit_ModSetting_RequiresRestart" data-uid="NivalisModKit.ModSetting.RequiresRestart">
   RequiresRestart
-  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/ModSetting.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>True when a change only takes effect after restarting the game (the mod reads the value once). The browser

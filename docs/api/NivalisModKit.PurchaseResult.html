@@ -90,7 +90,7 @@
 
 
   <h1 id="NivalisModKit_PurchaseResult" data-uid="NivalisModKit.PurchaseResult" class="text-break">
-Enum PurchaseResult  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L195"><i class="bi bi-code-slash"></i></a>
+Enum PurchaseResult  <a class="header-action link-secondary" title="View source" href="https://github.com/BGASM/NivalisModKit/blob/main/NivalisModKit/Purchasing.cs/#L204"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -123,11 +123,12 @@ Enum PurchaseResult  <a class="header-action link-secondary" title="View source"
 </dd>
     <dt id="NivalisModKit_PurchaseResult_Failed"><code>Failed = 2</code></dt>
   
-  <dd><p>The game refused the purchase, usually for lack of money. The recipe's buying stops.</p>
+  <dd><p>The game refused the purchase. It moves on to the next vendor.</p>
 </dd>
     <dt id="NivalisModKit_PurchaseResult_Skipped"><code>Skipped = 1</code></dt>
   
-  <dd><p>Not needed: the quantity was already filled, or the vendor can supply none.</p>
+  <dd><p>Not bought from: the need was already met, or the game stopped buying the ingredient (the
+venue couldn't afford this vendor's price, or the restock budget ran out).</p>
 </dd>
   </dl>
 

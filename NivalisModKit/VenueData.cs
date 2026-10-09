@@ -167,9 +167,12 @@ public static partial class Venues
             foreach (var m in items)
             {
                 if (m == null) continue;
-                // The venue's recipe (with the ingredients chosen on the menu), read through the IRecipe interface; the
-                // definition's defaults if the venue has none.
-                var recipe = m._recipe;
+                // The venue's recipe, read through the IRecipe interface: since build 25828494 customized recipes apply
+                // per venue (MealMenuItem.GetRecipe(venue)); before, the menu entry's own recipe. The definition's
+                // defaults if there's neither.
+                IRecipe recipe = null;
+                try { recipe = VenueRecipe(m, area.Venue); } catch (MissingMethodException) { }   // an older game build
+                recipe ??= m._recipe;
                 var ingredients = new List<(ItemType, int)>();
                 MealRecipeDefinition.InputDefinition[] inputs = null;
                 try { inputs = recipe?.Inputs; } catch { }
@@ -185,6 +188,9 @@ public static partial class Venues
         catch (Exception e) { KitPlugin.L.LogError($"Venues.MenuOf: {e.Message}"); }
         return list;
     }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    static IRecipe VenueRecipe(Nivalis.Locale.MealMenuItem m, Venue venue) => venue != null ? m.GetRecipe(venue) : null;
 
     /// <summary>The venue's reviews, oldest first.</summary>
     [Experimental("New in 0.5.")]

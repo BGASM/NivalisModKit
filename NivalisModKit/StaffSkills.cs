@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Il2CppInterop.Runtime;
 using Nivalis.GhostSystem.Ai;
 using Nivalis.GhostSystem.CustomerLoop;
@@ -16,8 +17,10 @@ namespace NivalisModKit;
 /// own staff actions use, so they always match what the game reads.
 /// </summary>
 /// <remarks>
-/// How the game uses them: <c>CookingLevel.ActionSpeed</c> multiplies a kitchen step's time (lower is faster);
-/// the other skills' <c>ActionSpeed</c> is a speed (higher is faster). A plated meal's quality is the plater's
+/// How the game uses them: a prep step's time is multiplied by the cook's <see cref="CookingTime"/> (lower is
+/// faster; <c>CookingLevel.CookingTime</c> since the game's patch 4, <c>ActionSpeed</c> before) and divided by
+/// <see cref="HappinessInfluence"/>. Plating takes a flat 6 seconds since patch 4. Since patch 4 every skill's
+/// <c>ActionSpeed</c> is a speed (higher is faster), cooking's included. A plated meal's quality is the plater's
 /// <c>PreparationQuality</c> × <see cref="HappinessInfluence"/>; a waiter adds <c>ServiceQuality</c> × the same
 /// influence to the order's service score when taking it and at each delivery. Someone without the skill gets
 /// 0.8 quality and a 1.2 time multiplier (in the game only the player can be in that position).
@@ -109,6 +112,29 @@ public static class StaffSkills
     }
 
     /// <summary>
+    /// The cook's prep time multiplier (lower is faster), as the game applies it to each prep step:
+    /// <c>CookingLevel.CookingTime</c> on the game's patch 4 and later, <c>ActionSpeed</c> on earlier builds.
+    /// 1.2 without the cooking skill. New in 0.6.2.
+    /// </summary>
+    public static float CookingTime(Person person)
+    {
+        var level = CookingOf(person);
+        if (level == null) return NoSkillTime;
+        try { return LevelCookingTime(level); }
+        catch (MissingFieldException) { return level.ActionSpeed; }
+        catch (MissingMethodException) { return level.ActionSpeed; }
+    }
+
+    /// <summary>The game's time multiplier for someone without the skill.</summary>
+    public const float NoSkillTime = 1.2f;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static float LevelCookingTime(CookingLevel level) => level.CookingTime;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static float LevelCleaningTime(CleaningLevel level) => level.CleaningTime;
+
+    /// <summary>
     /// The game's happiness factor for skill results: 0.7 + 0.5 × work satisfaction (0 to 1), so 0.7 to 1.2.
     /// Plated meal quality and a waiter's service both use it. 1 when the person has no data.
     /// </summary>
@@ -169,7 +195,13 @@ public static class StaffSkills
                 var row = new Dictionary<string, object> { ["level"] = i + 1 };   // as the game shows it
                 try { row["xpToReach"] = def.GetExperienceForLevel(i + 1); } catch { }
                 if (d.TryCast<StaffSkillLevelData>() is { } st) row["actionSpeed"] = st.ActionSpeed;
-                if (d.TryCast<CookingLevel>() is { } c) row["preparationQuality"] = c.PreparationQuality;
+                if (d.TryCast<CookingLevel>() is { } c)
+                {
+                    row["preparationQuality"] = c.PreparationQuality;
+                    try { row["cookingTime"] = LevelCookingTime(c); } catch (MissingFieldException) { } catch (MissingMethodException) { }
+                }
+                if (d.TryCast<CleaningLevel>() is { } cl)
+                    try { row["cleaningTime"] = LevelCleaningTime(cl); } catch (MissingFieldException) { } catch (MissingMethodException) { }
                 if (d.TryCast<ServingLevel>() is { } sv) { row["serviceQuality"] = sv.ServiceQuality; row["takeOrderTime"] = sv.TakeOrderTime; }
                 levels.Add(row);
             }
