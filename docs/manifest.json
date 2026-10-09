@@ -153,6 +153,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/NivalisModKit.ConfigurationManagerAttributes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/NivalisModKit.ConfigurationManagerAttributes.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "NivalisModKit.ConfigurationManagerAttributes",
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ConfigurationManagerAttributes.yml\" sourcestartlinenumber=\"1\">The standard BepInEx settings tag, read by settings menus such as Mod Settings Menu and Configuration\nManager as well as the kit's own Mods browser. Pass one as a tag when you bind a setting:</p>\n<pre><code class=\"lang-csharp\">Config.Bind(\"Debug\", \"Verbose\", false,\n    new ConfigDescription(\"Log every decision.\", null, new ConfigurationManagerAttributes { IsAdvanced = true }));</code></pre>\n<p sourcefile=\"api/NivalisModKit.ConfigurationManagerAttributes.yml\" sourcestartlinenumber=\"7\">Menus find it by its class name and read its fields, so this is the same tag mods usually copy into\nthemselves; with the kit you don't need a copy. In the kit's browser it also opts the setting in, like\n<xref href=\"NivalisModKit.ModSetting\" data-throw-if-not-resolved=\"false\"></xref>. New in 0.6.2.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/NivalisModKit.Content.CustomItem.yml",
       "output": {
         ".html": {
@@ -863,7 +877,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "NivalisModKit.ModSetting",
-      "Summary": "<p sourcefile=\"api/NivalisModKit.ModSetting.yml\" sourcestartlinenumber=\"1\">How a setting appears in the in-game mod browser. Pass one as a tag when you bind the setting:</p>\n<pre><code class=\"lang-csharp\">Config.Bind(\"General\", \"Verbose\", false,\n    new ConfigDescription(\"Log every decision.\", null, new ModSetting { IsAdvanced = true }));</code></pre>\n<p sourcefile=\"api/NivalisModKit.ModSetting.yml\" sourcestartlinenumber=\"6\">Listing is opt-in: a setting appears when it has this tag, or when its mod called\n<xref href=\"NivalisModKit.ModMenu.ListSettings(System.String)\" data-throw-if-not-resolved=\"false\"></xref> (then all of its settings appear, and these flags adjust them). The browser\nalso reads BepInEx ConfigurationManager's <code>ConfigurationManagerAttributes</code> tag to adjust listed settings,\nbut that tag alone doesn't list a setting.</p>\n"
+      "Summary": "<p sourcefile=\"api/NivalisModKit.ModSetting.yml\" sourcestartlinenumber=\"1\">How a setting appears in the kit's in-game mod browser. Since 0.6.2, prefer\n<xref href=\"NivalisModKit.ConfigurationManagerAttributes\" data-throw-if-not-resolved=\"false\"></xref>: it does the same here and other settings menus (Mod Settings Menu,\nConfiguration Manager) read it too. This tag is read only by the kit. Pass one as a tag when you bind the setting:</p>\n<pre><code class=\"lang-csharp\">Config.Bind(\"General\", \"Verbose\", false,\n    new ConfigDescription(\"Log every decision.\", null, new ModSetting { IsAdvanced = true }));</code></pre>\n<p sourcefile=\"api/NivalisModKit.ModSetting.yml\" sourcestartlinenumber=\"8\">Listing is opt-in: a setting appears when it has this tag, or when its mod called\n<xref href=\"NivalisModKit.ModMenu.ListSettings(System.String)\" data-throw-if-not-resolved=\"false\"></xref> (then all of its settings appear, and these flags adjust them). The browser\nalso reads a mod's own copy of the <code>ConfigurationManagerAttributes</code> tag to adjust listed settings, but that\nalone doesn't list a setting (the kit's <xref href=\"NivalisModKit.ConfigurationManagerAttributes\" data-throw-if-not-resolved=\"false\"></xref> does).</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1199,7 +1213,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "NivalisModKit.Purchasing",
-      "Summary": "<p sourcefile=\"api/NivalisModKit.Purchasing.yml\" sourcestartlinenumber=\"1\">Manager ingredient purchasing. Once any mod subscribes to <xref href=\"NivalisModKit.Purchasing.VendorOrdering\" data-throw-if-not-resolved=\"false\"></xref> or\n<xref href=\"NivalisModKit.Purchasing.OrderQuantity\" data-throw-if-not-resolved=\"false\"></xref>, the kit takes over each recipe's purchases: it collects the vendor\noffers the game makes, lets handlers set the quantity and the vendor order, then buys only up to\nthat quantity, stopping at the first failed purchase (almost always the venue out of money).\nWith no subscribers the kit leaves purchasing to the game.</p>\n"
+      "Summary": "<p sourcefile=\"api/NivalisModKit.Purchasing.yml\" sourcestartlinenumber=\"1\">Manager ingredient purchasing. The game restocks each dish's ingredients up to the venue's supply\ntarget, buying from vendors cheapest first (then most stock) until each ingredient's need is met,\nwithin the venue's money and daily restock budget. Once any mod subscribes to\n<xref href=\"NivalisModKit.Purchasing.VendorOrdering\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"NivalisModKit.Purchasing.OrderQuantity\" data-throw-if-not-resolved=\"false\"></xref>, the kit lets handlers change the\nsupply target and the vendor order; the game still does the buying. With no subscribers the kit\nleaves purchasing alone.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1661,7 +1675,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "NivalisModKit.VendorOffer",
-      "Summary": "<p sourcefile=\"api/NivalisModKit.VendorOffer.yml\" sourcestartlinenumber=\"1\">One vendor's offer for an ingredient, as the game made it.</p>\n"
+      "Summary": "<p sourcefile=\"api/NivalisModKit.VendorOffer.yml\" sourcestartlinenumber=\"1\">One vendor's offer for an ingredient, from the game's vendor list.</p>\n"
     },
     {
       "type": "ManagedReference",
